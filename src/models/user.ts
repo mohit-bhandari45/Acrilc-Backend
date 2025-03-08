@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
 
 interface IUser extends Document {
@@ -14,51 +14,52 @@ interface IUser extends Document {
     role: "user" | "admin";
 }
 
-const userSchema: Schema<IUser> = new Schema({
-    username: {
-        type: String,
-        required: true,
+const userSchema: Schema<IUser> = new Schema(
+    {
+        username: {
+            type: String,
+            required: true,
+        },
+        email: {
+            type: String,
+            required: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        salt: {
+            type: String,
+            required: true,
+        },
+        profilePicture: {
+            type: String,
+        },
+        bio: {
+            type: String,
+        },
+        socialLinks: { type: Map, of: String },
+        following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        role: {
+            type: String,
+            enum: ["user", "admin"],
+            default: "user",
+        },
     },
-    email: {
-        type: String,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    salt: {
-        type: String,
-    },
-    profilePicture: {
-        type: String,
-    },
-    bio: {
-        type: String,
-    },
-    socialLinks: { type: Map, of: String },
-    following: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    role: {
-        type: String,
-        enum: ["user", "admin"],
-        default: "user",
-    },
-});
+    { timestamps: true }
+);
 
-const User = model<IUser>("user", userSchema);
-export default User;
-
-userSchema.pre("save", async function (next) {
-    const user = this;
-    if (!user.isModified("password")) return;
-
-    const saltRounds = 10;
+userSchema.pre<IUser>("save", async function (next) {
+    const saltRounds = 10; // for complexity
     const salt = await bcrypt.genSalt(saltRounds);
-    const hashedPassword = await bcrypt.hash(user.password, salt);
+    const hashedPassword = await bcrypt.hash(this.password, salt);
 
     this.salt = salt;
     this.password = hashedPassword;
 
     next();
 });
+
+const User = model<IUser>("user", userSchema);
+export default User;

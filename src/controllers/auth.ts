@@ -2,12 +2,27 @@ import { Request, Response } from "express";
 import User from "../models/user.js";
 
 async function signUpHandler(req: Request, res: Response): Promise<any> {
-    const body = req.body;
+    const { username, email, password } = req.body;
 
-    const user = await User.create(body);
-    console.log(user);
+    try {
+        const existingUser = await User.findOne({
+            email: email,
+        });
 
-    return res.send("<h1>Hello</h1>");
+        if (existingUser) {
+            return res.status(409).json({ msg: "User Already Exists" });
+        }
+
+        const user = await User.create({
+            username: username,
+            email: email,
+            password: password,
+        });
+
+        return res.status(201).send({ msg: "User Created Successfully", user: user });
+    } catch (err) {
+        return res.status(500).json({ msg: "Internal Server Error", err: err });
+    }
 }
 
 export { signUpHandler };
