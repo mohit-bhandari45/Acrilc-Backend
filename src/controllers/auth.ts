@@ -63,4 +63,3 @@ async function loginHandler(req: Request, res: Response): Promise<any> {
 }
 
 export { IResponse, loginHandler, signUpHandler };
-
