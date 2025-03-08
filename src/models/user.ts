@@ -1,7 +1,10 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Model } from "mongoose";
 import bcrypt from "bcrypt";
+import { encode } from "../utils/jwt.js";
+import { IResponse } from "../controllers/auth.js";
 
 interface IUser extends Document {
+    fullName: string;
     username: string;
     email: string;
     password: string;
@@ -14,11 +17,18 @@ interface IUser extends Document {
     role: "user" | "admin";
 }
 
+interface IUserModel extends Model<IUser> {
+    matchPasswordAndGenerateToken(email: string, password: string, response: IResponse): Promise<boolean>;
+}
+
 const userSchema: Schema<IUser> = new Schema(
     {
-        username: {
+        fullName: {
             type: String,
             required: true,
+        },
+        username: {
+            type: String,
         },
         email: {
             type: String,
@@ -56,10 +66,38 @@ userSchema.pre<IUser>("save", async function (next) {
     const hashedPassword = await bcrypt.hash(this.password, salt);
 
     this.salt = salt;
+    console.log(this.salt);
+    console.log(salt);
     this.password = hashedPassword;
 
     next();
 });
 
-const User = model<IUser>("user", userSchema);
+userSchema.static("matchPasswordAndGenerateToken", async function (email, password, response): Promise<boolean> {
+    const user = await this.findOne({ email });
+
+    if (!user) {
+        response.msg = "Invalid Email";
+        return false;
+    }
+
+    const salt: string = user.salt;
+    const hashed: string = await bcrypt.hash(password, salt);
+
+    const isMatch: boolean = hashed === user.password;
+
+    if (!isMatch) {
+        response.msg = "Invalid Password";
+        return false;
+    }
+
+    const token: string = encode(user);
+    response.msg = "Login Success";
+    response.token = token;
+
+    return true;
+});
+
+const User = model<IUser, IUserModel>("user", userSchema);
+export { IUser };
 export default User;

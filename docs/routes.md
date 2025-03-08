@@ -10,22 +10,23 @@
 - **Method**: `POST`
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
-    ``` json
+    ```json
     {
-        "username":"user@76",
-        "email":"user@76gmail.com",
-        "password":"guwrqoig",
+        "fullName": "example rawat",
+        "email": "example@gmail.com",
+        "password": "password@45"
     }
+    ```
 
 ### 2. Login
 
-- **URL**: `/auth/login`
-- **Method**: `POST`
-- **Headers**: `Content-Type:application/json`
+- **URL**: `/auth/login`,
+- **Method**: `POST`,
+- **Headers**: `Content-Type: application/json`,
 - **Request Body**:
     ```json
     {
-        "email": "user@example.com",
-        "password": "securepass"
+        "email": "example@gmail.com",
+        "password": "password132"
     }
     ```

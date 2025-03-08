@@ -5,6 +5,7 @@ import { connectDB } from "./db.js";
 import authRoutes from "./routes/auth/auth.js";
 dotenv.config();
 connectDB();
+// console.log(process)
 
 const app: Express = express();
 
