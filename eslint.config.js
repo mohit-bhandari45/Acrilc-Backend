@@ -9,6 +9,9 @@ export default [
         files: ["src/**/*.ts"],
     },
     {
+        ignores: ["dist/**", "node_modules/**"],
+    },
+    {
         languageOptions: {
             globals: {
                 ...globals.browser,

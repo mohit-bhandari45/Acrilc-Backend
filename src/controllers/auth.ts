@@ -5,6 +5,7 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
     const body = req.body;
 
     const user = await User.create(body);
+    console.log(user);
 
     return res.send("<h1>Hello</h1>");
 }
