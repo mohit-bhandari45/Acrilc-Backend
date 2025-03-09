@@ -40,7 +40,6 @@ const userSchema: Schema<IUser> = new Schema(
         },
         salt: {
             type: String,
-            required: true,
         },
         profilePicture: {
             type: String,
