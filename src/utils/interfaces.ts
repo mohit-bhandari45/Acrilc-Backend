@@ -59,4 +59,3 @@ interface IPost {
 }
 
 export { IPost, IUser };
-
