@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import { Express } from "express";
 import Post from "../models/post.js";
 import { setErrorDetails } from "../utils/helper.js";
-import { IPost } from "../utils/interfaces.js";
+import { IPost, IUser } from "../utils/interfaces.js";
+import { Schema } from "mongoose";
+import User from "../models/user.js";
 
 function mediaType(type: string): string {
     if (type.startsWith("image")) {
@@ -18,7 +20,8 @@ function mediaType(type: string): string {
 
 interface IResponse {
     msg: string;
-    post?: IPost
+    post?: IPost;
+    users?: IUser[];
 }
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
@@ -72,25 +75,67 @@ async function getPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-async function likePostHandler(req: Request, res: Response): Promise<any> {
+/* Like Handlers */
+async function allLikesHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
-    const id = "652f8ae19bde3f001d432bad";
 
     try {
         let response: IResponse = {
             msg: "",
         };
-        const updatedPost = await Post.findByIdAndUpdate(postId, { $addToSet: { likes: id } }, { new: true });
 
-        response.msg = "Post not found.";
-        if (!updatedPost) return res.status(404).json({ message: "Post not found." });
+        const post = await Post.findById(postId).populate({
+            path: "likes",
+            select: "fullName email",
+        });
 
-        response.msg = "Post Updated Successfully";
-        response.post = updatedPost;
+        if (!post) {
+            response.msg = "Post Not found";
+            return res.status(404).json(response);
+        }
+
+        response.msg = "Fetched all users";
+        response.users = post.likes as unknown as IUser[];
+
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+async function likePostHandler(req: Request, res: Response): Promise<any> {
+    const { postId } = req.params;
+    const id = "652f8ae19bde3f001d432bad" as unknown as Schema.Types.ObjectId;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        console.log(response, postId);
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            response.msg = "Post Not found";
+            return res.status(404).json(response);
+        }
+
+        const isLiked: boolean = post?.likes.includes(id);
+
+        const updatedPost = await Post.findByIdAndUpdate(postId, isLiked ? { $pull: { likes: id } } : { $addToSet: { likes: id } }, { new: true });
+
+        response.msg = isLiked ? "Unliked Post" : "Liked Post";
+        response.post = updatedPost!;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
 
-export { createPostHandler, getPostHandler, likePostHandler };
+async function commentPostHandler(req: Request, res: Response): Promise<any> {
+    const { postId } = req.params;
+    const id = "652f8ae19bde3f001d432bad";
+}
+
+export { createPostHandler, getPostHandler, allLikesHandler, likePostHandler };

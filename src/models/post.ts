@@ -12,7 +12,7 @@ const postSchema: Schema<IPost> = new Schema(
                 url: { type: String, required: true },
                 type: { type: String, enum: ["image", "audio", "video", "gif"], required: true },
                 thumbnail: { type: String },
-                duration: { type: Number }
+                duration: { type: Number },
             },
         ],
         links: [{ type: String }],
@@ -20,28 +20,28 @@ const postSchema: Schema<IPost> = new Schema(
         mentions: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "User",
+                ref: "user",
             },
         ],
-        author: { type: Schema.Types.ObjectId, ref: "User", required: true },
-        likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        author: { type: Schema.Types.ObjectId, ref: "user", required: true },
+        likes: [{ type: Schema.Types.ObjectId, ref: "user" }],
         comments: [
             {
-                user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+                user: { type: Schema.Types.ObjectId, ref: "user", required: true },
                 text: { type: String, required: true },
                 createdAt: { type: Date, default: Date.now },
                 updatedAt: { type: Date, default: Date.now() },
-                likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+                likes: [{ type: Schema.Types.ObjectId, ref: "user" }],
             },
         ],
-        shares: [{ type: Schema.Types.ObjectId, ref: "User" }],
-        saves: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        shares: [{ type: Schema.Types.ObjectId, ref: "user" }],
+        saves: [{ type: Schema.Types.ObjectId, ref: "user" }],
         poll: {
             question: { type: String },
             options: [
                 {
                     text: { type: String, required: true },
-                    votes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+                    votes: [{ type: Schema.Types.ObjectId, ref: "user" }],
                 },
             ],
         },
