@@ -26,11 +26,11 @@ interface IMedia {
 interface IComment {
     user: Schema.Types.ObjectId;
     text: string;
-    likes: Schema.Types.ObjectId[];
-    replies: IComment[];
+    likes?: Schema.Types.ObjectId[];
+    replies?: IComment[];
 
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 interface IOption {

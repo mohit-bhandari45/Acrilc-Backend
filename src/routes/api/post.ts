@@ -1,6 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
-import { allLikesHandler, createPostHandler, getPostHandler, likePostHandler } from "../../controllers/post.js";
+import { allLikesHandler, commentPostHandler, createPostHandler, getPostHandler, getSpecificPostHandler, likePostHandler } from "../../controllers/post.js";
 import fs from "fs";
 import path from "path";
 
@@ -29,10 +29,14 @@ const upload = multer({ storage });
 
 /* Post Routes */
 router.get("/", getPostHandler);
+router.get("/:postId", getSpecificPostHandler);
 router.post("/create", upload.array("media", 10), createPostHandler);
 
 /* Like Routes */
 router.get("/likes/:postId", allLikesHandler);
 router.get("/like/:postId", likePostHandler);
+
+/* Comment Routes */
+router.post("/comments/:postId", commentPostHandler);
 
 export default router;

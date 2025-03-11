@@ -67,9 +67,35 @@ async function getPostHandler(req: Request, res: Response): Promise<any> {
     try {
         const posts = await Post.find({
             author: id,
-        });
+        }).limit(10);
 
         return res.status(200).json(posts);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+async function getSpecificPostHandler(req: Request, res: Response): Promise<any> {
+    const { postId } = req.params;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const post = await Post.findById(postId).populate({
+            path: "likes",
+            select: "fullName username email",
+        });
+
+        if (!post) {
+            response.msg = "Post Not found";
+            return res.status(404).json(response);
+        }
+
+        response.msg = "Post Found";
+        response.post = post;
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
@@ -133,9 +159,37 @@ async function likePostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
+/* Comment Handler */
 async function commentPostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
-    const id = "652f8ae19bde3f001d432bad";
+    const id = "652f8ae19bde3f001d432bad" as unknown as Schema.Types.ObjectId;
+
+    const { text } = req.body;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const post = await Post.findByIdAndUpdate(
+            postId,
+            {
+                $push: { comments: { user: id, text: text } },
+            },
+            { new: true }
+        );
+
+        if (!post) {
+            response.msg = "No Post Found";
+            return res.status(404).json(response);
+        }
+
+        response.msg = "Commented Successfully";
+        response.post = post;
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
 }
 
-export { createPostHandler, getPostHandler, allLikesHandler, likePostHandler };
+export { createPostHandler, getPostHandler, getSpecificPostHandler, allLikesHandler, likePostHandler, commentPostHandler };
