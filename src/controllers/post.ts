@@ -25,7 +25,8 @@ interface IResponse {
 }
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
-    const { text, links, hashTags, author, mentions, poll, location } = req.body;
+    const author = "652f8ae19bde3f001d432bad" as unknown as Schema.Types.ObjectId;
+    const { text, links, hashTags, mentions, poll, location } = req.body;
 
     try {
         let response: IResponse = {

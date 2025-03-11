@@ -58,34 +58,121 @@
         "password": "password132"
     }
     ```
-- **Success Response**:
+- **Response Body** 
 
+    - **Success Response**:
+        ```json
+        {
+            "msg": "Login Successful",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            "user": {
+                "_id": "64a2f4c2e5f1d12345678901",
+                "fullName": "example rawat",
+                "email": "example@gmail.com"
+            }
+        }
+        ```
+
+    - **Error Response**:
+
+        - Status Code: 401
+            ```json
+            {
+                "msg": "Invalid Email or Password",
+                "token": null
+            }
+            ```
+
+        - Status Code: 500
+            ```json
+            {
+                "msg": "Internal Server Error"
+            }
+            ```
+
+## Post Routes
+
+### 1. Creating a Post
+
+- **URL**: `/api/posts/create`
+- **Method**: `POST`
+- **Headers**: 
+    - `Content-Type: multipart/form-data`
+    - `Authorization: Bearer <your_token>`
+- **Request Body**:
     ```json
     {
-        "msg": "Login Successful",
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-        "user": {
-            "_id": "64a2f4c2e5f1d12345678901",
-            "fullName": "example rawat",
-            "email": "example@gmail.com"
-        }
+        "text": "Exploring the beautiful city!",
+        "links": ["https://example.com"],
+        "hashTags": ["#travel", "#exploration"],
+        "author": "652f8ae19bde3f001d432bad",
+        "mentions": ["user123", "user456"],
+        "poll": {
+            "question": "What's your favorite travel destination?",
+            "options": ["Beach", "Mountains", "City", "Countryside"],
+            "expiresAt": "2025-12-31T23:59:59Z"
+        },
+        "location": {
+            "latitude": 40.7128,
+            "longitude": -74.0060,
+            "name": "New York City, USA"
+        },
+        "files": [
+            // Media files go here
+        ]
     }
-    ```
 
-- **Error Response**:
+- **Response Body** 
 
-    - Status Code: 401
-
+    - **Success Response**:
         ```json
         {
-            "msg": "Invalid Email or Password",
-            "token": null
+            "msg": "Post Created Successfully",
+            "post": {
+                "_id": "6530a3f29bde3f001d432fbc",
+                "text": "Exploring the beautiful city!",
+                "media": [
+                    {
+                        "url": "/uploads/image1.jpg",
+                        "type": "image"
+                    },
+                    {
+                        "url": "/uploads/video1.mp4",
+                        "type": "video"
+                    }
+                ],
+                "author": "652f8ae19bde3f001d432bad",
+                "links": ["https://example.com"],
+                "hashTags": ["#travel", "#exploration"],
+                "mentions": ["user123", "user456"],
+                "poll": {
+                    "question": "What's your favorite travel destination?",
+                    "options": ["Beach", "Mountains", "City", "Countryside"],
+                    "expiresAt": "2025-12-31T23:59:59Z"
+                },
+                "location": {
+                    "latitude": 40.7128,
+                    "longitude": -74.0060,
+                    "name": "New York City, USA"
+                },
+                "createdAt": "2025-03-11T10:00:00Z",
+                "updatedAt": "2025-03-11T10:00:00Z"
+            }
         }
         ```
 
-    - Status Code: 500
-        ```json
-        {
-            "msg": "Internal Server Error"
-        }
-        ```
+    - **Error Response**:
+
+        - Status Code: 401
+            ```json
+            {
+                "msg": "Unauthorized Access"
+            }
+            ```
+
+        - Status Code: 500
+            ```json
+            {
+                "msg": "Internal Server Error"
+            }
+            ```
