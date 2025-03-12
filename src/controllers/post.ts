@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import { Express } from "express";
+import { Schema } from "mongoose";
 import Post from "../models/post.js";
 import { setErrorDetails } from "../utils/helper.js";
 import { IPost, IUser } from "../utils/interfaces.js";
-import { Schema } from "mongoose";
-import User from "../models/user.js";
 
 function mediaType(type: string): string {
     if (type.startsWith("image")) {
@@ -62,12 +61,12 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-async function getPostHandler(req: Request, res: Response): Promise<any> {
-    const id = "652f8ae19bde3f001d432bad";
+async function getSpecificPostsHandler(req: Request, res: Response): Promise<any> {
+    const { authorId } = req.params;
 
     try {
         const posts = await Post.find({
-            author: id,
+            author: authorId,
         }).limit(10);
 
         return res.status(200).json(posts);
@@ -75,6 +74,14 @@ async function getPostHandler(req: Request, res: Response): Promise<any> {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
+
+// async function getAllPostsHandler(req:Request, res:Response):Promise<any>{
+//     try {
+
+//     } catch (error) {
+//         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+//     }
+// }
 
 async function getSpecificPostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
@@ -96,6 +103,23 @@ async function getSpecificPostHandler(req: Request, res: Response): Promise<any>
 
         response.msg = "Post Found";
         response.post = post;
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+async function deletePostHandler(req: Request, res: Response): Promise<any> {
+    const { postId } = req.params;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        await Post.findByIdAndDelete(postId);
+
+        response.msg = "Post Deleted Successfully";
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -133,14 +157,12 @@ async function allLikesHandler(req: Request, res: Response): Promise<any> {
 
 async function likePostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
-    const id = "652f8ae19bde3f001d432bad" as unknown as Schema.Types.ObjectId;
+    const id = "67cdb65646b7e5ad0edda388" as unknown as Schema.Types.ObjectId;
 
     try {
         let response: IResponse = {
             msg: "",
         };
-
-        console.log(response, postId);
 
         const post = await Post.findById(postId);
         if (!post) {
@@ -193,4 +215,4 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-export { createPostHandler, getPostHandler, getSpecificPostHandler, allLikesHandler, likePostHandler, commentPostHandler };
+export { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getSpecificPostsHandler, getSpecificPostHandler, likePostHandler };

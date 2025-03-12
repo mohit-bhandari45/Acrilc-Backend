@@ -1,8 +1,8 @@
 import { Router } from "express";
-import multer from "multer";
-import { allLikesHandler, commentPostHandler, createPostHandler, getPostHandler, getSpecificPostHandler, likePostHandler } from "../../controllers/post.js";
 import fs from "fs";
+import multer from "multer";
 import path from "path";
+import { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getSpecificPostHandler, getSpecificPostsHandler, likePostHandler } from "../../controllers/post.js";
 
 const router = Router();
 
@@ -28,9 +28,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* Post Routes */
-router.get("/", getPostHandler);
-router.get("/:postId", getSpecificPostHandler);
 router.post("/create", upload.array("media", 10), createPostHandler);
+// router.get("/", getSpecificPostsHandler);
+router.get("/author/:authorId", getSpecificPostsHandler);
+router.get("/:postId", getSpecificPostHandler);
+router.delete("/:postId", deletePostHandler);
 
 /* Like Routes */
 router.get("/likes/:postId", allLikesHandler);

@@ -21,15 +21,7 @@
     ```json
     {
         "msg": "User Created Successfully",
-        "user": {
-            "_id": "64a2f4c2e5f1d12345678901",
-            "fullName": "example rawat",
-            "email": "example@gmail.com",
-            "password": "$2b$10$encrypted_password",
-            "createdAt": "2024-09-25T10:00:00.000Z",
-            "updatedAt": "2024-09-25T10:00:00.000Z",
-            "__v": 0
-        }
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
     ```
 - **Error Response**:
@@ -48,9 +40,9 @@
 
 ### 2. Login
 
-- **URL**: `/auth/login`,
-- **Method**: `POST`,
-- **Headers**: `Content-Type: application/json`,
+- **URL**: `/auth/login`
+- **Method**: `POST`
+- **Headers**: `Content-Type: application/json`
 - **Request Body**:
     ```json
     {
@@ -58,24 +50,21 @@
         "password": "password132"
     }
     ```
-- **Response Body** 
+- **Response Body**
 
     - **Success Response**:
+
         ```json
         {
             "msg": "Login Successful",
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-            "user": {
-                "_id": "64a2f4c2e5f1d12345678901",
-                "fullName": "example rawat",
-                "email": "example@gmail.com"
-            }
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
         }
         ```
 
     - **Error Response**:
 
         - Status Code: 401
+
             ```json
             {
                 "msg": "Invalid Email or Password",
@@ -96,10 +85,11 @@
 
 - **URL**: `/api/posts/create`
 - **Method**: `POST`
-- **Headers**: 
+- **Headers**:
     - `Content-Type: multipart/form-data`
     - `Authorization: Bearer <your_token>`
 - **Request Body**:
+
     ```json
     {
         "text": "Exploring the beautiful city!",
@@ -114,17 +104,17 @@
         },
         "location": {
             "latitude": 40.7128,
-            "longitude": -74.0060,
+            "longitude": -74.006,
             "name": "New York City, USA"
         },
-        "files": [
-            // Media files go here
-        ]
+        "files": []
     }
+    ```
 
-- **Response Body** 
+- **Response Body**
 
     - **Success Response**:
+
         ```json
         {
             "msg": "Post Created Successfully",
@@ -152,7 +142,7 @@
                 },
                 "location": {
                     "latitude": 40.7128,
-                    "longitude": -74.0060,
+                    "longitude": -74.006,
                     "name": "New York City, USA"
                 },
                 "createdAt": "2025-03-11T10:00:00Z",
@@ -163,12 +153,37 @@
 
     - **Error Response**:
 
-        - Status Code: 401
+        - Status Code: 500
             ```json
             {
-                "msg": "Unauthorized Access"
+                "msg": "Internal Server Error"
             }
             ```
+
+### 2. Get Posts by Author
+
+- **URL**: `/api/posts/author/:id`
+- **Method**: `GET`
+- **Headers**:
+    - `Authorization: Bearer <your_token>`
+- **Response Body**
+
+    - **Success Response**:
+
+        ```json
+        [
+            {
+                "_id": "6530a3f29bde3f001d432fbc",
+                "text": "Exploring the beautiful city!",
+                "author": "652f8ae19bde3f001d432bad",
+                "createdAt": "2025-03-11T10:00:00Z",
+                "updatedAt": "2025-03-11T10:00:00Z"
+            },
+            ...
+        ]
+        ```
+
+    - **Error Response**:
 
         - Status Code: 500
             ```json
