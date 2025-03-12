@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { decode } from "../utils/jwt.js";
 import { IUser } from "../types/express.js";
 
-async function authCheckMiddleware(req: Request, res: Response, next: NextFunction) : Promise<any>{
+async function authCheckMiddleware(req: Request, res: Response, next: NextFunction): Promise<any> {
     const authHeader: string = req.headers.authorization!;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({
-            msg: "Unauthorized Access - No Token Provided"
+            msg: "Unauthorized Access - No Token Provided",
         });
     }
 
@@ -18,7 +18,7 @@ async function authCheckMiddleware(req: Request, res: Response, next: NextFuncti
 
         if (!user) {
             return res.status(401).json({
-                msg: "Unauthorized Access - Invalid Token"
+                msg: "Unauthorized Access - Invalid Token",
             });
         }
 
@@ -28,7 +28,7 @@ async function authCheckMiddleware(req: Request, res: Response, next: NextFuncti
         console.error("Token decoding error:", error);
         return res.status(401).json({
             msg: "Unauthorized Access - Token Verification Failed",
-            error: error
+            error: error,
         });
     }
 }
