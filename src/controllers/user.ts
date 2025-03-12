@@ -1,3 +1,5 @@
-import { clear } from "console";
+// import { Request, Response } from "express";
 
-clear;
+// async function getUserHandler(req: Request, res: Response): Promise<any> {}
+
+// export { getUserHandler };

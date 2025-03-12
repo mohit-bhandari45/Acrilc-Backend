@@ -1,21 +1,8 @@
-import { Schema, model, Document, Model } from "mongoose";
 import bcrypt from "bcrypt";
-import { encode } from "../utils/jwt.js";
+import { Model, Schema, model } from "mongoose";
 import { IResponse } from "../controllers/auth.js";
-
-interface IUser extends Document {
-    fullName: string;
-    username: string;
-    email: string;
-    password: string;
-    salt: string;
-    profilePicture: string;
-    bio: string;
-    socialLinks: Map<string, string>;
-    following: Schema.Types.ObjectId[];
-    followers: Schema.Types.ObjectId[];
-    role: "user" | "admin";
-}
+import { IUser } from "../utils/interfaces.js";
+import { encode } from "../utils/jwt.js";
 
 interface IUserModel extends Model<IUser> {
     matchPasswordAndGenerateToken(email: string, password: string, response: IResponse): Promise<boolean>;

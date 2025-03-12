@@ -31,11 +31,11 @@ export default [
             prettier: prettier,
         },
         rules: {
-            semi: ["error", "always"],
-            quotes: ["error", "double"],
+            semi: ["warn", "always"],
+            quotes: ["warn", "double"],
             "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
             "no-unused-vars": "off",
-            "prettier/prettier": "error",
+            "prettier/prettier": "warn",
         },
     },
 ];
