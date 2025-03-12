@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./db.js";
@@ -17,5 +17,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/auth", authRoutes);
 app.use("/api", apiRoutes);
+
+app.get("/up", (req: Request, res: Response) => {
+    res.status(200).json({
+        msg: "Server is up and running",
+    });
+});
 
 export default app;
