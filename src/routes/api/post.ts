@@ -29,7 +29,6 @@ const upload = multer({ storage });
 
 /* Post Routes */
 router.post("/create", upload.array("media", 10), createPostHandler);
-// router.get("/", getSpecificPostsHandler);
 router.get("/author/:authorId", getSpecificPostsHandler);
 router.get("/:postId", getSpecificPostHandler);
 router.delete("/:postId", deletePostHandler);

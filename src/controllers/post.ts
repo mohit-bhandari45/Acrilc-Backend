@@ -24,7 +24,7 @@ interface IResponse {
 }
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
-    const author = "652f8ae19bde3f001d432bad" as unknown as Schema.Types.ObjectId;
+    const author = "67d15dc9f48d42769192b835" as unknown as Schema.Types.ObjectId;
     const { text, links, hashTags, mentions, poll, location } = req.body;
 
     try {
@@ -157,7 +157,7 @@ async function allLikesHandler(req: Request, res: Response): Promise<any> {
 
 async function likePostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
-    const id = "67cdb65646b7e5ad0edda388" as unknown as Schema.Types.ObjectId;
+    const id = "67d15dc9f48d42769192b835" as unknown as Schema.Types.ObjectId;
 
     try {
         let response: IResponse = {

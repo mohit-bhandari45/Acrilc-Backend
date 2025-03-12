@@ -52,8 +52,6 @@ userSchema.pre<IUser>("save", async function (next) {
     const hashedPassword = await bcrypt.hash(this.password, salt);
 
     this.salt = salt;
-    console.log(this.salt);
-    console.log(salt);
     this.password = hashedPassword;
 
     next();

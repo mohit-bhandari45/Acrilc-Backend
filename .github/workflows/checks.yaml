@@ -1,60 +1,26 @@
-name: Build and Lint Checks
+name: Deploy to Koyeb
 
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches:
+      - main  # Adjust if your default branch is different
 
 jobs:
-    lint:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+      - name: Install Koyeb CLI
+        run: |
+          curl -s https://get.koyeb.com | bash
+          echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
 
-            - name: Setup Nodejs
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-
-            - name: Install dependencies
-              run: npm install
-
-            - name: Lint Checks
-              run: npm run lint
-
-    build:
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-
-            - name: Setup Nodejs
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-
-            - name: Install Dependencies
-              run: npm install
-
-            - name: Build Project
-              run: npm run build
-
-    deploy:
-        runs-on: ubuntu-latest
-        needs: build
-
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-
-            - name: Deploy to Koyeb
-              run: |
-                  curl -X POST \
-                  -H "Authorization: Bearer ${{ secrets.KOYEB_API_TOKEN }}" \
-                  "https://app.koyeb.com/v1/apps/YOUR_APP_ID/deploy"
+      - name: Deploy to Koyeb
+        run: |
+          koyeb service update ${{ secrets.KOYEB_SERVICE_NAME }} \
+            --organization ${{ secrets.KOYEB_ORG_NAME }} \
+            --repo ${{ github.repository }} \
+            --branch ${{ github.ref_name }} \
+            --token ${{ secrets.KOYEB_API_TOKEN }}
