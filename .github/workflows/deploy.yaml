@@ -1,0 +1,26 @@
+name: Deploy Checks
+
+on:
+    push:
+        branches:
+            - main
+            
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Install Koyeb CLI
+              run: |
+                  curl -s https://get.koyeb.com | bash
+                  echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
+
+            - name: Deploy to Koyeb
+              run: |
+                  koyeb service update ${{ secrets.KOYEB_SERVICE_NAME }} \
+                    --organization ${{ secrets.KOYEB_ORG_NAME }} \
+                    --repo ${{ github.repository }} \
+                    --branch ${{ github.ref_name }} \
+                    --token ${{ secrets.KOYEB_API_TOKEN }}
