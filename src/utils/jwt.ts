@@ -5,8 +5,6 @@ interface IUser {
     _id: any;
     fullName: string;
     email: string;
-    password: string;
-    salt: string;
     role: "user" | "admin";
 }
 
@@ -22,7 +20,7 @@ function encode(user: IUser) {
 }
 
 function decode(token: string) {
-    const user = jwt.verify(token, ENV.jwt_secret);
+    const user = jwt.verify(token, ENV.jwt_secret) as jwt.JwtPayload;
     return user;
 }
 
