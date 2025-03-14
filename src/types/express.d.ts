@@ -1,5 +1,4 @@
 import { JwtPayload } from "jsonwebtoken";
-import { Request } from "express";
 
 export interface IUser extends JwtPayload {
     email: string;

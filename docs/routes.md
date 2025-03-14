@@ -79,6 +79,103 @@
             }
             ```
 
+## Profile Routes
+
+### 1. Get Profile
+
+- **URL**: `/api/profile`
+- **Method**: `GET`
+- **Headers**:
+    - `Authorization: Bearer <your_token>`
+- **Success Response**:
+    ```json
+    {
+        "msg": "User Found",
+        "user": {
+            "_id": "652f8ae19bde3f001d432bad",
+            "fullName": "John Doe",
+            "username": "john_doe",
+            "bio": "Love traveling!",
+            "profilePicture": "profile_image.jpg"
+        }
+    }
+    ```
+- **Error Response**:
+    - Status Code: 500
+        ```json
+        {
+            "msg": "Internal Server Error"
+        }
+        ```
+
+### 2. Update Profile
+
+- **URL**: `/api/profile`
+- **Method**: `PUT`
+- **Headers**:
+    - `Content-Type: multipart/form-data`
+    - `Authorization: Bearer <your_token>`
+- **Request Body**:
+    ```json
+    {
+        "fullName": "John Updated",
+        "username": "john_updated",
+        "bio": "Updated Bio",
+        "profilePicture": "updated_image.jpg"
+    }
+    ```
+- **Success Response**:
+    ```json
+    {
+        "msg": "User Updated",
+        "user": {
+            "_id": "652f8ae19bde3f001d432bad",
+            "fullName": "John Updated",
+            "username": "john_updated",
+            "bio": "Updated Bio",
+            "profilePicture": "updated_image.jpg"
+        }
+    }
+    ```
+- **Error Response**:
+    - Status Code: 500
+
+        ```json
+        {
+            "msg": "Internal Server Error"
+        }
+        ```
+
+### 3. Delete Profile
+
+- **URL**: `/api/profile`
+- **Method**: `DELETE`
+- **Headers**:
+    - `Authorization: Bearer <your_token>`
+- **Success Response**:
+    ```json
+    {
+        "msg": "User Deleted"
+    }
+    ```
+- **Non-Success Response**:
+
+    - Status Code: 404
+
+        ```json
+        {
+            "msg": "User Already Deleted"
+        }
+        ```
+
+    - Status Code: 500
+        ```json
+        {
+            "msg": "Internal Server Error",
+            "err": "err"
+        }
+        ```
+
 ## Post Routes
 
 ### 1. Creating a Post
@@ -121,30 +218,7 @@
             "post": {
                 "_id": "6530a3f29bde3f001d432fbc",
                 "text": "Exploring the beautiful city!",
-                "media": [
-                    {
-                        "url": "/uploads/image1.jpg",
-                        "type": "image"
-                    },
-                    {
-                        "url": "/uploads/video1.mp4",
-                        "type": "video"
-                    }
-                ],
                 "author": "652f8ae19bde3f001d432bad",
-                "links": ["https://example.com"],
-                "hashTags": ["#travel", "#exploration"],
-                "mentions": ["user123", "user456"],
-                "poll": {
-                    "question": "What's your favorite travel destination?",
-                    "options": ["Beach", "Mountains", "City", "Countryside"],
-                    "expiresAt": "2025-12-31T23:59:59Z"
-                },
-                "location": {
-                    "latitude": 40.7128,
-                    "longitude": -74.006,
-                    "name": "New York City, USA"
-                },
                 "createdAt": "2025-03-11T10:00:00Z",
                 "updatedAt": "2025-03-11T10:00:00Z"
             }
@@ -152,7 +226,6 @@
         ```
 
     - **Error Response**:
-
         - Status Code: 500
             ```json
             {
@@ -178,13 +251,11 @@
                 "author": "652f8ae19bde3f001d432bad",
                 "createdAt": "2025-03-11T10:00:00Z",
                 "updatedAt": "2025-03-11T10:00:00Z"
-            },
-            ...
+            }
         ]
         ```
 
     - **Error Response**:
-
         - Status Code: 500
             ```json
             {

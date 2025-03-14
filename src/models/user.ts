@@ -16,7 +16,6 @@ const userSchema: Schema<IUser> = new Schema(
         },
         username: {
             type: String,
-            default: "",
         },
         email: {
             type: String,
@@ -31,11 +30,9 @@ const userSchema: Schema<IUser> = new Schema(
         },
         profilePicture: {
             type: String,
-            default: "",
         },
         bio: {
             type: String,
-            default: "",
         },
         socialLinks: { type: Map, of: String },
         following: [{ type: Schema.Types.ObjectId, ref: "User" }],
