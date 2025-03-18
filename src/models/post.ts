@@ -3,6 +3,10 @@ import { IPost } from "../utils/interfaces.js";
 
 const postSchema: Schema<IPost> = new Schema(
     {
+        title: {
+            type: String,
+            required: true,
+        },
         text: {
             type: String,
             required: true,
@@ -36,15 +40,6 @@ const postSchema: Schema<IPost> = new Schema(
         ],
         shares: [{ type: Schema.Types.ObjectId, ref: "user" }],
         saves: [{ type: Schema.Types.ObjectId, ref: "user" }],
-        poll: {
-            question: { type: String },
-            options: [
-                {
-                    text: { type: String, required: true },
-                    votes: [{ type: Schema.Types.ObjectId, ref: "user" }],
-                },
-            ],
-        },
         location: { type: String },
     },
     { timestamps: true }

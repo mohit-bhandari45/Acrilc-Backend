@@ -1,11 +1,9 @@
 import { Router } from "express";
-import { deleteProfileHandler, getProfileHandler, updateProfileHandler } from "../../controllers/profile.js";
-import upload from "../../lib/multer.js";
+import { getOwnProfile, getProfile } from "../../controllers/profile.js";
 
 const router = Router();
 
-router.get("/", getProfileHandler);
-router.put("/", upload.single("profilePic"), updateProfileHandler);
-router.delete("/", deleteProfileHandler);
+router.get("/me", getOwnProfile); /* Get personal profile */
+router.get("/:userId", getProfile); /* Get Other's profile */
 
 export default router;

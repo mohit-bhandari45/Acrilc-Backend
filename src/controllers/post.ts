@@ -20,7 +20,9 @@ function mediaType(type: string): string {
 interface IResponse {
     msg: string;
     post?: IPost;
+    userId?: string;
     users?: IUser[];
+    posts?: IPost[];
 }
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
@@ -61,15 +63,39 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-async function getSpecificPostsHandler(req: Request, res: Response): Promise<any> {
+async function getPostsHandler(req: Request, res: Response): Promise<any> {
     const authorId = req.user?.id as unknown as Schema.Types.ObjectId;
 
     try {
+        let response: IResponse = {
+            msg: "",
+        };
+
         const posts = await Post.find({
             author: authorId,
         }).limit(10);
 
-        return res.status(200).json(posts);
+        response.posts = posts;
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+async function getOtherPostsHandler(req: Request, res: Response): Promise<any> {
+    const { userId } = req.params;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const posts = await Post.find({
+            author: userId,
+        }).limit(10);
+
+        response.posts = posts;
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
@@ -212,4 +238,4 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-export { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getSpecificPostsHandler, getSpecificPostHandler, likePostHandler };
+export { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getPostsHandler, getOtherPostsHandler, getSpecificPostHandler, likePostHandler };

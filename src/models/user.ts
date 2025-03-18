@@ -42,6 +42,12 @@ const userSchema: Schema<IUser> = new Schema(
             enum: ["user", "admin"],
             default: "user",
         },
+        preferences: [
+            {
+                type: String,
+                enum: ["Woolen Craft", "Poetry", "Exclusive"],
+            },
+        ],
     },
     { timestamps: true }
 );
