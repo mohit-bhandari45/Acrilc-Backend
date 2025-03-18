@@ -1,37 +1,18 @@
 import { Router } from "express";
-import fs from "fs";
-import multer from "multer";
-import path from "path";
-import { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getSpecificPostHandler, getSpecificPostsHandler, likePostHandler } from "../../controllers/post.js";
+import { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getOtherPostsHandler, getPostsHandler, likePostHandler } from "../../controllers/post.js";
+import upload from "../../lib/multer.js";
 
 const router = Router();
 
-const uploadDir: string = "./uploads";
-const storage = multer.diskStorage({
-    destination: "./uploads",
-    filename: (req, file, cb) => {
-        fs.readdir(uploadDir, (err, files) => {
-            if (err) {
-                console.log(err);
-                return cb(err, null as unknown as string);
-            }
-
-            const fileCount: number = files.length + 1;
-            const fileExtension: string = path.extname(file.originalname);
-            const newFileName: string = `${fileCount}${fileExtension}`;
-
-            return cb(err, newFileName);
-        });
-    },
-});
-
-const upload = multer({ storage });
-
 /* Post Routes */
-router.post("/create", upload.array("media", 10), createPostHandler);
-router.get("/author/:authorId", getSpecificPostsHandler);
-router.get("/:postId", getSpecificPostHandler);
-router.delete("/:postId", deletePostHandler);
+
+router.get("/", getPostsHandler); /* Getting personal posts */
+router.get("/:userId", getOtherPostsHandler); /* Get other's posts */
+router.post("/", upload.array("media", 10), createPostHandler);
+// router.get("/:postId", getSpecificPostHandler);
+
+// router.put("/:postId", updatePostHandler); /* Update specific post */
+router.delete("/:postId", deletePostHandler); /* Delete Specific Post */
 
 /* Like Routes */
 router.get("/likes/:postId", allLikesHandler);

@@ -20,11 +20,13 @@ function mediaType(type: string): string {
 interface IResponse {
     msg: string;
     post?: IPost;
+    userId?: string;
     users?: IUser[];
+    posts?: IPost[];
 }
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
-    const author = "67d15dc9f48d42769192b835" as unknown as Schema.Types.ObjectId;
+    const author = req.user?.id as unknown as Schema.Types.ObjectId;
     const { text, links, hashTags, mentions, poll, location } = req.body;
 
     try {
@@ -61,27 +63,43 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-async function getSpecificPostsHandler(req: Request, res: Response): Promise<any> {
-    const { authorId } = req.params;
+async function getPostsHandler(req: Request, res: Response): Promise<any> {
+    const authorId = req.user?.id as unknown as Schema.Types.ObjectId;
 
     try {
+        let response: IResponse = {
+            msg: "",
+        };
+
         const posts = await Post.find({
             author: authorId,
         }).limit(10);
 
-        return res.status(200).json(posts);
+        response.posts = posts;
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
 
-// async function getAllPostsHandler(req:Request, res:Response):Promise<any>{
-//     try {
+async function getOtherPostsHandler(req: Request, res: Response): Promise<any> {
+    const { userId } = req.params;
 
-//     } catch (error) {
-//         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
-//     }
-// }
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const posts = await Post.find({
+            author: userId,
+        }).limit(10);
+
+        response.posts = posts;
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
 
 async function getSpecificPostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
@@ -117,7 +135,12 @@ async function deletePostHandler(req: Request, res: Response): Promise<any> {
             msg: "",
         };
 
-        await Post.findByIdAndDelete(postId);
+        const post = await Post.findByIdAndDelete(postId);
+
+        if (post === null) {
+            response.msg = "Post Not Found";
+            return res.status(404).json(response);
+        }
 
         response.msg = "Post Deleted Successfully";
         return res.status(200).json(response);
@@ -215,4 +238,4 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-export { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getSpecificPostsHandler, getSpecificPostHandler, likePostHandler };
+export { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getPostsHandler, getOtherPostsHandler, getSpecificPostHandler, likePostHandler };

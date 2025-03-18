@@ -13,6 +13,7 @@ interface IUser extends Document {
     following: Schema.Types.ObjectId[];
     followers: Schema.Types.ObjectId[];
     role: "user" | "admin";
+    preferences: string;
 }
 
 /* Post Interfaces */
@@ -44,6 +45,7 @@ interface IPoll {
 }
 
 interface IPost {
+    title: string;
     text: string;
     media: IMedia[];
     links: string[];
