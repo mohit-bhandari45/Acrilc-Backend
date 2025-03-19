@@ -8,6 +8,7 @@ interface IUser extends Document {
     password: string;
     salt: string;
     profilePicture: string;
+    story: string;
     bio: string;
     socialLinks: Map<string, string>;
     following: Schema.Types.ObjectId[];
@@ -48,6 +49,7 @@ interface IPost {
     title: string;
     text: string;
     media: IMedia[];
+    size: string
     links: string[];
     hashTags: string[];
     mentions: Schema.Types.ObjectId[];

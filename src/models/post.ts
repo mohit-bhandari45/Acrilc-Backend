@@ -19,6 +19,10 @@ const postSchema: Schema<IPost> = new Schema(
                 duration: { type: Number },
             },
         ],
+        size: {
+            type: String, 
+            required: true
+        },
         links: [{ type: String }],
         hashTags: [{ type: String }],
         mentions: [

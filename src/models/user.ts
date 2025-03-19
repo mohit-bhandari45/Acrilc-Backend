@@ -10,12 +10,12 @@ interface IUserModel extends Model<IUser> {
 
 const userSchema: Schema<IUser> = new Schema(
     {
+        username: {
+            type: String,
+        },
         fullName: {
             type: String,
             required: true,
-        },
-        username: {
-            type: String,
         },
         email: {
             type: String,
@@ -34,9 +34,12 @@ const userSchema: Schema<IUser> = new Schema(
         bio: {
             type: String,
         },
+        story: {
+            type: String,
+        },
         socialLinks: { type: Map, of: String },
-        following: [{ type: Schema.Types.ObjectId, ref: "User" }],
         followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        following: [{ type: Schema.Types.ObjectId, ref: "User" }],
         role: {
             type: String,
             enum: ["user", "admin"],
