@@ -1,12 +1,14 @@
 import { Router } from "express";
 import {
     addProfilePicHandler,
+    addSocialLinkHandler,
     deleteProfilePicHandler,
     getOwnProfileHandler,
     getPersonalDetailsHandler,
     getPreferencesHandler,
     getUserProfileHandler,
     setPreferencesHandler,
+    updatePersonalDetailsHandler,
     updatePreferenceHandler,
 } from "../../controllers/user.js";
 import upload from "../../lib/multer.js";
@@ -19,7 +21,8 @@ router.get("/:userId", getUserProfileHandler);
 
 /* General Settings */
 router.get("/", getPersonalDetailsHandler);
-// router.put("/", updateDetailsHandler);
+router.put("/", updatePersonalDetailsHandler);
+router.post("/social-links", addSocialLinkHandler);
 router.post("/profile-pic", upload.single("profilePic"), addProfilePicHandler);
 router.put("/profile-pic", upload.single("profilePic"), addProfilePicHandler);
 router.delete("/profile-pic", deleteProfilePicHandler);

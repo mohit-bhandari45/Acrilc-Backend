@@ -12,6 +12,7 @@ interface IResponse {
     preferences?: string;
     user?: Partial<IUser>;
     profilePic?: string;
+    link?: string
 }
 
 /* Getting Profiles */
@@ -66,7 +67,6 @@ async function getUserProfileHandler(req: Request, res: Response): Promise<any> 
  * @desc Get Personal General Details
  * @route Get api/user/
  */
-
 async function getPersonalDetailsHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
 
@@ -88,6 +88,68 @@ async function getPersonalDetailsHandler(req: Request, res: Response): Promise<a
         response.msg = "User Found";
         response.user = updatedUserDetails;
 
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+/***
+ * @desc Update Personal General Details
+ * @route PUT api/user/
+ */
+async function updatePersonalDetailsHandler(req: Request, res: Response): Promise<any> {
+    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const { username, fullName, bio } = req.body;
+
+    try {
+        const response: IResponse = {
+            msg: "",
+        };
+
+        await User.findByIdAndUpdate(
+            userId,
+            {
+                $set: {
+                    username: username && username,
+                    fullName: fullName && fullName,
+                    bio: bio && bio,
+                },
+            },
+            { new: true }
+        );
+
+        response.msg = "User Updated";
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+/***
+ * @desc Add Social Links
+ * @route Post api/user/social-links
+ */
+async function addSocialLinkHandler(req: Request, res: Response): Promise<any> {
+    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const { platform, url } = req.body;
+
+    try {
+        const response: IResponse = {
+            msg: "",
+        };
+
+        const user = (await User.findById(userId))!;
+
+        if (!user.socialLinks) {
+            user.socialLinks = new Map<string, string>();
+        }
+
+        user.socialLinks.set(platform, url);
+        await user.save();
+
+        response.msg = "Link Added";
+        response.link = url;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -284,6 +346,8 @@ export {
     getOwnProfileHandler,
     getUserProfileHandler,
     getPersonalDetailsHandler,
+    updatePersonalDetailsHandler,
+    addSocialLinkHandler,
     addProfilePicHandler,
     updateProfilePicHandler,
     deleteProfilePicHandler,
