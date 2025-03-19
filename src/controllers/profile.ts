@@ -11,7 +11,7 @@ interface IResponse {
     userId?: string;
 }
 
-async function getOwnProfile(req: Request, res: Response): Promise<any> {
+async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
     const ownerId = req.user?.id as unknown as Schema.Types.ObjectId;
 
     try {
@@ -29,7 +29,7 @@ async function getOwnProfile(req: Request, res: Response): Promise<any> {
     }
 }
 
-async function getProfile(req: Request, res: Response): Promise<any> {
+async function getUserProfileHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
 
     try {
@@ -47,4 +47,4 @@ async function getProfile(req: Request, res: Response): Promise<any> {
     }
 }
 
-export { getOwnProfile, getProfile };
+export { getOwnProfileHandler, getUserProfileHandler };
