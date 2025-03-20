@@ -34,6 +34,9 @@ const userSchema: Schema<IUser> = new Schema(
         bio: {
             type: String,
         },
+        story: {
+            type: String,
+        },
         socialLinks: { type: Map, of: String },
         following: [{ type: Schema.Types.ObjectId, ref: "User" }],
         followers: [{ type: Schema.Types.ObjectId, ref: "User" }],

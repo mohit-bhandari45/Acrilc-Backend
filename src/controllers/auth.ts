@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/user.js";
 import { setErrorDetails } from "../utils/helper.js";
 import { encode } from "../utils/jwt.js";
+import sendWelcomeEmail from "../utils/email.js";
 
 interface IResponse {
     msg: string;
@@ -32,6 +33,8 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
             email: formattedEmail,
             password: password,
         });
+
+        await sendWelcomeEmail(user);
 
         const token: string = encode(user);
         response.msg = "User Created Successfully";
