@@ -10,6 +10,7 @@ interface IUser extends Document {
     profilePicture: string;
     story: string;
     bio: string;
+    story: string
     socialLinks: Map<string, string>;
     following: Schema.Types.ObjectId[];
     followers: Schema.Types.ObjectId[];
