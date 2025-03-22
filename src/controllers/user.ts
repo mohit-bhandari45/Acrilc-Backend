@@ -5,6 +5,8 @@ import { setErrorDetails } from "../utils/helper.js";
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
+import bcrypt from "bcrypt";
+import { createTransporter } from "../utils/email.js";
 
 interface IResponse {
     msg: string;
@@ -349,6 +351,123 @@ async function updatePreferenceHandler(req: Request, res: Response): Promise<any
     }
 }
 
+/* Account and Settings */
+async function changeEmailHandler(req: Request, res: Response): Promise<any> {
+    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const { newEmail } = req.body;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+        const saltRounds = 10; // for complexity
+        const token = await bcrypt.genSalt(saltRounds);
+
+        const user = await User.findByIdAndUpdate(userId,
+            {
+                $set: {
+                    newEmail: newEmail,
+                    newEmailToken: token,
+                },
+            }, { new: true });
+
+        const transporter = createTransporter();
+
+        const mailOptions = {
+            to: newEmail,
+            subject: "Verify Your New Email",
+            html: `<p>Click the link below to verify your new email:</p>
+                <a href="http://localhost:8000/api/verify-email?token=${token}">Verify Email</a>`
+        };
+
+        await transporter.sendMail({
+            from: process.env.EMAIL_FROM,
+            ...mailOptions,
+        });
+
+        console.log("Verification Email Sent");
+
+        response.msg = "Verification email sent. Please check your inbox.";
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+async function verifyEmailHandler(req: Request, res: Response): Promise<any> {
+    const { token } = req.query;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const user = await User.findOne({
+            newEmailToken: token,
+        });
+
+        if (!user) {
+            response.msg = "User not found";
+            return res.status(404).json(response);
+        }
+
+        user.email = user.newEmail!;
+        user.newEmail = null;
+        user.newEmailToken = null;
+
+        await user.save();
+
+        response.msg = "Email successfully updated!";
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+const passwordCheck = async (user: IUser, currentPassword: string): Promise<Boolean> => {
+    const salt = user.salt;
+    const hashed: string = await bcrypt.hash(currentPassword, salt);
+
+    if (hashed === user.password) {
+        return true;
+    }
+
+    return false;
+};
+
+async function changePasswordHandler(req: Request, res: Response): Promise<any> {
+    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const { currentPassword, newPassword } = req.body;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const user = await User.findById(userId);
+        if (!user) {
+            response.msg = "User not found";
+            return res.status(404).json(response);
+        }
+
+        if (!passwordCheck(user, currentPassword)) {
+            response.msg = "Current password is incorrect";
+            return res.status(400).json(response);
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        user.save();
+
+        response.msg = "Password Changed Successfully";
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
 export {
     getOwnProfileHandler,
     getUserProfileHandler,
@@ -361,4 +480,7 @@ export {
     getPreferencesHandler,
     setPreferencesHandler,
     updatePreferenceHandler,
+    changeEmailHandler,
+    verifyEmailHandler,
+    changePasswordHandler
 };
