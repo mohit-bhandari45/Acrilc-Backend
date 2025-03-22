@@ -38,6 +38,10 @@ const userSchema: Schema<IUser> = new Schema(
             type: String,
         },
         socialLinks: { type: Map, of: String },
+        visibility: {
+            type: String,
+            enum: ["public", "followers", "private"],
+        },
         followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
         following: [{ type: Schema.Types.ObjectId, ref: "User" }],
         role: {
