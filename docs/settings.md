@@ -92,6 +92,13 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
         "username": "example@45"
     }
     ```
+- **Response Body**:
+    ```json
+    {
+        "msg": "Username Set",
+        "username":"example@45"
+    }
+    ```
 
 ### 2. Add Profile Picture
 
@@ -101,6 +108,13 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     - `Authorization: Bearer <your_token>`
     - `Content-Type: multipart/form-data`
 - **Request Body**: Form field: `image` (File upload, e.g., `.jpg`, `.png`).
+- **Response Body**:
+    ```json
+    {
+        "msg": "Profile Pic Added",
+        "username":"https://i.ibb.co/4n6D1rWY/1.jpg"
+    }
+    ```
 
 ### 3. Set Preferences Details
 
@@ -114,6 +128,13 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
         "preferences": ["Woolen Craft", "Ceramic"]
     }
     ```
+- **Response Body**:
+    ```json
+    {
+        "msg": "Preferences Added Successfully",
+        "preferences":["Woolen Craft", "Ceramic"]
+    }
+    ```
 
 ## General Settings Routes
 
@@ -123,6 +144,24 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Method**: `GET`
 - **Headers**:
     - `Authorization: Bearer <your_token>`
+- **Response Body**:
+    ```json
+    {
+        "msg": "User Found",
+        "user": {
+            "username": "iahfpeqwf",
+            "fullName": "Mohit Rawat",
+            "bio": "This is a small artist",
+            "story": "This is the story of background artist",
+            "profilePicture": null,
+            "socialLinks": {
+                "Instagram": "https://instagram.com/sophieturner",
+                "Twitter": "https://twitter.com/sophieturner"
+            },
+            "visibility": "Public"
+        }
+    }
+    ```
 
 ### 2. Update Personal General Details
 
@@ -144,6 +183,12 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
         "visibility": "private"
     }
     ```
+- **Response Body**:
+    ```json
+        {
+            "msg": "User Updated"
+        }
+    ```
 
 ### 4. Update Profile Picture
 
@@ -152,6 +197,13 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Headers**:
     - `Authorization: Bearer <your_token>`
 - **Request Body**: Form field: `image` (File upload, e.g., `.jpg`, `.png`).
+- **Response Body**:
+    ```json
+        {
+            "msg": "Profile Pic Updated",
+            "profilePic": "https://i.ibb.co/TqdXmWkk/2.jpg"
+        }
+    ```
 
 ### 5. Delete Profile Picture
 
@@ -159,6 +211,12 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Method**: `DELETE`
 - **Headers**:
     - `Authorization: Bearer <your_token>`
+- **Response Body**:
+    ```json
+        {
+            "msg": "Profile Pic Deleted"
+        }
+    ```
 
 ## Preferences Routes
 
