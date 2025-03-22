@@ -4,7 +4,7 @@ import { IUser } from "./interfaces.js";
 interface EmailOptions {
     to: string;
     subject: string;
-    html: string
+    html: string;
 }
 
 const createTransporter = (): Transporter => {
@@ -12,10 +12,10 @@ const createTransporter = (): Transporter => {
         service: "gmail",
         auth: {
             user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    })
-}
+            pass: process.env.EMAIL_PASS,
+        },
+    });
+};
 
 const sendWelcomeEmail = async (user: IUser): Promise<void> => {
     const transporter = createTransporter();
@@ -57,7 +57,7 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
     // Email options
     const mailOptions: EmailOptions = {
         to: user.email,
-        subject: '🎨 Welcome to Acrilic – Unleash Your Creativity!',
+        subject: "🎨 Welcome to Acrilic – Unleash Your Creativity!",
         html: emailContent,
     };
 
@@ -68,8 +68,8 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
         });
         console.log(`Welcome email sent to ${user.email}`);
     } catch (error) {
-        console.error('Error sending welcome email:', error);
-        throw new Error('Failed to send welcome email');
+        console.error("Error sending welcome email:", error);
+        throw new Error("Failed to send welcome email");
     }
 };
 

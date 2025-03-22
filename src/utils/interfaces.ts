@@ -10,8 +10,8 @@ interface IUser extends Document {
     profilePicture: string;
     story: string;
     bio: string;
-    story: string
     socialLinks: Map<string, string>;
+    visibility: "public" | "private" | "followers";
     following: Schema.Types.ObjectId[];
     followers: Schema.Types.ObjectId[];
     role: "user" | "admin";
@@ -50,7 +50,7 @@ interface IPost {
     title: string;
     text: string;
     media: IMedia[];
-    size: string
+    size: string;
     links: string[];
     hashTags: string[];
     mentions: Schema.Types.ObjectId[];

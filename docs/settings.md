@@ -27,7 +27,8 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
                 "profilePicture": "https://i.ibb.co/example.jpg",
                 "socialLinks": { "twitter": "https://twitter.com/jane_doe" },
                 "bio": "Lover of code and coffee",
-                "preferences": ["Woolen", "Ceramic"]
+                "preferences": ["Woolen", "Ceramic"],
+                ...
             }
         }
         ```
@@ -53,67 +54,36 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
                 "profilePicture": "https://i.ibb.co/example2.jpg",
                 "socialLinks": { "linkedin": "https://linkedin.com/in/john_doe" },
                 "bio": "Passionate developer",
-                "preferences": ["Ceramic"]
+                "preferences": ["Ceramic"],
+                ...
             }
         }
         ```
 
-## General Settings Routes
+## Signup Continuation Screens Routes
 
-### 1. Get Personal General Details
+### 1. Set Username
 
-- **URL**: `/api/user/`
-- **Method**: `GET`
+- **URL**: `/api/user/username`
+- **Method**: `POST`
 - **Headers**:
     - `Authorization: Bearer <your_token>`
-- **Request Body**: None
+- **Request Body**:
+    ```json
+    {
+        "username": "example@45"
+    }
+    ```
 - **Response Body**:
     - **Success Response**:
         ```json
         {
             "msg": "User Found",
-            "user": {
-                "username": "jane_doe",
-                "fullName": "Jane Doe",
-                "profilePicture": "https://i.ibb.co/example.jpg",
-                "socialLinks": { "twitter": "https://twitter.com/jane_doe" },
-                "bio": "Lover of code and coffee"
-            }
+            "username":"mohit@45"
         }
         ```
 
-### 2. Update Personal General Details
-
-- **URL**: `/api/user/`
-- **Method**: `PUT`
-- **Headers**:
-    - `Authorization: Bearer <your_token>`
-    - `Content-Type: application/json` (Required for sending the request body).
-- **Request Body**:
-    ```json
-    {
-        "username": "jane_updated",
-        "fullName": "Jane Updated",
-        "bio": "Updated bio: Code, coffee, and more!"
-    }
-    ```
-
-### 3. Add Social Links
-
-- **URL**: `/api/user/social-links`
-- **Method**: `POST`
-- **Headers**:
-    - `Authorization: Bearer <your_token>`
-    - `Content-Type: application/json` (Required for sending the request body).
-- **Request Body**:
-    ```json
-    {
-        "platform": "twitter",
-        "url": "https://twitter.com/jane_doe"
-    }
-    ```
-
-### 4. Add Profile Picture
+### 2. Add Profile Picture
 
 - **URL**: `/api/user/profile-pic`
 - **Method**: `POST`
@@ -136,7 +106,69 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
         }
         ```
 
-### 5. Update Profile Picture
+### 3. Set Preferences Details
+
+- **URL**: `/api/user/preferences`
+- **Method**: `POST`
+- **Headers**:
+    - `Authorization: Bearer <your_token>` (Required, provides user authentication via JWT or similar middleware).
+    - `Content-Type: application/json` (Required for sending the request body).
+- **Request Body**:
+    ```json
+    {
+        "preferences": ["Woolen Craft", "Ceramic"]
+    }
+    ```
+
+## General Settings Routes
+
+### 1. Get Personal General Details
+
+- **URL**: `/api/user/`
+- **Method**: `GET`
+- **Headers**:
+    - `Authorization: Bearer <your_token>`
+- **Request Body**: None
+- **Response Body**:
+    - **Success Response**:
+        ```json
+        {
+            "msg": "User Found",
+            "user": {
+                "fullName": "Jane Doe",
+                "username": "jane_doe",
+                "bio": "Lover of code and coffee",
+                "story":"Lover is lover and hater is hater",
+                "profilePicture": "https://i.ibb.co/example.jpg",
+                "socialLinks": { "twitter": "https://twitter.com/jane_doe" },
+                "visibility":"public",
+            }
+        }
+        ```
+
+### 2. Update Personal General Details
+
+- **URL**: `/api/user/`
+- **Method**: `PUT`
+- **Headers**:
+    - `Authorization: Bearer <your_token>`
+    - `Content-Type: application/json` (Required for sending the request body).
+- **Request Body**:
+    ```json
+    {
+        "fullName": "Jane Updated",
+        "username": "jane_updated",
+        "bio": "Updated bio: Code, coffee, and more!",
+        "story":"This is the new story to talk about and I am very happy to see you with me"
+        "socialLinks": {
+            "Instagram": "https://instagram.com/sophieturner",
+            "Twitter": "https://twitter.com/sophieturner"
+        },
+        "visibility": "private"
+    }
+    ```
+
+### 4. Update Profile Picture
 
 - **URL**: `/api/user/profile-pic`
 - **Method**: `PUT`
@@ -159,7 +191,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
         }
         ```
 
-### 6. Delete Profile Picture
+### 5. Delete Profile Picture
 
 - **URL**: `/api/user/profile-pic`
 - **Method**: `DELETE`
@@ -192,21 +224,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
         }
         ```
 
-### 2. Set Preferences Details
-
-- **URL**: `/api/user/preferences`
-- **Method**: `POST`
-- **Headers**:
-    - `Authorization: Bearer <your_token>` (Required, provides user authentication via JWT or similar middleware).
-    - `Content-Type: application/json` (Required for sending the request body).
-- **Request Body**:
-    ```json
-    {
-        "preferences": "dark mode"
-    }
-    ```
-
-### 3. Update Preferences Details
+### 2. Update Preferences Details
 
 - **URL**: `/api/user/preferences`
 - **Method**: `PUT`

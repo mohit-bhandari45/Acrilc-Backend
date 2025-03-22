@@ -20,8 +20,8 @@ const postSchema: Schema<IPost> = new Schema(
             },
         ],
         size: {
-            type: String, 
-            required: true
+            type: String,
+            required: true,
         },
         links: [{ type: String }],
         hashTags: [{ type: String }],

@@ -12,7 +12,8 @@ interface IResponse {
     preferences?: string;
     user?: Partial<IUser>;
     profilePic?: string;
-    link?: string
+    link?: string;
+    username?: string;
 }
 
 /* Getting Profiles */
@@ -80,9 +81,11 @@ async function getPersonalDetailsHandler(req: Request, res: Response): Promise<a
         const updatedUserDetails: Partial<IUser> = {
             username: user?.username,
             fullName: user?.fullName,
+            bio: user?.bio,
+            story: user?.story,
             profilePicture: user?.profilePicture,
             socialLinks: user?.socialLinks,
-            bio: user?.bio,
+            visibility: user?.visibility,
         };
 
         response.msg = "User Found";
@@ -95,12 +98,43 @@ async function getPersonalDetailsHandler(req: Request, res: Response): Promise<a
 }
 
 /***
+ * @desc Set Username Handler
+ * @route POST api/user/username
+ */
+async function setUsernameHandler(req: Request, res: Response): Promise<any> {
+    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const { username } = req.body;
+
+    try {
+        const response: IResponse = {
+            msg: "",
+        };
+
+        await User.findByIdAndUpdate(
+            userId,
+            {
+                $set: {
+                    username: username,
+                },
+            },
+            { new: true }
+        );
+
+        response.msg = "Username Set";
+        response.username = username;
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+/***
  * @desc Update Personal General Details
  * @route PUT api/user/
  */
 async function updatePersonalDetailsHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
-    const { username, fullName, bio } = req.body;
+    const { fullName, username, bio, story, socialLinks, visibility } = req.body;
 
     try {
         const response: IResponse = {
@@ -114,42 +148,15 @@ async function updatePersonalDetailsHandler(req: Request, res: Response): Promis
                     username: username && username,
                     fullName: fullName && fullName,
                     bio: bio && bio,
+                    story: story && story,
+                    socialLinks: socialLinks && socialLinks,
+                    visibility: visibility && visibility,
                 },
             },
             { new: true }
         );
 
         response.msg = "User Updated";
-        return res.status(200).json(response);
-    } catch (error) {
-        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
-    }
-}
-
-/***
- * @desc Add Social Links
- * @route Post api/user/social-links
- */
-async function addSocialLinkHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
-    const { platform, url } = req.body;
-
-    try {
-        const response: IResponse = {
-            msg: "",
-        };
-
-        const user = (await User.findById(userId))!;
-
-        if (!user.socialLinks) {
-            user.socialLinks = new Map<string, string>();
-        }
-
-        user.socialLinks.set(platform, url);
-        await user.save();
-
-        response.msg = "Link Added";
-        response.link = url;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -173,7 +180,6 @@ async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
         formData.append("image", fs.createReadStream(file!.path));
 
         const response = await axios.post("https://api.imgbb.com/1/upload?key=34cb3d0fe2362f6b0dcf3fcd9e8860b6", formData);
-
         const imageUrl = response.data.data.url;
 
         fs.unlinkSync(file?.path!);
@@ -190,6 +196,7 @@ async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
         r.profilePic = imageUrl;
         return res.status(200).json(r);
     } catch (error) {
+        console.log(error);
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
@@ -345,9 +352,9 @@ async function updatePreferenceHandler(req: Request, res: Response): Promise<any
 export {
     getOwnProfileHandler,
     getUserProfileHandler,
+    setUsernameHandler,
     getPersonalDetailsHandler,
     updatePersonalDetailsHandler,
-    addSocialLinkHandler,
     addProfilePicHandler,
     updateProfilePicHandler,
     deleteProfilePicHandler,
