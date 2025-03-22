@@ -1,6 +1,19 @@
 # API Routes Documentation
 
-## Base URL: `http://localhost:8000`
+## Table of Contents
+
+- [Base URL](#base-url)
+- [Authentication](#authentication)
+  - [Signup](#1-signup)
+  - [Login](#2-login)
+- [Post Routes](#post-routes)
+  - [Creating a Post](#1-creating-a-post)
+  - [Get Posts by Author](#2-get-posts-by-author)
+
+---
+
+## Base URL
+`http://localhost:8000`
 
 ## Authentication
 
