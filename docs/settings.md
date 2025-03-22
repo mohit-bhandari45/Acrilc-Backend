@@ -178,6 +178,6 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Request Body**:
     ```json
     {
-        "preferences": "light mode"
+        "preferences": ["Woolen", "Ceramic", "Pottery"]
     }
     ```
