@@ -31,9 +31,6 @@ const userSchema: Schema<IUser> = new Schema(
             type: String,
             required: true,
         },
-        salt: {
-            type: String,
-        },
         profilePicture: {
             type: String,
         },
@@ -66,11 +63,8 @@ const userSchema: Schema<IUser> = new Schema(
 );
 
 userSchema.pre<IUser>("save", async function (next) {
-    const saltRounds = 10; // for complexity
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hashedPassword = await bcrypt.hash(this.password, salt);
+    const hashedPassword = await bcrypt.hash(this.password, 10);
 
-    this.salt = salt;
     this.password = hashedPassword;
 
     next();
@@ -84,10 +78,7 @@ userSchema.static("matchPasswordAndGenerateToken", async function (email, passwo
         return false;
     }
 
-    const salt: string = user.salt;
-    const hashed: string = await bcrypt.hash(password, salt);
-
-    const isMatch: boolean = hashed === user.password;
+    const isMatch: boolean = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
         response.msg = "Invalid Password";

@@ -425,17 +425,6 @@ async function verifyEmailHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-const passwordCheck = async (user: IUser, currentPassword: string): Promise<Boolean> => {
-    const salt = user.salt;
-    const hashed: string = await bcrypt.hash(currentPassword, salt);
-
-    if (hashed === user.password) {
-        return true;
-    }
-
-    return false;
-};
-
 async function changePasswordHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
     const { currentPassword, newPassword } = req.body;
@@ -451,7 +440,9 @@ async function changePasswordHandler(req: Request, res: Response): Promise<any> 
             return res.status(404).json(response);
         }
 
-        if (!passwordCheck(user, currentPassword)) {
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+        if (!isMatch) {
             response.msg = "Current password is incorrect";
             return res.status(400).json(response);
         }

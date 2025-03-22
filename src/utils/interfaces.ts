@@ -8,7 +8,6 @@ interface IUser extends Document {
     newEmail: string | null;
     newEmailToken: string | null;
     password: string;
-    salt: string;
     profilePicture: string;
     story: string;
     bio: string;
