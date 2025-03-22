@@ -1,0 +1,41 @@
+[33me9dbd09[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeat/other-setting-routes[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m refactored github
+[33mc030a44[m Merge pull request #8 from mohit-bhandari45/feat/general-settings
+[33m99f805a[m added refactoring of general routes
+[33m7028613[m[33m ([m[1;32mfeat/tests[m[33m)[m deleted env
+[33mf55c76c[m added settings.md file
+[33m6763c40[m added some social-links and general settings routes
+[33m59469ef[m added profile routes
+[33m8dc27f5[m Merge pull request #6 from mohit-bhandari45/feat/seed
+[33m0e7c59c[m added seed data
+[33m21943f6[m removed env
+[33mcefc8c8[m removed deply sec
+[33m161f891[m Merge pull request #4 from mohit-bhandari45/feat/adds
+[33maba2ee0[m added preferences route
+[33m5bab0e4[m added profile routes
+[33m2e5fc6e[m added profile routes
+[33m1a4df21[m format
+[33m3458b09[m working on more routes and docs updates
+[33m7531101[m addition
+[33m9d07cd6[m some more
+[33m05fc15d[m some changes
+[33m77f255c[m added some workflow options
+[33m29306be[m added deployment logic
+[33m1495ec9[m Merge pull request #3 from mohit-bhandari45/feat/routes
+[33m8261cc4[m[33m ([m[1;31morigin/feat/routes[m[33m)[m added post routes and  much more, will update the readme file
+[33m328ac52[m updated readme file and some more
+[33m501312b[m added more post routes
+[33m29b5077[m added likes route
+[33m739ab72[m added some more routes
+[33mfca0b6f[m small change
+[33md5c24ac[m post
+[33mb693d2d[m small fixes
+[33mc27be77[m Merge pull request #1 from mohit-bhandari45/feat/auth
+[33m46f9d21[m lint fixes
+[33mf39b349[m added auth controllers with jwt
+[33m6df68cb[m added signup
+[33m6166231[m small fix
+[33me47f294[m added workflow
+[33mb47f8c1[m auth sets
+[33mc50c4f8[m ignore file configs
+[33m7d54198[m eslint setup
+[33m517372b[m setup
