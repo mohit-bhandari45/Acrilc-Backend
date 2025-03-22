@@ -2,6 +2,16 @@
 
 ## Base URL: `http://localhost:8000`
 
+## Table of Contents
+
+1. [Authentication](#authentication)
+    - [Signup](#1-signup)
+    - [Login](#2-login)
+2. [Post Routes](#post-routes)
+    - [Creating a Post](#1-creating-a-post)
+    - [Get Posts by Author](#2-get-posts-by-author)
+    - [Get Posts of Fellow Artist](#get-posts-of-fellow-artist)
+
 ## Authentication
 
 ### 1. Signup
@@ -79,174 +89,6 @@
             }
             ```
 
-## Preferences
-
-### 1. Get Preferences
-
-- **URL**: `/api/preferences`
-- **Method**: `GET`
-- **Headers**: `Authorization: Bearer <your_token>`
-- **Response**:
-    ```json
-    {
-        "msg": "Preferences Found",
-        "preferences": ["Woolen Art", "Ceramic Art"]
-    }
-    ```
-
-### 2. Set Preferences
-
-- **URL**: `/api/preferences`
-- **Method**: `POST`
-- **Headers**: `Authorization: Bearer <your_token>`
-- **Response**:
-    ```json
-    {
-        "msg": "Preferences Added Successfully",
-        "preferences": ["Woolen Art", "Ceramic Art"]
-    }
-    ```
-
-### 3. Update Preferences
-
-- **URL**: `/api/preferences`
-- **Method**: `PUT`
-- **Headers**: `Authorization: Bearer <your_token>`
-- **Response**:
-    ```json
-    {
-        "msg": "Preferences Updated Successfully",
-        "preferences": ["Woolen Art", "Poetry"]
-    }
-    ```
-
-## Profile Routes
-
-### 1. Get Personal Profile
-
-- **URL**: `/api/profile`
-- **Method**: `GET`
-- **Headers**:
-    - `Authorization: Bearer <your_token>`
-- **Success Response**:
-    ```json
-    {
-        "msg": "User Found",
-        "user": {
-            "_id": "652f8ae19bde3f001d432bad",
-            "fullName": "John Doe",
-            "username": "john_doe",
-            "bio": "Love traveling!",
-            "profilePicture": "profile_image.jpg"
-        }
-    }
-    ```
-- **Error Response**:
-    - Status Code: 500
-        ```json
-        {
-            "msg": "Internal Server Error"
-        }
-        ```
-
-### 1. Get Profile
-
-- **URL**: `/api/profile/:userId`
-- **Method**: `GET`
-- **Headers**:
-    - `Authorization: Bearer <your_token>`
-- **Success Response**:
-    ```json
-    {
-        "msg": "User Found",
-        "user": {
-            "_id": "652f8ae19bde3f001d432bad",
-            "fullName": "John Doe",
-            "username": "john_doe",
-            "bio": "Love traveling!",
-            "profilePicture": "profile_image.jpg"
-        }
-    }
-    ```
-- **Error Response**:
-    - Status Code: 500
-        ```json
-        {
-            "msg": "Internal Server Error"
-        }
-        ```
-
-## Setting Routes
-
-### 1. Update Profile
-
-- **URL**: `/api/settings`
-- **Method**: `PUT`
-- **Headers**:
-    - `Content-Type: multipart/form-data`
-    - `Authorization: Bearer <your_token>`
-- **Request Body**:
-    ```json
-    {
-        "fullName": "John Updated",
-        "username": "john_updated",
-        "bio": "Updated Bio",
-        "profilePicture": "updated_image.jpg"
-    }
-    ```
-- **Success Response**:
-    ```json
-    {
-        "msg": "User Updated",
-        "user": {
-            "_id": "652f8ae19bde3f001d432bad",
-            "fullName": "John Updated",
-            "username": "john_updated",
-            "bio": "Updated Bio",
-            "profilePicture": "updated_image.jpg"
-        }
-    }
-    ```
-- **Error Response**:
-
-    - Status Code: 500
-
-        ```json
-        {
-            "msg": "Internal Server Error"
-        }
-        ```
-
-### 2. Delete Profile
-
-- **URL**: `/api/settings`
-- **Method**: `DELETE`
-- **Headers**:
-    - `Authorization: Bearer <your_token>`
-- **Success Response**:
-    ```json
-    {
-        "msg": "User Deleted"
-    }
-    ```
-- **Non-Success Response**:
-
-    - Status Code: 404
-
-        ```json
-        {
-            "msg": "User Already Deleted"
-        }
-        ```
-
-    - Status Code: 500
-        ```json
-        {
-            "msg": "Internal Server Error",
-            "err": "err"
-        }
-        ```
-
 ## Post Routes
 
 ### 1. Creating a Post
@@ -318,10 +160,7 @@
         [
             {
                 "text": "Check out my latest Gym vlog! ✈️🌍",
-                "links": [
-                    "https://example.com/my-vlog",
-                    "https://example.com/travel-tips"
-                ],
+                "links": ["https://example.com/my-vlog", "https://example.com/travel-tips"],
                 "hashTags": ["#GymVlog", "#Exercise", "#Workout"],
                 "mentions": ["652f8ae19bde3f001d432baf", "652f8ae19bde3f001d432bb0"],
                 "poll": {
@@ -342,61 +181,8 @@
                     ]
                 },
                 "location": "Santorini, Greece"
-            },
-            ...
-        ]
-
-        ```
-
-    - **Error Response**:
-        - Status Code: 500
-            ```json
-            {
-                "msg": "Internal Server Error"
             }
-            ```
-
-### Get Posts of Fellow Artist
-
-- **URL**: `/posts/:userId`
-- **Method**: `GET`
-- **Headers**: `Authorization: Bearer <your_token>`
-- **Response Body**:
-
-    - Success Response:
-
-        ```json
-        [
-            {
-                "text": "Check out my latest Gym vlog! ✈️🌍",
-                "links": [
-                    "https://example.com/my-vlog",
-                    "https://example.com/travel-tips"
-                ],
-                "hashTags": ["#GymVlog", "#Exercise", "#Workout"],
-                "mentions": ["652f8ae19bde3f001d432baf", "652f8ae19bde3f001d432bb0"],
-                "poll": {
-                    "question": "Where should I visit next?",
-                    "options": [
-                        {
-                            "text": "Bali",
-                            "votes": ["652f8ae19bde3f001d432bba", "652f8ae19bde3f001d432bbb"]
-                        },
-                        {
-                            "text": "Iceland",
-                            "votes": ["652f8ae19bde3f001d432bbc"]
-                        },
-                        {
-                            "text": "Japan",
-                            "votes": ["652f8ae19bde3f001d432bbd", "652f8ae19bde3f001d432bbe"]
-                        }
-                    ]
-                },
-                "location": "Santorini, Greece"
-            },
-            ...
         ]
-
         ```
 
     - **Error Response**:
