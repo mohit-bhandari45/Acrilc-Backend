@@ -30,7 +30,7 @@ interface IMedia {
 interface IComment {
     user: Schema.Types.ObjectId;
     text: string;
-    likes?: Schema.Types.ObjectId[];
+    applauds?: Schema.Types.ObjectId[];
     replies?: IComment[];
 
     createdAt?: Date;
@@ -64,4 +64,28 @@ interface IPost {
     location: Location;
 }
 
-export { IPost, IUser };
+interface ICollection {
+    userId: Schema.Types.ObjectId;
+    title: string;
+    visibility: "public" | "private" | "unlisted"
+    posts: Schema.Types.ObjectId[]
+}
+
+/* Response Interface */
+interface IResponse {
+    msg: string;
+    token?: string | null;
+    err?: string;
+    post?: IPost;
+    users?: IUser[];
+    posts?: IPost[];
+    preferences?: string;
+    user?: Partial<IUser>;
+    profilePic?: string;
+    link?: string;
+    username?: string;
+    collections?: ICollection[];
+    collection?: ICollection;
+}
+
+export { IPost, IUser, IResponse, ICollection };

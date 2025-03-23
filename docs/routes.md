@@ -13,12 +13,13 @@
     - [Get Posts of Fellow Artist](#get-posts-of-fellow-artist)
 
 ## Common Error Response
+
 - Status Code: 500
     ```json
     {
         "msg": "Internal Server Error"
     }
-    ```    
+    ```
 
 ## Authentication
 
@@ -50,7 +51,6 @@
         }
         ```
 
-
 ### 2. Login
 
 - **URL**: `/auth/login`
@@ -64,7 +64,9 @@
     }
     ```
 - **Response Body**
+
     - **Success Response**:
+
         ```json
         {
             "msg": "Login Successful",
@@ -73,6 +75,7 @@
         ```
 
     - **Error Response**:
+
         - Status Code: 401
 
             ```json
@@ -80,6 +83,7 @@
                 "msg": "Invalid Email or Password",
                 "token": null
             }
+            ```
 
 ## Post Routes
 
@@ -91,6 +95,7 @@
     - `Content-Type: multipart/form-data`
     - `Authorization: Bearer <your_token>`
 - **Request Body**:
+
     ```json
     {
         "text": "Exploring the beautiful city!",
@@ -110,6 +115,7 @@
         },
         "files": []
     }
+    ```
 
 - **Response Body**
     - **Success Response**:
@@ -124,6 +130,7 @@
                 "updatedAt": "2025-03-11T10:00:00Z"
             }
         }
+        ```
 
 ### 2. Get Posts by Author
 
@@ -160,3 +167,4 @@
                 "location": "Santorini, Greece"
             }
         ]
+        ```

@@ -10,7 +10,7 @@ import {
     setPreferencesHandler,
     setUsernameHandler,
     updatePersonalDetailsHandler,
-    updateProfilePicHandler
+    updateProfilePicHandler,
 } from "../../controllers/user.js";
 import upload from "../../lib/multer.js";
 
