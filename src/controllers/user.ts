@@ -360,16 +360,18 @@ async function changeEmailHandler(req: Request, res: Response): Promise<any> {
         let response: IResponse = {
             msg: "",
         };
-        const saltRounds = 10; // for complexity
-        const token = await bcrypt.genSalt(saltRounds);
+        const token = await bcrypt.genSalt(10);
 
-        const user = await User.findByIdAndUpdate(userId,
+        await User.findByIdAndUpdate(
+            userId,
             {
                 $set: {
                     newEmail: newEmail,
                     newEmailToken: token,
                 },
-            }, { new: true });
+            },
+            { new: true }
+        );
 
         const transporter = createTransporter();
 
@@ -377,7 +379,7 @@ async function changeEmailHandler(req: Request, res: Response): Promise<any> {
             to: newEmail,
             subject: "Verify Your New Email",
             html: `<p>Click the link below to verify your new email:</p>
-                <a href="http://localhost:8000/api/verify-email?token=${token}">Verify Email</a>`
+                <a href="http://localhost:8000/api/verify-email?token=${token}">Verify Email</a>`,
         };
 
         await transporter.sendMail({
@@ -473,5 +475,5 @@ export {
     updatePreferenceHandler,
     changeEmailHandler,
     verifyEmailHandler,
-    changePasswordHandler
+    changePasswordHandler,
 };
