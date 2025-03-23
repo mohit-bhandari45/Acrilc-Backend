@@ -101,7 +101,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "Username Set",
-        "username":"example@34"
+        "username": "example@34"
     }
     ```
 
@@ -117,7 +117,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "Profile Pic Added",
-        "profilePic":"https://i.ibb.co/VYsfQqMY/2.jpg"
+        "profilePic": "https://i.ibb.co/VYsfQqMY/2.jpg"
     }
     ```
 
@@ -141,7 +141,6 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     }
     ```
 
-
 ## General Settings Routes
 
 ### 1. Get Personal General Details
@@ -154,7 +153,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "Preferences Added Successfully",
-        "user":{
+        "user": {
             "username": "example@34",
             "fullName": "example rawat",
             "bio": "This is example",
@@ -165,7 +164,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
                 "Twitter": "https://twitter.com/sophieturner"
             },
             "visibility": "public",
-            "preferences":["Woolen", "Ceramic"]
+            "preferences": ["Woolen", "Ceramic"]
         }
     }
     ```
@@ -194,7 +193,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Response Body**:
     ```json
     {
-        "msg": "User Updated",
+        "msg": "User Updated"
     }
     ```
 
@@ -209,7 +208,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "Profile Pic Updated",
-        "profilePic":"https://i.ibb.co/VYsfQqMY/2.jpg"
+        "profilePic": "https://i.ibb.co/VYsfQqMY/2.jpg"
     }
     ```
 
@@ -222,7 +221,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Response Body**:
     ```json
     {
-        "msg": "Profile Pic Deleted",
+        "msg": "Profile Pic Deleted"
     }
     ```
 
@@ -237,7 +236,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Response Body**:
     ```json
     {
-        "msg": "Verification email sent. Please check your inbox.",
+        "msg": "Verification email sent. Please check your inbox."
     }
     ```
 
@@ -250,6 +249,6 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Response Body**:
     ```json
     {
-        "msg": "Password Changed Successfully",
+        "msg": "Password Changed Successfully"
     }
     ```

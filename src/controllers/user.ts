@@ -7,16 +7,7 @@ import axios from "axios";
 import FormData from "form-data";
 import bcrypt from "bcrypt";
 import { createTransporter } from "../utils/email.js";
-
-interface IResponse {
-    msg: string;
-    err?: string;
-    preferences?: string;
-    user?: Partial<IUser>;
-    profilePic?: string;
-    link?: string;
-    username?: string;
-}
+import { IResponse } from "../utils/interfaces.js";
 
 /* Getting Profiles */
 

@@ -3,7 +3,8 @@ import { Express } from "express";
 import { Schema } from "mongoose";
 import Post from "../models/post.js";
 import { setErrorDetails } from "../utils/helper.js";
-import { IPost, IUser } from "../utils/interfaces.js";
+import { IUser } from "../utils/interfaces.js";
+import { IResponse } from "../utils/interfaces.js";
 
 function mediaType(type: string): string {
     if (type.startsWith("image")) {
@@ -17,17 +18,9 @@ function mediaType(type: string): string {
     }
 }
 
-interface IResponse {
-    msg: string;
-    post?: IPost;
-    userId?: string;
-    users?: IUser[];
-    posts?: IPost[];
-}
-
 async function createPostHandler(req: Request, res: Response): Promise<any> {
     const author = req.user?.id as unknown as Schema.Types.ObjectId;
-    const { text, links, hashTags, mentions, poll, location } = req.body;
+    const { title, text, links, hashTags, size, mentions, poll, location } = req.body;
 
     try {
         let response: IResponse = {
@@ -45,6 +38,8 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
             }) || [];
 
         const post = await Post.create({
+            title,
+            size,
             text: text,
             media: media,
             author: author,
@@ -59,6 +54,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
         response.post = post;
         return res.status(200).json(response);
     } catch (error) {
+        console.log(error);
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
