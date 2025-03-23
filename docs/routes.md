@@ -12,6 +12,14 @@
     - [Get Posts by Author](#2-get-posts-by-author)
     - [Get Posts of Fellow Artist](#get-posts-of-fellow-artist)
 
+## Common Error Response
+- Status Code: 500
+    ```json
+    {
+        "msg": "Internal Server Error"
+    }
+    ```    
+
 ## Authentication
 
 ### 1. Signup
@@ -41,12 +49,7 @@
             "msg": "User Already Exists"
         }
         ```
-    - Status Code: 500
-        ```json
-        {
-            "msg": "Internal Server Error"
-        }
-        ```
+
 
 ### 2. Login
 
@@ -61,9 +64,7 @@
     }
     ```
 - **Response Body**
-
     - **Success Response**:
-
         ```json
         {
             "msg": "Login Successful",
@@ -72,7 +73,6 @@
         ```
 
     - **Error Response**:
-
         - Status Code: 401
 
             ```json
@@ -80,14 +80,6 @@
                 "msg": "Invalid Email or Password",
                 "token": null
             }
-            ```
-
-        - Status Code: 500
-            ```json
-            {
-                "msg": "Internal Server Error"
-            }
-            ```
 
 ## Post Routes
 
@@ -99,7 +91,6 @@
     - `Content-Type: multipart/form-data`
     - `Authorization: Bearer <your_token>`
 - **Request Body**:
-
     ```json
     {
         "text": "Exploring the beautiful city!",
@@ -119,12 +110,9 @@
         },
         "files": []
     }
-    ```
 
 - **Response Body**
-
     - **Success Response**:
-
         ```json
         {
             "msg": "Post Created Successfully",
@@ -136,15 +124,6 @@
                 "updatedAt": "2025-03-11T10:00:00Z"
             }
         }
-        ```
-
-    - **Error Response**:
-        - Status Code: 500
-            ```json
-            {
-                "msg": "Internal Server Error"
-            }
-            ```
 
 ### 2. Get Posts by Author
 
@@ -153,9 +132,7 @@
 - **Headers**:
     - `Authorization: Bearer <your_token>`
 - **Response Body**
-
     - **Success Response**:
-
         ```json
         [
             {
@@ -183,12 +160,3 @@
                 "location": "Santorini, Greece"
             }
         ]
-        ```
-
-    - **Error Response**:
-        - Status Code: 500
-            ```json
-            {
-                "msg": "Internal Server Error"
-            }
-            ```

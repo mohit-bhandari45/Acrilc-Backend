@@ -1,15 +1,16 @@
 import { Router } from "express";
 import {
     addProfilePicHandler,
+    changeEmailHandler,
+    changePasswordHandler,
     deleteProfilePicHandler,
     getOwnProfileHandler,
     getPersonalDetailsHandler,
-    getPreferencesHandler,
     getUserProfileHandler,
     setPreferencesHandler,
     setUsernameHandler,
     updatePersonalDetailsHandler,
-    updatePreferenceHandler,
+    updateProfilePicHandler
 } from "../../controllers/user.js";
 import upload from "../../lib/multer.js";
 
@@ -27,11 +28,11 @@ router.post("/profile-pic", upload.single("profilePic"), addProfilePicHandler);
 /* General Settings */
 router.get("/", getPersonalDetailsHandler);
 router.put("/", updatePersonalDetailsHandler);
-router.put("/profile-pic", upload.single("profilePic"), addProfilePicHandler);
+router.put("/profile-pic", upload.single("profilePic"), updateProfilePicHandler);
 router.delete("/profile-pic", deleteProfilePicHandler);
 
-/* Preferences Routes */
-router.get("/preferences", getPreferencesHandler);
-router.put("/preferences", updatePreferenceHandler);
+/* Account and Settings */
+router.post("/change-email", changeEmailHandler);
+router.post("/change-password", changePasswordHandler);
 
 export default router;

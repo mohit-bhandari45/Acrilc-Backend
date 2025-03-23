@@ -7,7 +7,7 @@ interface EmailOptions {
     html: string;
 }
 
-const createTransporter = (): Transporter => {
+export const createTransporter = (): Transporter => {
     return nodemailer.createTransport({
         service: "gmail",
         auth: {

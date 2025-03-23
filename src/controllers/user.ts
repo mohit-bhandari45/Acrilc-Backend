@@ -5,6 +5,8 @@ import { setErrorDetails } from "../utils/helper.js";
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
+import bcrypt from "bcrypt";
+import { createTransporter } from "../utils/email.js";
 
 interface IResponse {
     msg: string;
@@ -86,6 +88,7 @@ async function getPersonalDetailsHandler(req: Request, res: Response): Promise<a
             profilePicture: user?.profilePicture,
             socialLinks: user?.socialLinks,
             visibility: user?.visibility,
+            preferences: user?.preferences,
         };
 
         response.msg = "User Found";
@@ -134,7 +137,7 @@ async function setUsernameHandler(req: Request, res: Response): Promise<any> {
  */
 async function updatePersonalDetailsHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
-    const { fullName, username, bio, story, socialLinks, visibility } = req.body;
+    const { fullName, username, bio, story, socialLinks, visibility, preferences } = req.body;
 
     try {
         const response: IResponse = {
@@ -151,6 +154,7 @@ async function updatePersonalDetailsHandler(req: Request, res: Response): Promis
                     story: story && story,
                     socialLinks: socialLinks && socialLinks,
                     visibility: visibility && visibility,
+                    preferences: preferences && preferences,
                 },
             },
             { new: true }
@@ -260,31 +264,6 @@ async function deleteProfilePicHandler(req: Request, res: Response): Promise<any
     }
 }
 
-/* Preferences Handler */
-
-/***
- * @desc Get Preferences Details
- * @route Get api/user/preferences
- */
-
-async function getPreferencesHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
-
-    try {
-        let response: IResponse = {
-            msg: "",
-        };
-
-        const user = await User.findById(userId);
-
-        response.msg = "Preferenes Found";
-        response.preferences = user?.preferences;
-        return res.status(200).json(response);
-    } catch (error) {
-        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
-    }
-}
-
 /***
  * @desc Set Preferences Details
  * @route POST api/user/preferences
@@ -317,34 +296,112 @@ async function setPreferencesHandler(req: Request, res: Response): Promise<any> 
     }
 }
 
-/***
- * @desc Update(Change or Delete) Preferences Details
- * @route PUT api/user/preferences
- */
-
-async function updatePreferenceHandler(req: Request, res: Response): Promise<any> {
+/* Account and Settings */
+async function changeEmailHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
-    const { preferences } = req.body;
+    const { newEmail } = req.body;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+        const token = await bcrypt.genSalt(10);
+
+        await User.findByIdAndUpdate(
+            userId,
+            {
+                $set: {
+                    newEmail: newEmail,
+                    newEmailToken: token,
+                },
+            },
+            { new: true }
+        );
+
+        const transporter = createTransporter();
+
+        const mailOptions = {
+            to: newEmail,
+            subject: "Verify Your New Email",
+            html: `<p>Click the link below to verify your new email:</p>
+                <a href="http://localhost:8000/api/verify-email?token=${token}">Verify Email</a>`,
+        };
+
+        await transporter.sendMail({
+            from: process.env.EMAIL_FROM,
+            ...mailOptions,
+        });
+
+        console.log("Verification Email Sent");
+
+        response.msg = "Verification email sent. Please check your inbox.";
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+async function verifyEmailHandler(req: Request, res: Response): Promise<any> {
+    const { token } = req.query;
 
     try {
         let response: IResponse = {
             msg: "",
         };
 
-        const user = await User.findByIdAndUpdate(
-            userId,
-            {
-                $set: {
-                    preferences: preferences,
-                },
-            },
-            { new: true }
-        );
+        const user = await User.findOne({
+            newEmailToken: token,
+        });
 
-        response.msg = "Preferences Updated Successfully";
-        response.preferences = user?.preferences;
+        if (!user) {
+            response.msg = "User not found";
+            return res.status(404).json(response);
+        }
+
+        user.email = user.newEmail!;
+        user.newEmail = null;
+        user.newEmailToken = null;
+
+        await user.save();
+
+        response.msg = "Email successfully updated!";
         return res.status(200).json(response);
     } catch (error) {
+        console.log(error);
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+async function changePasswordHandler(req: Request, res: Response): Promise<any> {
+    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const { currentPassword, newPassword } = req.body;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const user = await User.findById(userId);
+        if (!user) {
+            response.msg = "User not found";
+            return res.status(404).json(response);
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+        if (!isMatch) {
+            response.msg = "Current password is incorrect";
+            return res.status(400).json(response);
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        user.save();
+
+        response.msg = "Password Changed Successfully";
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
@@ -358,7 +415,8 @@ export {
     addProfilePicHandler,
     updateProfilePicHandler,
     deleteProfilePicHandler,
-    getPreferencesHandler,
     setPreferencesHandler,
-    updatePreferenceHandler,
+    changeEmailHandler,
+    verifyEmailHandler,
+    changePasswordHandler,
 };

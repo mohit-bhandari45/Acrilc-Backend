@@ -19,6 +19,9 @@
 6. [Preferences Routes](#preferences-routes)
     - [Get Preferences Details](#1-get-preferences-details)
     - [Update Preferences Details](#2-update-preferences-details)
+7. [Account & Settings](#account-and-settings-routes)
+    - [Change Email](#1-change-email)
+    - [Change Password](#2-change-password)
 
 ---
 
@@ -49,6 +52,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
             "socialLinks": { "twitter": "https://twitter.com/jane_doe" },
             "bio": "Lover of code and coffee",
             "preferences": ["Woolen", "Ceramic"]
+            ...
         }
     }
     ```
@@ -74,6 +78,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
             "socialLinks": { "linkedin": "https://linkedin.com/in/john_doe" },
             "bio": "Passionate developer",
             "preferences": ["Ceramic"]
+            ...
         }
     }
     ```
@@ -92,6 +97,13 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
         "username": "example@45"
     }
     ```
+- **Response Body**:
+    ```json
+    {
+        "msg": "Username Set",
+        "username":"example@34"
+    }
+    ```
 
 ### 2. Add Profile Picture
 
@@ -101,6 +113,13 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     - `Authorization: Bearer <your_token>`
     - `Content-Type: multipart/form-data`
 - **Request Body**: Form field: `image` (File upload, e.g., `.jpg`, `.png`).
+- **Response Body**:
+    ```json
+    {
+        "msg": "Profile Pic Added",
+        "profilePic":"https://i.ibb.co/VYsfQqMY/2.jpg"
+    }
+    ```
 
 ### 3. Set Preferences Details
 
@@ -114,6 +133,14 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
         "preferences": ["Woolen Craft", "Ceramic"]
     }
     ```
+- **Response Body**:
+    ```json
+    {
+        "msg": "Preferences Added Successfully",
+        "preferences": ["Woolen Craft", "Pottery"]
+    }
+    ```
+
 
 ## General Settings Routes
 
@@ -123,6 +150,25 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Method**: `GET`
 - **Headers**:
     - `Authorization: Bearer <your_token>`
+- **Response Body**:
+    ```json
+    {
+        "msg": "Preferences Added Successfully",
+        "user":{
+            "username": "example@34",
+            "fullName": "example rawat",
+            "bio": "This is example",
+            "story": "This is example in long",
+            "profilePicture": "",
+            "socialLinks": {
+                "Instagram": "https://instagram.com/sophieturner",
+                "Twitter": "https://twitter.com/sophieturner"
+            },
+            "visibility": "public",
+            "preferences":["Woolen", "Ceramic"]
+        }
+    }
+    ```
 
 ### 2. Update Personal General Details
 
@@ -144,14 +190,28 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
         "visibility": "private"
     }
     ```
+    - `Authorization: Bearer <your_token>`
+- **Response Body**:
+    ```json
+    {
+        "msg": "User Updated",
+    }
+    ```
 
-### 4. Update Profile Picture
+### 4. Update Profile Picture(Problem for now)
 
 - **URL**: `/api/user/profile-pic`
 - **Method**: `PUT`
 - **Headers**:
     - `Authorization: Bearer <your_token>`
 - **Request Body**: Form field: `image` (File upload, e.g., `.jpg`, `.png`).
+- **Response Body**:
+    ```json
+    {
+        "msg": "Profile Pic Updated",
+        "profilePic":"https://i.ibb.co/VYsfQqMY/2.jpg"
+    }
+    ```
 
 ### 5. Delete Profile Picture
 
@@ -159,25 +219,37 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
 - **Method**: `DELETE`
 - **Headers**:
     - `Authorization: Bearer <your_token>`
-
-## Preferences Routes
-
-### 1. Get Preferences Details
-
-- **URL**: `/api/user/preferences`
-- **Method**: `GET`
-- **Headers**:
-    - `Authorization: Bearer <your_token>`
-
-### 2. Update Preferences Details
-
-- **URL**: `/api/user/preferences`
-- **Method**: `PUT`
-- **Headers**:
-    - `Authorization: Bearer <your_token>`
-- **Request Body**:
+- **Response Body**:
     ```json
     {
-        "preferences": ["Woolen", "Ceramic", "Pottery"]
+        "msg": "Profile Pic Deleted",
+    }
+    ```
+
+## Account and Settings Routes
+
+### 1. Change Email
+
+- **URL**: `/api/user/change-email`
+- **Method**: `POST`
+- **Headers**:
+    - `Authorization: Bearer <your_token>`
+- **Response Body**:
+    ```json
+    {
+        "msg": "Verification email sent. Please check your inbox.",
+    }
+    ```
+
+### 2. Change Password
+
+- **URL**: `/api/user/change-password`
+- **Method**: `POST`
+- **Headers**:
+    - `Authorization: Bearer <your_token>`
+- **Response Body**:
+    ```json
+    {
+        "msg": "Password Changed Successfully",
     }
     ```
