@@ -88,6 +88,7 @@ async function getPersonalDetailsHandler(req: Request, res: Response): Promise<a
             profilePicture: user?.profilePicture,
             socialLinks: user?.socialLinks,
             visibility: user?.visibility,
+            preferences: user?.preferences,
         };
 
         response.msg = "User Found";
@@ -136,7 +137,7 @@ async function setUsernameHandler(req: Request, res: Response): Promise<any> {
  */
 async function updatePersonalDetailsHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
-    const { fullName, username, bio, story, socialLinks, visibility } = req.body;
+    const { fullName, username, bio, story, socialLinks, visibility, preferences } = req.body;
 
     try {
         const response: IResponse = {
@@ -153,6 +154,7 @@ async function updatePersonalDetailsHandler(req: Request, res: Response): Promis
                     story: story && story,
                     socialLinks: socialLinks && socialLinks,
                     visibility: visibility && visibility,
+                    preferences: preferences && preferences,
                 },
             },
             { new: true }
@@ -262,31 +264,6 @@ async function deleteProfilePicHandler(req: Request, res: Response): Promise<any
     }
 }
 
-/* Preferences Handler */
-
-/***
- * @desc Get Preferences Details
- * @route Get api/user/preferences
- */
-
-async function getPreferencesHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
-
-    try {
-        let response: IResponse = {
-            msg: "",
-        };
-
-        const user = await User.findById(userId);
-
-        response.msg = "Preferenes Found";
-        response.preferences = user?.preferences;
-        return res.status(200).json(response);
-    } catch (error) {
-        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
-    }
-}
-
 /***
  * @desc Set Preferences Details
  * @route POST api/user/preferences
@@ -312,38 +289,6 @@ async function setPreferencesHandler(req: Request, res: Response): Promise<any> 
         );
 
         response.msg = "Preferences Added Successfully";
-        response.preferences = user?.preferences;
-        return res.status(200).json(response);
-    } catch (error) {
-        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
-    }
-}
-
-/***
- * @desc Update(Change or Delete) Preferences Details
- * @route PUT api/user/preferences
- */
-
-async function updatePreferenceHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
-    const { preferences } = req.body;
-
-    try {
-        let response: IResponse = {
-            msg: "",
-        };
-
-        const user = await User.findByIdAndUpdate(
-            userId,
-            {
-                $set: {
-                    preferences: preferences,
-                },
-            },
-            { new: true }
-        );
-
-        response.msg = "Preferences Updated Successfully";
         response.preferences = user?.preferences;
         return res.status(200).json(response);
     } catch (error) {
@@ -470,9 +415,7 @@ export {
     addProfilePicHandler,
     updateProfilePicHandler,
     deleteProfilePicHandler,
-    getPreferencesHandler,
     setPreferencesHandler,
-    updatePreferenceHandler,
     changeEmailHandler,
     verifyEmailHandler,
     changePasswordHandler,

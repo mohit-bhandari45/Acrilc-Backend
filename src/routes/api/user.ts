@@ -6,13 +6,11 @@ import {
     deleteProfilePicHandler,
     getOwnProfileHandler,
     getPersonalDetailsHandler,
-    getPreferencesHandler,
     getUserProfileHandler,
     setPreferencesHandler,
     setUsernameHandler,
     updatePersonalDetailsHandler,
-    updatePreferenceHandler,
-    verifyEmailHandler,
+    updateProfilePicHandler
 } from "../../controllers/user.js";
 import upload from "../../lib/multer.js";
 
@@ -30,10 +28,8 @@ router.post("/profile-pic", upload.single("profilePic"), addProfilePicHandler);
 /* General Settings */
 router.get("/", getPersonalDetailsHandler);
 router.put("/", updatePersonalDetailsHandler);
-router.put("/profile-pic", upload.single("profilePic"), addProfilePicHandler);
+router.put("/profile-pic", upload.single("profilePic"), updateProfilePicHandler);
 router.delete("/profile-pic", deleteProfilePicHandler);
-router.get("/preferences", getPreferencesHandler);
-router.put("/preferences", updatePreferenceHandler);
 
 /* Account and Settings */
 router.post("/change-email", changeEmailHandler);

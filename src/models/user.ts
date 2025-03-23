@@ -44,6 +44,7 @@ const userSchema: Schema<IUser> = new Schema(
         visibility: {
             type: String,
             enum: ["public", "followers", "private"],
+            default: "public",
         },
         followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
         following: [{ type: Schema.Types.ObjectId, ref: "User" }],
