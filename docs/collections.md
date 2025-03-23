@@ -19,6 +19,7 @@
     {
         "msg": "Internal Server Error"
     }
+    ```
 
 ## Collection Routes
 
@@ -41,6 +42,7 @@
             }
         ]
     }
+    ```
 
 ### 2. Add a Collection
 
@@ -54,6 +56,7 @@
         "visibility": "private",
         "posts": []
     }
+    ```
 - **Success Response**:
     ```json
     {
@@ -66,6 +69,7 @@
             "posts": []
         }
     }
+    ```
 
 ### 3. Update a Collection
 
@@ -78,11 +82,13 @@
         "title": "Updated Collection Title",
         "visibility": "public"
     }
+    ```
 - **Success Response**:
     ```json
     {
         "msg": "Collection updated"
     }
+    ```
 
 ### 4. Delete a Collection
 
@@ -94,6 +100,7 @@
     {
         "msg": "Collection Deleted"
     }
+    ```
 
 ### 5. Get Collection Posts
 
@@ -113,6 +120,7 @@
             }
         ]
     }
+    ```
 
 ### 6. Remove Post from Collection
 
@@ -120,13 +128,16 @@
 - **Method**: `PUT`
 - **Headers**: `Authorization: Bearer <token>`
 - **Request Body**:
+
     ```json
     {
         "postId": "613b32a1f3f99b001a2b4c25"
     }
+    ```
 
 - **Success Response**:
     ```json
     {
         "msg": "Post Deleted"
     }
+    ```

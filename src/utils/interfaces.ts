@@ -67,8 +67,8 @@ interface IPost {
 interface ICollection {
     userId: Schema.Types.ObjectId;
     title: string;
-    visibility: "public" | "private" | "unlisted"
-    posts: Schema.Types.ObjectId[]
+    visibility: "public" | "private" | "unlisted";
+    posts: Schema.Types.ObjectId[];
 }
 
 /* Response Interface */

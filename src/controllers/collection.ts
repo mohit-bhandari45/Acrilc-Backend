@@ -75,7 +75,7 @@ async function updateCollectionHandler(req: Request, res: Response): Promise<any
             $set: {
                 title: title,
                 visibility: visibility,
-            }
+            },
         });
 
         response.msg = "Collection updated";
@@ -150,7 +150,7 @@ async function removeCollectionPostHandler(req: Request, res: Response): Promise
 
         collection.posts = collection.posts.filter((id) => {
             return id.toString() !== postId;
-        })
+        });
         collection.save();
 
         response.msg = "Post Deleted";
