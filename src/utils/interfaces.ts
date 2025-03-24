@@ -27,11 +27,18 @@ interface IMedia {
     duration?: number;
 }
 
+interface IReply {
+    user: Schema.Types.ObjectId;
+    text: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 interface IComment {
     user: Schema.Types.ObjectId;
     text: string;
     applauds?: Schema.Types.ObjectId[];
-    replies?: IComment[];
+    replies?: IReply[];
 
     createdAt?: Date;
     updatedAt?: Date;
@@ -48,18 +55,17 @@ interface IPoll {
 }
 
 interface IPost {
+    author: Schema.Types.ObjectId;
     title: string;
-    text: string;
-    media: IMedia[];
+    subtitle: string;
     size: string;
+    story: string;
     links: string[];
     hashTags: string[];
     mentions: Schema.Types.ObjectId[];
-    author: Schema.Types.ObjectId;
-    likes: Schema.Types.ObjectId[];
+    media: IMedia[];
+    applauds: Schema.Types.ObjectId[];
     comments: IComment[];
-    shares: Schema.Types.ObjectId[];
-    saves: Schema.Types.ObjectId[];
     poll: IPoll;
     location: Location;
 }
@@ -88,4 +94,4 @@ interface IResponse {
     collection?: ICollection;
 }
 
-export { IPost, IUser, IResponse, ICollection };
+export { IUser, IPost, IComment, IReply, ICollection, IMedia, IResponse };

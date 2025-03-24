@@ -5,6 +5,7 @@ import Post from "../models/post.js";
 import { setErrorDetails } from "../utils/helper.js";
 import { IUser } from "../utils/interfaces.js";
 import { IResponse } from "../utils/interfaces.js";
+import Collection from "../models/collection.js";
 
 function mediaType(type: string): string {
     if (type.startsWith("image")) {
@@ -20,7 +21,7 @@ function mediaType(type: string): string {
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
     const author = req.user?.id as unknown as Schema.Types.ObjectId;
-    const { title, text, links, hashTags, size, mentions, poll, location } = req.body;
+    const { title, subtitle, story, size, links, hashTags, mentions, location, collectionId } = req.body;
 
     try {
         let response: IResponse = {
@@ -38,17 +39,25 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
             }) || [];
 
         const post = await Post.create({
+            author,
             title,
+            subtitle,
             size,
-            text: text,
-            media: media,
-            author: author,
-            links: links,
-            hashTags: hashTags,
-            mentions: mentions,
-            poll: poll,
+            story,
+            media,
+            links,
+            hashTags,
+            mentions,
             location: location,
         });
+
+        if (collectionId) {
+            await Collection.findByIdAndUpdate(collectionId, {
+                $push: {
+                    posts: post.id,
+                },
+            }, { new: true });
+        }
 
         response.msg = "Post Created Successfully";
         response.post = post;
@@ -165,7 +174,7 @@ async function allLikesHandler(req: Request, res: Response): Promise<any> {
         }
 
         response.msg = "Fetched all users";
-        response.users = post.likes as unknown as IUser[];
+        response.users = post.applauds as unknown as IUser[];
 
         return res.status(200).json(response);
     } catch (error) {
@@ -189,7 +198,7 @@ async function likePostHandler(req: Request, res: Response): Promise<any> {
             return res.status(404).json(response);
         }
 
-        const isLiked: boolean = post?.likes.includes(id);
+        const isLiked: boolean = post?.applauds.includes(id);
 
         const updatedPost = await Post.findByIdAndUpdate(postId, isLiked ? { $pull: { likes: id } } : { $addToSet: { likes: id } }, { new: true });
 
