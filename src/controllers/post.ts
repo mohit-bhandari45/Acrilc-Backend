@@ -154,6 +154,11 @@ async function deletePostHandler(req: Request, res: Response): Promise<any> {
 }
 
 /* Like Handlers */
+
+/***
+ * @desc Get all likes in a post
+ * @route GET /api/posts/post/likes/:postId
+ */
 async function allLikesHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
 
@@ -169,7 +174,7 @@ async function allLikesHandler(req: Request, res: Response): Promise<any> {
             return res.status(404).json(response);
         }
 
-        response.msg = "Fetched all users";
+        response.msg = "Fetched all applauds users";
         response.users = post.applauds as unknown as IUser[];
 
         return res.status(200).json(response);
@@ -179,6 +184,10 @@ async function allLikesHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
+/***
+ * @desc like or dislike in a post
+ * @route POST /api/posts/post/like/:postId
+ */
 async function likePostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
     const { userId } = req.body;
@@ -207,6 +216,40 @@ async function likePostHandler(req: Request, res: Response): Promise<any> {
 }
 
 /* Comment Handler */
+
+/***
+ * @desc Get all comments in a post
+ * @route GET /api/posts/post/comments/:postId
+ */
+async function allCommentsHandler(req: Request, res: Response): Promise<any> {
+    const { postId } = req.params;
+    
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+        
+        const post = await Post.findById(postId);
+        
+        if (!post) {
+            response.msg = "Post Not found";
+            return res.status(404).json(response);
+        }
+        
+        response.msg = "Fetched all comments";
+        response.comments = post.comments;
+        
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+/***
+ * @desc Comment in a post
+ * @route POST /api/posts/post/comment/:postId
+ */
 async function commentPostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
     const { userId } = req.body;
@@ -239,4 +282,4 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-export { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getPostsHandler, getSpecificPostHandler, likePostHandler };
+export { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getPostsHandler, getSpecificPostHandler, likePostHandler, allCommentsHandler };

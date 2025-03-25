@@ -93,6 +93,7 @@ interface IResponse {
     username?: string;
     collections?: ICollection[];
     collection?: ICollection;
+    comments?: IComment[];
 }
 
 export { IUser, IPost, IComment, IReply, ICollection, IMedia, IResponse };

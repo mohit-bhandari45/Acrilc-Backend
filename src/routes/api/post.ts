@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { createPostHandler, deletePostHandler, getPostsHandler, getSpecificPostHandler } from "../../controllers/post.js";
 import upload from "../../lib/multer.js";
-import postInteractRoute from "./like.js";
+import postInteractRoute from "./postInteract.js";
 
 const router = Router();
 
