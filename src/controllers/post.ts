@@ -19,6 +19,11 @@ function mediaType(type: string): string {
     }
 }
 
+
+/***
+ * @desc Create post
+ * @route POST /api/posts
+ */
 async function createPostHandler(req: Request, res: Response): Promise<any> {
     const author = req.user?.id as unknown as Schema.Types.ObjectId;
     const { title, subtitle, story, size, links, hashTags, mentions, location, forte, collectionId } = req.body;
@@ -69,6 +74,10 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
+/***
+ * @desc Get Posts of a user
+ * @route GET /api/posts/:postId
+ */
 async function getPostsHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
 
@@ -88,6 +97,10 @@ async function getPostsHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
+/***
+ * @desc Get Single post
+ * @route POST /api/posts/post/:postId
+ */
 async function getSpecificPostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
 
@@ -114,6 +127,10 @@ async function getSpecificPostHandler(req: Request, res: Response): Promise<any>
     }
 }
 
+/***
+ * @desc Delete a post
+ * @route POST /api/posts/post/:postId
+ */
 async function deletePostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
 
@@ -145,10 +162,7 @@ async function allLikesHandler(req: Request, res: Response): Promise<any> {
             msg: "",
         };
 
-        const post = await Post.findById(postId).populate({
-            path: "likes",
-            select: "fullName email",
-        });
+        const post = await Post.findById(postId).populate("applauds");
 
         if (!post) {
             response.msg = "Post Not found";
@@ -167,7 +181,7 @@ async function allLikesHandler(req: Request, res: Response): Promise<any> {
 
 async function likePostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
-    const id = "67d15dc9f48d42769192b835" as unknown as Schema.Types.ObjectId;
+    const { userId } = req.body;
 
     try {
         let response: IResponse = {
@@ -180,9 +194,9 @@ async function likePostHandler(req: Request, res: Response): Promise<any> {
             return res.status(404).json(response);
         }
 
-        const isLiked: boolean = post?.applauds.includes(id);
+        const isLiked: boolean = post?.applauds.includes(userId);
 
-        const updatedPost = await Post.findByIdAndUpdate(postId, isLiked ? { $pull: { likes: id } } : { $addToSet: { likes: id } }, { new: true });
+        const updatedPost = await Post.findByIdAndUpdate(postId, isLiked ? { $pull: { applauds: userId } } : { $addToSet: { applauds: userId } }, { new: true });
 
         response.msg = isLiked ? "Unliked Post" : "Liked Post";
         response.post = updatedPost!;
@@ -195,7 +209,7 @@ async function likePostHandler(req: Request, res: Response): Promise<any> {
 /* Comment Handler */
 async function commentPostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
-    const id = "652f8ae19bde3f001d432bad" as unknown as Schema.Types.ObjectId;
+    const { userId } = req.body;
 
     const { text } = req.body;
 
@@ -207,7 +221,7 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
         const post = await Post.findByIdAndUpdate(
             postId,
             {
-                $push: { comments: { user: id, text: text } },
+                $push: { comments: { user: userId, text: text } },
             },
             { new: true }
         );
