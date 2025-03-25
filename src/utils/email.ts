@@ -36,7 +36,7 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
             </ul>
 
         <p><strong>Ready to dive in? Let’s get started!</strong></p>
-            <a href="${process.env.BASE_URL}/profile/edit" style="background-color: #FF6200; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Complete Your Profile Now</a>
+            <a href="${process.env.BASE_URL}/profile" style="background-color: #FF6200; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Complete Your Profile Now</a>
 
             <p>Explore our platform, upload your first piece of art, and connect with the Acrilic community. We can’t wait to see what you create!</p>
 

@@ -21,7 +21,7 @@ function mediaType(type: string): string {
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
     const author = req.user?.id as unknown as Schema.Types.ObjectId;
-    const { title, subtitle, story, size, links, hashTags, mentions, location, collectionId } = req.body;
+    const { title, subtitle, story, size, links, hashTags, mentions, location, forte, collectionId } = req.body;
 
     try {
         let response: IResponse = {
@@ -45,6 +45,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
             size,
             story,
             media,
+            forte,
             links,
             hashTags,
             mentions,
@@ -69,25 +70,6 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
 }
 
 async function getPostsHandler(req: Request, res: Response): Promise<any> {
-    const authorId = req.user?.id as unknown as Schema.Types.ObjectId;
-
-    try {
-        let response: IResponse = {
-            msg: "",
-        };
-
-        const posts = await Post.find({
-            author: authorId,
-        }).limit(10);
-
-        response.posts = posts;
-        return res.status(200).json(response);
-    } catch (error) {
-        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
-    }
-}
-
-async function getOtherPostsHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
 
     try {
@@ -115,7 +97,7 @@ async function getSpecificPostHandler(req: Request, res: Response): Promise<any>
         };
 
         const post = await Post.findById(postId).populate({
-            path: "likes",
+            path: "applauds",
             select: "fullName username email",
         });
 
@@ -243,4 +225,4 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-export { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getPostsHandler, getOtherPostsHandler, getSpecificPostHandler, likePostHandler };
+export { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getPostsHandler, getSpecificPostHandler, likePostHandler };

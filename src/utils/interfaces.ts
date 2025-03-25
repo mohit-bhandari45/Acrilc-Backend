@@ -64,6 +64,7 @@ interface IPost {
     hashTags: string[];
     mentions: Schema.Types.ObjectId[];
     media: IMedia[];
+    forte: string;
     applauds: Schema.Types.ObjectId[];
     comments: IComment[];
     poll: IPoll;

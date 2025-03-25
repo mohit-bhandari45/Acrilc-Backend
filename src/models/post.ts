@@ -61,6 +61,9 @@ const postSchema: Schema<IPost> = new Schema(
             },
         ],
         media: [mediaSchema],
+        forte: {
+            type: String,
+        },
         applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
         comments: [commentSchema],
         location: { type: String },
