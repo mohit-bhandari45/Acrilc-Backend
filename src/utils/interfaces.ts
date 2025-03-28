@@ -28,6 +28,7 @@ interface IMedia {
 }
 
 interface IReply {
+    _id?: Schema.Types.ObjectId;
     user: Schema.Types.ObjectId;
     text: string;
     createdAt?: Date;
@@ -35,6 +36,7 @@ interface IReply {
 }
 
 interface IComment {
+    _id: Schema.Types.ObjectId;
     user: Schema.Types.ObjectId;
     text: string;
     applauds?: Schema.Types.ObjectId[];
@@ -94,6 +96,7 @@ interface IResponse {
     collections?: ICollection[];
     collection?: ICollection;
     comments?: IComment[];
+    comment?: IComment;
 }
 
 export { IUser, IPost, IComment, IReply, ICollection, IMedia, IResponse };
