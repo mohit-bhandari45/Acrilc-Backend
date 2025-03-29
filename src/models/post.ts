@@ -1,25 +1,55 @@
 import { model, Schema } from "mongoose";
-import { IPost } from "../utils/interfaces.js";
+import { IComment, IMedia, IPost, IReply } from "../utils/interfaces.js";
 
-const postSchema: Schema<IPost> = new Schema(
+const replySchema: Schema<IReply> = new Schema(
     {
-        title: {
-            type: String,
-            required: true,
-        },
+        user: { type: Schema.Types.ObjectId, ref: "user", required: true },
         text: {
             type: String,
             required: true,
         },
-        media: [
-            {
-                url: { type: String, required: true },
-                type: { type: String, enum: ["image", "audio", "video", "gif"], required: true },
-                thumbnail: { type: String },
-                duration: { type: Number },
-            },
-        ],
+        applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
+    },
+    { timestamps: true }
+);
+
+const commentSchema: Schema<IComment> = new Schema(
+    {
+        user: { type: Schema.Types.ObjectId, ref: "user", required: true },
+        text: { type: String, required: true },
+        applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
+        replies: [replySchema],
+    },
+    { timestamps: true }
+);
+
+const mediaSchema: Schema<IMedia> = new Schema({
+    url: {
+        type: String,
+        required: true,
+    },
+    type: {
+        type: String,
+        enum: ["image", "video", "audio", "gif"],
+        required: true,
+    },
+});
+
+const postSchema: Schema<IPost> = new Schema(
+    {
+        author: { type: Schema.Types.ObjectId, ref: "user", required: true },
+        title: {
+            type: String,
+            required: true,
+        },
+        subtitle: {
+            type: String,
+        },
         size: {
+            type: String,
+            required: true,
+        },
+        story: {
             type: String,
             required: true,
         },
@@ -31,19 +61,12 @@ const postSchema: Schema<IPost> = new Schema(
                 ref: "user",
             },
         ],
-        author: { type: Schema.Types.ObjectId, ref: "user", required: true },
-        likes: [{ type: Schema.Types.ObjectId, ref: "user" }],
-        comments: [
-            {
-                user: { type: Schema.Types.ObjectId, ref: "user", required: true },
-                text: { type: String, required: true },
-                createdAt: { type: Date, default: Date.now },
-                updatedAt: { type: Date, default: Date.now() },
-                likes: [{ type: Schema.Types.ObjectId, ref: "user" }],
-            },
-        ],
-        shares: [{ type: Schema.Types.ObjectId, ref: "user" }],
-        saves: [{ type: Schema.Types.ObjectId, ref: "user" }],
+        media: [mediaSchema],
+        forte: {
+            type: String,
+        },
+        applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
+        comments: [commentSchema],
         location: { type: String },
     },
     { timestamps: true }

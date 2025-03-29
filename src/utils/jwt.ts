@@ -15,7 +15,7 @@ function encode(user: IUser) {
         role: user.role,
     };
 
-    const token: string = jwt.sign(payload, ENV.jwt_secret, { expiresIn: "1h" });
+    const token: string = jwt.sign(payload, ENV.jwt_secret);
     return token;
 }
 

@@ -1,24 +1,18 @@
 import { Router } from "express";
-import { allLikesHandler, commentPostHandler, createPostHandler, deletePostHandler, getOtherPostsHandler, getPostsHandler, likePostHandler } from "../../controllers/post.js";
+import { createPostHandler, deletePostHandler, getPostsHandler, getSpecificPostHandler, updatePostHandler } from "../../controllers/post.js";
 import upload from "../../lib/multer.js";
+import postInteractRoute from "./postInteract.js";
 
 const router = Router();
 
+/* Interact Routes */
+router.use("/post", postInteractRoute);
+
 /* Post Routes */
-
-router.get("/", getPostsHandler); /* Getting personal posts */
-router.get("/:userId", getOtherPostsHandler); /* Get other's posts */
 router.post("/", upload.array("media", 10), createPostHandler);
-// router.get("/:postId", getSpecificPostHandler);
-
-// router.put("/:postId", updatePostHandler); /* Update specific post */
+router.get("/user/:userId", getPostsHandler); /* Get posts */
+router.get("/:postId", getSpecificPostHandler); /* Get Specific Post */
+router.patch("/:postId", updatePostHandler); /* Update specific post */
 router.delete("/:postId", deletePostHandler); /* Delete Specific Post */
-
-/* Like Routes */
-router.get("/likes/:postId", allLikesHandler);
-router.get("/like/:postId", likePostHandler);
-
-/* Comment Routes */
-router.post("/comments/:postId", commentPostHandler);
 
 export default router;
