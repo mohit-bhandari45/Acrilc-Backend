@@ -8,6 +8,7 @@ const replySchema: Schema<IReply> = new Schema(
             type: String,
             required: true,
         },
+        applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
     },
     { timestamps: true }
 );

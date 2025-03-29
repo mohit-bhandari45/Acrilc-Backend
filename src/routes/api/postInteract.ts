@@ -1,36 +1,35 @@
 import { Router } from "express";
 import {
-    allCommentsHandler,
-    allApplaudsHandler,
-    commentPostHandler,
-    getSpecificPostHandler,
-    likePostHandler,
+    addApplaudPostCommentReplyHandler,
+    addPostCommentApplaudHandler,
     addReplyHandler,
-    addLikeHandler,
+    allApplaudsHandler,
+    allCommentsHandler,
+    applaudPostHandler,
+    commentPostHandler,
     deleteCommentHandler,
-    updateCommentHandler,
-    updateReplyHandler,
     deleteReplyHandler,
+    updateCommentHandler,
+    updateReplyHandler
 } from "../../controllers/post.js";
 
 const router = Router();
 
-router.get("/:postId", getSpecificPostHandler);
-
 /* Likes Routes */
-router.get("/likes/:postId", allApplaudsHandler);
-router.get("/like/:postId", likePostHandler);
+router.get("/:postId/applauds", allApplaudsHandler);  //(done)
+router.get("/:postId/applaud", applaudPostHandler);  //(done)
 
 /* Comment Routes */
-router.get("/comments/:postId", allCommentsHandler);
-router.post("/comment/:postId", commentPostHandler);
-router.patch("/comment/:commentId", updateCommentHandler);
-router.delete("/comment/:commentId", deleteCommentHandler);
+router.get("/:postId/comments", allCommentsHandler);  //(done)
+router.post("/:postId/comment", commentPostHandler);  //(done)
+router.patch("/:postId/comment/:commentId", updateCommentHandler); //(done)
+router.delete("/:postId/comment/:commentId", deleteCommentHandler);  //(done)
 
 /* Comment Interact Routes */
-router.post("/comment/reply/:commentId", addReplyHandler);
-router.patch("/comment/reply/:replyId", updateReplyHandler);
-router.delete("/comment/reply/:replyId", deleteReplyHandler);
-router.post("/comment/like/:commentId", addLikeHandler);
+router.get("/:postId/comment/:commentId/applaud", addPostCommentApplaudHandler); //(done)
+router.post("/:postId/comment/:commentId/reply", addReplyHandler); //(done)
+router.patch("/:postId/comment/:commentId/reply/:replyId", updateReplyHandler); //(done)
+router.delete("/:postId/comment/:commentId/reply/:replyId", deleteReplyHandler); //(done)
+router.get("/:postId/comment/:commentId/reply/:replyId/applaud", addApplaudPostCommentReplyHandler); //(done)
 
 export default router;

@@ -24,7 +24,7 @@ function mediaType(type: string): string {
  * @route POST /api/posts
  */
 async function createPostHandler(req: Request, res: Response): Promise<any> {
-    const author = req.user?.id as unknown as Schema.Types.ObjectId;
+    const author = req.user?.id;
     const { title, subtitle, story, size, links, hashTags, mentions, location, forte, collectionId } = req.body;
 
     try {
@@ -79,7 +79,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
 
 /***
  * @desc Get Posts of a user
- * @route GET /api/posts/:postId
+ * @route GET /api/posts/user/:userId
  */
 async function getPostsHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
@@ -93,7 +93,7 @@ async function getPostsHandler(req: Request, res: Response): Promise<any> {
             author: userId,
         }).limit(10);
 
-        response.msg = "Got All posts";
+        response.msg = posts.length === 0 ? "No Posts Found!" : "Got All posts";
         response.posts = posts;
         return res.status(200).json(response);
     } catch (error) {
@@ -103,7 +103,7 @@ async function getPostsHandler(req: Request, res: Response): Promise<any> {
 
 /***
  * @desc Get Single post
- * @route POST /api/posts/post/:postId
+ * @route GET /api/posts/:postId
  */
 async function getSpecificPostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
@@ -133,7 +133,7 @@ async function getSpecificPostHandler(req: Request, res: Response): Promise<any>
 
 /***
  * @desc Delete a post
- * @route POST /api/posts/post/:postId
+ * @route DELETE /api/posts/:postId
  */
 async function deletePostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
@@ -145,7 +145,7 @@ async function deletePostHandler(req: Request, res: Response): Promise<any> {
 
         const post = await Post.findByIdAndDelete(postId);
 
-        if (post === null) {
+        if (!post) {
             response.msg = "Post Not Found";
             return res.status(404).json(response);
         }
@@ -157,11 +157,11 @@ async function deletePostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-/* Like Handlers */
+/* Applaud Handlers */
 
 /***
- * @desc Get all likes in a post
- * @route GET /api/posts/post/likes/:postId
+ * @desc Get all applauds in a post
+ * @route GET /api/posts/post/:postId/applauds
  */
 async function allApplaudsHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
@@ -178,7 +178,7 @@ async function allApplaudsHandler(req: Request, res: Response): Promise<any> {
             return res.status(404).json(response);
         }
 
-        response.msg = "Fetched all applauds users";
+        response.msg = post.applauds.length === 0 ? "No Applauds Yet!" : "Fetched all users applauds";
         response.users = post.applauds as unknown as IUser[];
 
         return res.status(200).json(response);
@@ -189,12 +189,12 @@ async function allApplaudsHandler(req: Request, res: Response): Promise<any> {
 }
 
 /***
- * @desc like or dislike in a post
- * @route GET /api/posts/post/like/:postId
+ * @desc Applaud or unApplaud in a post
+ * @route GET /api/posts/post/:postId/applaud
  */
-async function likePostHandler(req: Request, res: Response): Promise<any> {
+async function applaudPostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const userId = req.user?.id;
 
     try {
         let response: IResponse = {
@@ -211,7 +211,7 @@ async function likePostHandler(req: Request, res: Response): Promise<any> {
 
         const updatedPost = await Post.findByIdAndUpdate(postId, isLiked ? { $pull: { applauds: userId } } : { $addToSet: { applauds: userId } }, { new: true });
 
-        response.msg = isLiked ? "Unliked Post" : "Liked Post";
+        response.msg = isLiked ? "UnApplauded a Post" : "Applauded a Post";
         response.post = updatedPost!;
         return res.status(200).json(response);
     } catch (error) {
@@ -223,7 +223,7 @@ async function likePostHandler(req: Request, res: Response): Promise<any> {
 
 /***
  * @desc Get all comments in a post
- * @route GET /api/posts/post/comments/:postId
+ * @route GET /api/posts/post/:postId/comments
  */
 async function allCommentsHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
@@ -233,13 +233,13 @@ async function allCommentsHandler(req: Request, res: Response): Promise<any> {
             msg: "",
         };
 
-        const post = await Post.findById(postId).populate([{ path: "comments.user" }, { path: "comments.replies.user" }, { path: "comments.applauds" }]);
+        const post = await Post.findById(postId).populate([{ path: "comments.user" }, { path: "comments.applauds" }, { path: "comments.replies.user" }]);
         if (!post) {
             response.msg = "Post Not found";
             return res.status(404).json(response);
         }
 
-        response.msg = "Fetched all comments";
+        response.msg = post.comments.length === 0 ? "No Comments Yet!" : "Fetched all comments";
         response.comments = post.comments;
 
         return res.status(200).json(response);
@@ -251,7 +251,7 @@ async function allCommentsHandler(req: Request, res: Response): Promise<any> {
 
 /***
  * @desc Comment in a post
- * @route GET /api/posts/post/comment/:postId
+ * @route POST /api/posts/post/:postId/comment
  */
 async function commentPostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params;
@@ -286,12 +286,11 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
 
 /***
  * @desc Update a comment
- * @route Patch /api/posts/post/comment/:commentId
+ * @route Patch /api/posts/post/:postId/comment/:commentId
  */
 async function updateCommentHandler(req: Request, res: Response): Promise<any> {
-    const { commentId } = req.params;
-    let { postId, text } = req.body;
-    postId = postId as unknown as Schema.Types.ObjectId;
+    const { postId, commentId } = req.params;
+    let { text } = req.body;
 
     try {
         let response: IResponse = {
@@ -304,18 +303,18 @@ async function updateCommentHandler(req: Request, res: Response): Promise<any> {
             return res.status(404).json(response);
         }
 
-        post.comments = post.comments.map((comment) => {
-            if (comment._id.toString() !== commentId) {
-                comment.text = text;
-                return comment;
-            }
+        const comment = post.comments.find((comment) => comment._id.toString() === commentId);
 
-            return comment;
-        });
+        if (!comment) {
+            response.msg = "No Comment Found";
+            return res.status(404).json(response);
+        }
+
+        comment.text = text;
         await post.save();
 
         response.msg = "Comment Updated Successfully";
-        response.comments = post.comments;
+        response.comment = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -324,12 +323,10 @@ async function updateCommentHandler(req: Request, res: Response): Promise<any> {
 
 /***
  * @desc Delete a comment
- * @route Delete /api/posts/post/comment/:commentId
+ * @route Delete /api/posts/post/:postId/comment/:commentId
  */
 async function deleteCommentHandler(req: Request, res: Response): Promise<any> {
-    const { commentId } = req.params;
-    let { postId } = req.body;
-    postId = postId as unknown as Schema.Types.ObjectId;
+    const { commentId, postId } = req.params;
 
     try {
         let response: IResponse = {
@@ -353,14 +350,57 @@ async function deleteCommentHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
+/* Comment Interaction Controllers */
+
+/***
+ * @desc Applaud in a post comment
+ * @route GET /api/posts/post/comment/like/:commentId
+ */
+async function addPostCommentApplaudHandler(req: Request, res: Response): Promise<any> {
+    const userId = req.user?.id;
+    const { commentId, postId } = req.params;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            response.msg = "Post Not found";
+            return res.status(404).json(response);
+        }
+
+        const comment = post.comments.find((comment) => comment._id.toString() === commentId);
+        if (!comment) {
+            response.msg = "Comment Not found";
+            return res.status(404).json(response);
+        }
+
+        const isApplauded: boolean = (comment.applauds ?? []).includes(userId);
+        if (isApplauded) {
+            comment.applauds = comment.applauds?.filter((applaud) => applaud.toString() !== userId);
+        } else {
+            comment.applauds?.push(userId);
+        }
+        await post.save();
+
+        response.msg = isApplauded ? "UnApplauded Post" : "Applauded Post";
+        response.comment = comment;
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
 /***
  * @desc Reply in a post comment
- * @route GET /api/posts/post/comment/reply/:commentId
+ * @route POST /api/posts/post/:postId/comment/:commentId/reply
  */
 async function addReplyHandler(req: Request, res: Response): Promise<any> {
-    const { postId, text } = req.body;
-    const { commentId } = req.params;
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const { text } = req.body;
+    const { postId, commentId } = req.params;
+    const userId = req.user?.id;
 
     try {
         let response: IResponse = {
@@ -373,13 +413,17 @@ async function addReplyHandler(req: Request, res: Response): Promise<any> {
             return res.status(404).json(response);
         }
 
-        let comment = post.comments.find((comment) => comment._id.toString() === commentId);
+        const comment = post.comments.find((comment) => comment._id.toString() === commentId);
+        if (!comment) {
+            response.msg = "Comment Not found";
+            return res.status(404).json(response);
+        }
 
-        comment?.replies?.push({
+        comment.replies = comment.replies || [];
+        comment.replies.push({
             user: userId,
             text: text,
         });
-
         await post.save();
 
         response.msg = "Replied Successfully";
@@ -395,8 +439,8 @@ async function addReplyHandler(req: Request, res: Response): Promise<any> {
  * @route Patch /api/posts/post/comment/reply/:commentId
  */
 async function updateReplyHandler(req: Request, res: Response): Promise<any> {
-    const { postId, commentId, text } = req.body;
-    const { replyId } = req.params;
+    const { text } = req.body;
+    const { postId, commentId, replyId } = req.params;
 
     try {
         let response: IResponse = {
@@ -433,16 +477,16 @@ async function updateReplyHandler(req: Request, res: Response): Promise<any> {
 
 /**
  * @desc Delete a reply
- * @route Patch /api/posts/post/comment/reply/:commentId
+ * @route Patch /api/posts/post/:postId/:commentId/comment/reply/:replyId
  */
 async function deleteReplyHandler(req: Request, res: Response): Promise<any> {
-    const { postId, commentId } = req.body;
-    const { replyId } = req.params;
+    const { postId, commentId, replyId } = req.params;
 
     try {
         let response: IResponse = {
             msg: "",
         };
+
         const post = await Post.findById(postId);
         if (!post) {
             response.msg = "No Post Found";
@@ -461,7 +505,6 @@ async function deleteReplyHandler(req: Request, res: Response): Promise<any> {
         }
 
         comment.replies = comment.replies.filter((reply) => reply._id!.toString() !== replyId);
-
         await post.save();
 
         response.msg = "Reply Deleted Successfully";
@@ -472,14 +515,13 @@ async function deleteReplyHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-/***
- * @desc Like in a post comment
- * @route GET /api/posts/post/comment/like/:commentId
+/**
+ * @desc Add Applaud in a reply
+ * @route GET /api/posts/post/:postId/comment/:commentId/reply/:replyId/applaud
  */
-async function addLikeHandler(req: Request, res: Response): Promise<any> {
+async function addApplaudPostCommentReplyHandler(req: Request, res: Response): Promise<any> {
+    const { postId, commentId, replyId } = req.params;
     const userId = req.user?.id;
-    const { postId } = req.body;
-    const { commentId } = req.params;
 
     try {
         let response: IResponse = {
@@ -488,28 +530,28 @@ async function addLikeHandler(req: Request, res: Response): Promise<any> {
 
         const post = await Post.findById(postId);
         if (!post) {
-            response.msg = "Post Not found";
+            response.msg = "No Post Found";
             return res.status(404).json(response);
         }
 
-        let allComments = post.comments;
-        let isLiked: boolean = false;
-        allComments = allComments.map((comment) => {
-            if (comment._id.toString() === commentId) {
-                isLiked = comment.applauds?.includes(userId) ?? false;
+        const comment = post.comments.find((comment) => comment._id.toString() === commentId);
+        if (!comment) {
+            response.msg = "No Comment Found";
+            return res.status(404).json(response);
+        }
 
-                if (isLiked) {
-                    comment.applauds = comment.applauds?.filter((id) => id.toString() !== userId);
-                } else {
-                    comment.applauds = [...(comment.applauds || []), userId];
-                }
-            }
-            return comment;
-        });
+        const reply = (comment.replies ?? []).find((reply) => reply._id!.toString() === replyId);
+        if (!reply) {
+            response.msg = "No Reply Found";
+            return res.status(404).json(response);
+        }
+
+        reply.applauds = reply.applauds ?? [];
+        reply.applauds.push(userId);
         await post.save();
 
-        response.msg = isLiked ? "Unliked Post" : "Liked Post";
-        response.comments = allComments;
+        response.msg = "Applauded Successfully in the Reply";
+        response.comment = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -523,12 +565,13 @@ export {
     deletePostHandler,
     getPostsHandler,
     getSpecificPostHandler,
-    likePostHandler,
+    applaudPostHandler,
     allCommentsHandler,
     addReplyHandler,
-    addLikeHandler,
+    addPostCommentApplaudHandler,
     deleteCommentHandler,
     updateCommentHandler,
     updateReplyHandler,
     deleteReplyHandler,
+    addApplaudPostCommentReplyHandler,
 };
