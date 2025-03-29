@@ -78,6 +78,39 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
 }
 
 /***
+ * @desc Update post
+ * @route PATCH /api/posts/:postId
+ */
+async function updatePostHandler(req: Request, res: Response): Promise<any> {
+    const { postId } = req.params; // Post ID from URL
+    const updates = req.body; // Data to update
+
+    try {``
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const updatedPost = await Post.findByIdAndUpdate(
+            postId,
+            { $set: updates }, // Only update specified fields
+            { new: true, runValidators: true } // Return updated post & apply schema validation
+        );
+
+        if (!updatedPost) {
+            response.msg = "Post Not Found!";
+            return res.status(404).json(response);
+        }
+
+        response.msg = "Post updated successfully!";
+        response.post = updatedPost;
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+/***
  * @desc Get Posts of a user
  * @route GET /api/posts/user/:userId
  */
@@ -559,13 +592,14 @@ async function addApplaudPostCommentReplyHandler(req: Request, res: Response): P
 }
 
 export {
-    allApplaudsHandler,
-    commentPostHandler,
     createPostHandler,
-    deletePostHandler,
+    updatePostHandler,
     getPostsHandler,
     getSpecificPostHandler,
     applaudPostHandler,
+    allApplaudsHandler,
+    commentPostHandler,
+    deletePostHandler,
     allCommentsHandler,
     addReplyHandler,
     addPostCommentApplaudHandler,

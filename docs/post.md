@@ -14,20 +14,21 @@
 1. [Post Routes](#post-routes)
 
     - [Creating a Post](#1-creating-a-post)
-    - [Get Posts of a User](#2-get-posts-of-a-user)
-    - [Get Single Post](#3-get-single-post)
-    - [Delete a Post](#4-delete-a-post)
-    - [Get All Applauds in a Post](#5-get-all-applauds-in-a-post)
-    - [Applauded or Unapplauded a Post](#6-applaud-or-unapplaud-a-post)
-    - [Get All Comments in a Post](#7-get-all-comments-in-a-post)
-    - [Comment on a Post](#8-comment-on-a-post)
-    - [Update a Comment](#9-update-a-comment)
-    - [Delete a Comment](#10-delete-a-comment)
-    - [Applaud a Post Comment](#11-applaud-a-post-comment)
-    - [Reply to a Post Comment](#12-reply-to-a-post-comment)
-    - [Update a Reply](#13-update-a-reply)
-    - [Delete a Reply](#14-delete-a-reply)
-    - [Applaud in a Reply](#15-applaud-in-a-reply)
+    - [Update a Post](#2-updating-a-post)
+    - [Get Posts of a User](#3-get-posts-of-a-user)
+    - [Get Single Post](#4-get-single-post)
+    - [Delete a Post](#5-delete-a-post)
+    - [Get All Applauds in a Post](#6-get-all-applauds-in-a-post)
+    - [Applauded or Unapplauded a Post](#7-applaud-or-unapplaud-a-post)
+    - [Get All Comments in a Post](#8-get-all-comments-in-a-post)
+    - [Comment on a Post](#9-comment-on-a-post)
+    - [Update a Comment](#10-update-a-comment)
+    - [Delete a Comment](#11-delete-a-comment)
+    - [Applaud a Post Comment](#12-applaud-a-post-comment)
+    - [Reply to a Post Comment](#13-reply-to-a-post-comment)
+    - [Update a Reply](#14-update-a-reply)
+    - [Delete a Reply](#15-delete-a-reply)
+    - [Applaud in a Reply](#16-applaud-in-a-reply)
 
 ## Post Routes
 
@@ -89,7 +90,71 @@
     }
     ```
 
-### 2. Get Posts of a User
+### 2. Updating a Post
+
+- **URL**: `/api/posts/:postId`
+- **Method**: `PATCH`
+- **Headers**:
+
+    - `Content-Type: multipart/form-data`
+    - `Authorization: Bearer <your_token>`
+
+- **Request Body**:
+
+    ```json
+    {
+        "title": "A Journey to Remember",
+        "subtitle": "Exploring new places",
+        "story": "The adventure began at sunrise...",
+        "size": "medium",
+        "links": ["https://example.com/travel-blog"],
+        "hashTags": ["#Travel", "#Adventure"],
+        "mentions": ["user123", "user456"],
+        "location": "Eiffel Tower, Paris",
+        "forte": "Photography",
+        "collectionId": "6530a3f29bde3f001d432fbc",
+        "files": []
+    }
+    ```
+
+- **Success Response** :`200`
+    ```json
+    {
+        "msg": "Post Updated Successfully",
+        "post": {
+            "_id": "6530a3f29bde3f001d432fbc",
+            "title": "A Journey to Remember",
+            "subtitle": "Exploring new places",
+            "story": "The adventure began at sunrise...",
+            "size": "medium",
+            "media": [
+                {
+                    "url": "uploads/123456789.jpg",
+                    "type": "image"
+                }
+            ],
+            "links": ["https://example.com/travel-blog"],
+            "hashTags": ["#Travel", "#Adventure"],
+            "mentions": ["user123", "user456"],
+            "location": {
+                "latitude": 48.8584,
+                "longitude": 2.2945,
+                "name": "Eiffel Tower, Paris"
+            },
+            "forte": "Photography",
+            "createdAt": "2025-03-11T10:00:00Z",
+            "updatedAt": "2025-03-11T10:00:00Z"
+        }
+    }
+    ```
+- **Error Response** `404`:
+    ```json
+    {
+        "msg": "Post Not Found"
+    }
+    ```
+
+### 3. Get Posts of a User
 
 - **URL**: `/api/posts/user/:userId`
 - **Method**: `GET`
@@ -126,7 +191,7 @@
     }
     ```
 
-### 3. Get Single Post
+### 4. Get Single Post
 
 - **URL**: `/api/posts/:postId`
 - **Method**: `GET`
@@ -160,7 +225,7 @@
     }
     ```
 
-### 4. Delete a Post
+### 5. Delete a Post
 
 - **URL**: `/api/posts/:postId`
 - **Method**: `DELETE`
@@ -183,7 +248,7 @@
     }
     ```
 
-### 5. Get All Applauds in a Post
+### 6. Get All Applauds in a Post
 
 - **URL**: `/api/posts/post/:postId/applauds`
 - **Method**: `GET`
@@ -221,7 +286,7 @@
         }
         ```
 
-### 6. Applaud or UnApplaud a Post
+### 7. Applaud or UnApplaud a Post
 
 - **URL**: `/api/posts/post/:postId/applaud`
 - **Method**: `GET`
@@ -268,7 +333,7 @@
         }
         ```
 
-### 7. Get All Comments in a Post
+### 8. Get All Comments in a Post
 
 - **URL**: `/api/posts/post/:postId/comments`
 - **Method**: `GET`
@@ -317,7 +382,7 @@
         }
         ```
 
-### 8. Comment on a Post
+### 9. Comment on a Post
 
 - **URL**: `/api/posts/post/:postId/comment`
 - **Method**: `POST`
@@ -362,7 +427,7 @@
         }
         ```
 
-### 9. Update a Comment
+### 10. Update a Comment
 
 - **URL**: `/api/posts/post/comment/:commentId`
 - **Method**: `PATCH`
@@ -409,7 +474,7 @@
         }
         ```
 
-### 10. Delete a Comment
+### 11. Delete a Comment
 
 - **URL**: `/api/posts/post/:commentId/comment/:commentId`
 - **Method**: `DELETE`
@@ -436,7 +501,7 @@
         }
         ```
 
-### 11. Applaud a Post Comment
+### 12. Applaud a Post Comment
 
 - **URL**: `/api/posts/post/:postId/comment/:commentId/applaud`
 - **Method**: `GET`
@@ -487,7 +552,7 @@
         }
         ```
 
-### 12. Reply to a Post Comment
+### 13. Reply to a Post Comment
 
 - **URL**: `/api/posts/post/:postId/comment/:commentId/reply`
 - **Method**: `POST`
@@ -538,7 +603,7 @@
         }
         ```
 
-### 13. Update a Reply
+### 14. Update a Reply
 
 - **URL**: `/api/posts/post/:postId/comment/:commentId/reply/:replyId`
 - **Method**: `PATCH`
@@ -597,7 +662,7 @@
         }
         ```
 
-### 14. Delete a Reply
+### 15. Delete a Reply
 
 - **URL**: `/api/posts/post/:postId/comment/:commentId/reply/:replyId`
 - **Method**: `DELETE`
@@ -642,7 +707,7 @@
         }
         ```
 
-### 15. Applaud in a Reply
+### 16. Applaud in a Reply
 
 - **URL**: `/api/posts/post/:postId/comment/:commentId/reply/:replyId/applaud`
 - **Method**: `GET`
