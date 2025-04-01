@@ -10,20 +10,20 @@ import {
     deleteCommentHandler,
     deleteReplyHandler,
     updateCommentHandler,
-    updateReplyHandler
+    updateReplyHandler,
 } from "../../controllers/post.js";
 
 const router = Router();
 
 /* Likes Routes */
-router.get("/:postId/applauds", allApplaudsHandler);  //(done)
-router.get("/:postId/applaud", applaudPostHandler);  //(done)
+router.get("/:postId/applauds", allApplaudsHandler); //(done)
+router.get("/:postId/applaud", applaudPostHandler); //(done)
 
 /* Comment Routes */
-router.get("/:postId/comments", allCommentsHandler);  //(done)
-router.post("/:postId/comment", commentPostHandler);  //(done)
+router.get("/:postId/comments", allCommentsHandler); //(done)
+router.post("/:postId/comment", commentPostHandler); //(done)
 router.patch("/:postId/comment/:commentId", updateCommentHandler); //(done)
-router.delete("/:postId/comment/:commentId", deleteCommentHandler);  //(done)
+router.delete("/:postId/comment/:commentId", deleteCommentHandler); //(done)
 
 /* Comment Interact Routes */
 router.get("/:postId/comment/:commentId/applaud", addPostCommentApplaudHandler); //(done)

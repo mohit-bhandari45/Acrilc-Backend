@@ -31,7 +31,7 @@ interface IReply {
     _id?: Schema.Types.ObjectId;
     user: Schema.Types.ObjectId;
     text: string;
-    applauds?: Schema.Types.ObjectId[],
+    applauds?: Schema.Types.ObjectId[];
     createdAt?: Date;
     updatedAt?: Date;
 }

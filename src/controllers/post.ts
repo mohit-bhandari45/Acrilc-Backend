@@ -85,7 +85,7 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
     const { postId } = req.params; // Post ID from URL
     const updates = req.body; // Data to update
 
-    try {``
+    try {
         let response: IResponse = {
             msg: "",
         };
@@ -116,6 +116,9 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
  */
 async function getPostsHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
 
     try {
         let response: IResponse = {
@@ -124,7 +127,7 @@ async function getPostsHandler(req: Request, res: Response): Promise<any> {
 
         const posts = await Post.find({
             author: userId,
-        }).limit(10);
+        }).skip(skip).limit(10).sort({ createdAt: -1 });
 
         response.msg = posts.length === 0 ? "No Posts Found!" : "Got All posts";
         response.posts = posts;
@@ -418,7 +421,7 @@ async function addPostCommentApplaudHandler(req: Request, res: Response): Promis
         }
         await post.save();
 
-        response.msg = isApplauded ? "UnApplauded Post" : "Applauded Post";
+        response.msg = isApplauded ? "UnApplauded Comment" : "Applauded Comment";
         response.comment = comment;
         return res.status(200).json(response);
     } catch (error) {
