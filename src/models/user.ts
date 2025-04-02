@@ -27,6 +27,10 @@ const userSchema: Schema<IUser> = new Schema(
         newEmailToken: {
             type: String,
         },
+        googleId: {
+            type: String,
+            unique: true,
+        },
         password: {
             type: String,
             required: true,
@@ -46,8 +50,8 @@ const userSchema: Schema<IUser> = new Schema(
             enum: ["public", "followers", "private"],
             default: "public",
         },
-        followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
-        following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        followers: [{ type: Schema.Types.ObjectId, ref: "user" }],
+        following: [{ type: Schema.Types.ObjectId, ref: "user" }],
         role: {
             type: String,
             enum: ["user", "admin"],

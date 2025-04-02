@@ -7,6 +7,7 @@ interface IUser extends Document {
     email: string;
     newEmail: string | null;
     newEmailToken: string | null;
+    googleId: string;
     password: string;
     profilePicture: string;
     story: string;
@@ -98,6 +99,8 @@ interface IResponse {
     collection?: ICollection;
     comments?: IComment[];
     comment?: IComment;
+    followers?: Schema.Types.ObjectId[];
+    following?: Schema.Types.ObjectId[];
 }
 
 export { IUser, IPost, IComment, IReply, ICollection, IMedia, IResponse };
