@@ -127,7 +127,10 @@ async function getPostsHandler(req: Request, res: Response): Promise<any> {
 
         const posts = await Post.find({
             author: userId,
-        }).skip(skip).limit(10).sort({ createdAt: -1 });
+        })
+            .skip(skip)
+            .limit(10)
+            .sort({ createdAt: -1 });
 
         response.msg = posts.length === 0 ? "No Posts Found!" : "Got All posts";
         response.posts = posts;
