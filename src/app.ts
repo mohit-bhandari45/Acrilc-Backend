@@ -5,6 +5,7 @@ import { connectDB } from "./db.js";
 import authRoutes from "./routes/auth/auth.js";
 import apiRoutes from "./routes/api/index.js";
 import path from "path";
+import "./config/passport-config.js";
 import { fileURLToPath } from "url";
 
 dotenv.config();

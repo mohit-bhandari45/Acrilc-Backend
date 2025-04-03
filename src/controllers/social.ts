@@ -20,7 +20,7 @@ async function followUnfollowHandler(req: Request, res: Response): Promise<any> 
         }
 
         user.followers = user.followers ?? [];
-        const isFollowed = user.followers.some(id => id.toString() === loggedUser);
+        const isFollowed = user.followers.some((id) => id.toString() === loggedUser);
 
         user.followers = isFollowed ? user.followers.filter((id) => id.toString() !== loggedUser) : [...user.followers, loggedUser as unknown as Schema.Types.ObjectId];
 
@@ -52,7 +52,7 @@ async function getAllFollowersHandler(req: Request, res: Response): Promise<any>
         response.followers = user.followers;
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
