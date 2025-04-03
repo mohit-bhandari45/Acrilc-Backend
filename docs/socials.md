@@ -23,9 +23,11 @@
 - **URL**: `/api/users/:userId/follow`
 - **Method**: `POST`
 - **Headers**:
+
     - `Authorization: Bearer <your_token>`
 
 - **Response (User Followed)**: `200`
+
     ```json
     {
         "msg": "User Followed"
@@ -33,6 +35,7 @@
     ```
 
 - **Response (User Unfollowed)**: `200`
+
     ```json
     {
         "msg": "User Unfollowed"
@@ -51,9 +54,11 @@
 - **URL**: `/api/users/:userId/followers`
 - **Method**: `GET`
 - **Headers**:
+
     - `Authorization: Bearer <your_token>`
 
 - **Success Response**: `200`
+
     ```json
     {
         "msg": "Got Followers",
@@ -79,9 +84,11 @@
 - **URL**: `/api/users/:userId/following`
 - **Method**: `GET`
 - **Headers**:
+
     - `Authorization: Bearer <your_token>`
 
 - **Success Response**: `200`
+
     ```json
     {
         "msg": "Got Following",
