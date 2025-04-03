@@ -101,6 +101,7 @@ interface IResponse {
     comment?: IComment;
     followers?: Schema.Types.ObjectId[];
     following?: Schema.Types.ObjectId[];
+    cursor?: string;
 }
 
 export { IUser, IPost, IComment, IReply, ICollection, IMedia, IResponse };
