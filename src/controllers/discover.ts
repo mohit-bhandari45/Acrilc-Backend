@@ -4,15 +4,27 @@ import { IResponse } from "./auth.js";
 import { IStats } from "../types/stats.js";
 import { setErrorDetails } from "../utils/helper.js";
 
+let trendingCache: any = null;
+let cachedTimeStamp: any = 0;
+const TLE: number = 5 * 60 * 1000;
+
 /**
  * @route GET /api/discover/trending
- * @desc Returns all the trending fortes 
+ * @desc Returns all the trending fortes
  * */
 async function getTrendingForteHandler(req: Request, res: Response): Promise<any> {
     try {
-        const posts = await Post.find();
+        const now = Date.now();
 
-        const now = new Date();
+        if (trendingCache && now - cachedTimeStamp < TLE) {
+            console.log(now - cachedTimeStamp);
+            return res.status(200).json(trendingCache);
+        }
+
+        console.log("Mohit");
+
+        const currentDate = new Date();
+        const posts = await Post.find();
         const forteStats: Record<string, IStats> = {};
 
         posts.forEach((post) => {
@@ -32,7 +44,7 @@ async function getTrendingForteHandler(req: Request, res: Response): Promise<any
             const comments = post.comments.length;
             const replies = post.comments.reduce((total, comment) => total + (comment.replies?.length || 0), 0);
 
-            const hoursSinceCreation = (now.getTime() - post.createdAt.getTime()) / 36e5;
+            const hoursSinceCreation = (currentDate.getTime() - post.createdAt.getTime()) / 36e5;
             const isRecent = hoursSinceCreation < 24;
 
             forteStats[forte].postCount += 1;
@@ -56,6 +68,8 @@ async function getTrendingForteHandler(req: Request, res: Response): Promise<any
                 ...data,
             }));
 
+        trendingCache = trendingFortes;
+        cachedTimeStamp = now;
         return res.status(200).json(trendingFortes);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
