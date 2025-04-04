@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { IComment, IMedia, IPost, IReply } from "../utils/interfaces.js";
+import { IComment, IMedia, IPost, IReply } from "../types/post.js";
 
 const replySchema: Schema<IReply> = new Schema(
     {
@@ -70,6 +70,22 @@ const postSchema: Schema<IPost> = new Schema(
         location: { type: String },
     },
     { timestamps: true }
+);
+
+postSchema.index(
+    {
+        title: "text",
+        subtitle: "text",
+        story: "text",
+    },
+    {
+        weights: {
+            title: 5,
+            subtitle: 3,
+            story: 1,
+        },
+        name: "TextSearchIndex",
+    }
 );
 
 const Post = model<IPost>("post", postSchema);

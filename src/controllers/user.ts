@@ -7,7 +7,7 @@ import axios from "axios";
 import FormData from "form-data";
 import bcrypt from "bcrypt";
 import { createTransporter } from "../utils/email.js";
-import { IResponse } from "../utils/interfaces.js";
+import { IResponse } from "../types/response.js";
 
 /* Getting Profiles */
 

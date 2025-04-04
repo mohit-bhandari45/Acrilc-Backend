@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import { Request, Response } from "express";
 import { setErrorDetails } from "../utils/helper.js";
-import { IResponse } from "./auth.js";
+import { IResponse } from "../types/response.js";
 import { Schema } from "mongoose";
 
 async function followUnfollowHandler(req: Request, res: Response): Promise<any> {

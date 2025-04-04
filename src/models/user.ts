@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { Model, Schema, model } from "mongoose";
 import { IResponse } from "../controllers/auth.js";
-import { IUser } from "../utils/interfaces.js";
+import { IUser } from "../types/user.js";
 import { encode } from "../utils/jwt.js";
 
 interface IUserModel extends Model<IUser> {
