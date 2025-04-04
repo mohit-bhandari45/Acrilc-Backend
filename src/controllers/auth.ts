@@ -3,7 +3,7 @@ import User from "../models/user.js";
 import { setErrorDetails } from "../utils/helper.js";
 import { encode } from "../utils/jwt.js";
 import sendWelcomeEmail from "../utils/email.js";
-import { IResponse } from "../utils/interfaces.js";
+import { IResponse } from "../types/response.js";
 
 async function signUpHandler(req: Request, res: Response): Promise<any> {
     const { fullName, email, password } = req.body;

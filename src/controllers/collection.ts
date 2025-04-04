@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { Schema } from "mongoose";
 import Collection from "../models/collection.js";
 import { setErrorDetails } from "../utils/helper.js";
-import { IPost, IResponse } from "../utils/interfaces.js";
+import { IPost } from "../types/post.js";
+import { IResponse } from "../types/response.js";
 
 /***
  * @desc Get All Collections

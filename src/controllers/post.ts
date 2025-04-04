@@ -3,8 +3,8 @@ import { Express } from "express";
 import { Schema } from "mongoose";
 import Post from "../models/post.js";
 import { setErrorDetails } from "../utils/helper.js";
-import { IUser } from "../utils/interfaces.js";
-import { IResponse } from "../utils/interfaces.js";
+import { IUser } from "../types/user.js";
+import { IResponse } from "../types/response.js";
 import Collection from "../models/collection.js";
 
 function mediaType(type: string): string {

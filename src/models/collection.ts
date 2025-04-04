@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { ICollection } from "../utils/interfaces.js";
+import { ICollection } from "../types/collection.js";
 
 const collectionSchema: Schema<ICollection> = new Schema(
     {

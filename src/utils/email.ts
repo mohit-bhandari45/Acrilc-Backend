@@ -1,5 +1,5 @@
 import nodemailer, { Transporter } from "nodemailer";
-import { IUser } from "./interfaces.js";
+import { IUser } from "../types/user.js";
 
 interface EmailOptions {
     to: string;
