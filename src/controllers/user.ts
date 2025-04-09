@@ -8,6 +8,7 @@ import FormData from "form-data";
 import bcrypt from "bcrypt";
 import { createTransporter } from "../utils/email.js";
 import { IResponse } from "../types/response.js";
+import UploadService from "../services/service.js";
 
 /* Getting Profiles */
 
@@ -174,7 +175,7 @@ async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
         const formData = new FormData();
         formData.append("image", fs.createReadStream(file!.path));
 
-        const response = await axios.post("https://api.imgbb.com/1/upload?key=34cb3d0fe2362f6b0dcf3fcd9e8860b6", formData);
+        const response = await UploadService.upload(formData);
         const imageUrl = response.data.data.url;
 
         fs.unlinkSync(file?.path!);
@@ -212,7 +213,7 @@ async function updateProfilePicHandler(req: Request, res: Response): Promise<any
         const formData = new FormData();
         formData.append("image", fs.createReadStream(file!.path));
 
-        const response = await axios.post("https://api.imgbb.com/1/upload?key=34cb3d0fe2362f6b0dcf3fcd9e8860b6", formData);
+        const response = await UploadService.upload(formData);
 
         const imageUrl = response.data.data.url;
 

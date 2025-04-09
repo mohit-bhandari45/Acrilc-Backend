@@ -20,6 +20,7 @@ interface IUser extends Document {
     followers: Schema.Types.ObjectId[];
     role: "user" | "admin";
     preferences: string;
+    isOnline: boolean;
 }
 
 export { IUser };

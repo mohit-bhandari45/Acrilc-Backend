@@ -12,5 +12,4 @@ function calculatePostScore(post: IPost): number {
     return applauds * 3 + comments * 2 + replies + recentPostBonus;
 }
 
-
-export { calculatePostScore }
+export { calculatePostScore };
