@@ -1,15 +1,17 @@
 import { model, Schema } from "mongoose";
-import IMessage from "../types/message.js";
+import { IConversation, IMessage } from "../types/message.js";
 
 const messageSchema: Schema<IMessage> = new Schema(
     {
         senderId: {
             type: Schema.Types.ObjectId,
             required: true,
+            ref: "user",
         },
         recipientId: {
             type: Schema.Types.ObjectId,
             required: true,
+            ref: "user",
         },
         content: {
             type: String,
@@ -23,5 +25,23 @@ const messageSchema: Schema<IMessage> = new Schema(
     { timestamps: true }
 );
 
-const Message = model("message", messageSchema);
-export default Message;
+const conversationSchema: Schema<IConversation> = new Schema(
+    {
+        participants: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "user",
+                required: true,
+            },
+        ],
+        lastMessage: {
+            type: messageSchema,
+            required: true,
+        },
+        messages: [messageSchema],
+    },
+    { timestamps: true }
+);
+
+const Conversation = model("conversation", conversationSchema);
+export default Conversation;
