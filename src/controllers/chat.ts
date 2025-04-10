@@ -36,7 +36,7 @@ async function getConversationHandler(req: Request, res: Response): Promise<any>
                     name: otherUser?.name,
                     profilePicture: otherUser?.profilePicture,
                 },
-                message: lastMessage,
+                lastMessage,
                 messages: convo.messages,
                 status: lastMessage.status,
                 unreadCount: unreadMessages.length,
@@ -45,6 +45,7 @@ async function getConversationHandler(req: Request, res: Response): Promise<any>
 
         return res.status(200).json(formatted);
     } catch (error) {
+        console.log(error)
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
