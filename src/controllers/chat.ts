@@ -12,14 +12,16 @@ async function getConversationHandler(req: Request, res: Response): Promise<any>
     try {
         const conversations = await Conversation.find({
             participants: userId,
-        }).populate({
-            path: "participants",
-            select: "_id name profilePicture",
-            match: { _id: { $ne: userId } }
-        }).sort({ updatedAt: -1 })
+        })
+            .populate({
+                path: "participants",
+                select: "_id name profilePicture",
+                match: { _id: { $ne: userId } },
+            })
+            .sort({ updatedAt: -1 });
 
         const formatted = conversations.map((convo) => {
-            const otherUser = convo.participants[0] as unknown as { _id: string, name: string, profilePicture: string };
+            const otherUser = convo.participants[0] as unknown as { _id: string; name: string; profilePicture: string };
 
             const unreadMessages = convo.messages.filter((msg) => {
                 return msg.recipientId.toString() === userId.toString() && msg.status === "delivered";
@@ -38,7 +40,7 @@ async function getConversationHandler(req: Request, res: Response): Promise<any>
                 messages: convo.messages,
                 status: lastMessage.status,
                 unreadCount: unreadMessages.length,
-            }
+            };
         });
 
         return res.status(200).json(formatted);
