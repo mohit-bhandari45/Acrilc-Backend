@@ -68,6 +68,10 @@ const postSchema: Schema<IPost> = new Schema(
         applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
         comments: [commentSchema],
         location: { type: String },
+        score: {
+            type: Number,
+            deafult: 0,
+        },
     },
     { timestamps: true }
 );
@@ -87,6 +91,19 @@ postSchema.index(
         name: "TextSearchIndex",
     }
 );
+
+postSchema.post("findOneAndUpdate", async function (doc) {
+    if (!doc) return;
+
+    const applauds = doc.applauds.length;
+    const comments = doc.comments.length;
+    const replies = doc.comments.reduce((acc: any, comment: any) => acc + (comment.replies.length || 0), 0);
+    const isRecent = (Date.now() - doc.createdAt.getTime()) / 36e4 < 24;
+
+    doc.score = applauds * 3 + comments * 2 + replies + (isRecent ? 5 : 0);
+
+    doc.save();
+});
 
 const Post = model<IPost>("post", postSchema);
 export default Post;

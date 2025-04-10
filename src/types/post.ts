@@ -42,6 +42,7 @@ interface IPost {
     applauds: Schema.Types.ObjectId[];
     comments: IComment[];
     location: Location;
+    score: number;
     createdAt: Date;
     updatedAt: Date;
 }
