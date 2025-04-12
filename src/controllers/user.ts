@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 import { createTransporter } from "../utils/email.js";
 import { IResponse } from "../types/response.js";
 import UploadService from "../services/service.js";
+import Post from "../models/post.js";
 
 /* Getting Profiles */
 
@@ -23,10 +24,16 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
         let response: IResponse = {
             msg: "",
         };
-        const user = (await User.findById(ownerId)) as IUser;
+        let user = await User.findById(ownerId).lean()
+        const posts = await Post.find({
+            author: ownerId,
+        });
 
         response.msg = "User Found";
-        response.user = user;
+        response.all = {
+            ...user as unknown as IUser,
+            posts: posts.length
+        };
 
         return res.status(200).json(response);
     } catch (error) {
@@ -198,7 +205,7 @@ async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
 }
 
 /***
- * @desc Update Personal General Details
+ * @desc Update Profile Pic
  * @route PUT api/user/profile-pic
  */
 async function updateProfilePicHandler(req: Request, res: Response): Promise<any> {

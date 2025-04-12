@@ -3,6 +3,10 @@ import { ICollection } from "./collection.js";
 import { IComment, IPost } from "./post.js";
 import { IUser } from "./user.js";
 
+interface IAll extends IUser {
+    posts: number
+}
+
 /* Response Interface */
 interface IResponse {
     msg: string;
@@ -13,6 +17,7 @@ interface IResponse {
     posts?: IPost[];
     preferences?: string;
     user?: Partial<IUser>;
+    all?: IAll;
     profilePic?: string;
     link?: string;
     username?: string;
@@ -25,4 +30,4 @@ interface IResponse {
     cursor?: string;
 }
 
-export { IResponse };
+export { IResponse, IAll };

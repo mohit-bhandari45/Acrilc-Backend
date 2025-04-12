@@ -5,7 +5,10 @@ import Post from "../models/post.js";
 import { setErrorDetails } from "../utils/helper.js";
 import { IUser } from "../types/user.js";
 import { IResponse } from "../types/response.js";
+import fs from "fs";
 import Collection from "../models/collection.js";
+import UploadService from "../services/service.js";
+import FormData from "form-data";
 
 function mediaType(type: string): string {
     if (type.startsWith("image")) {
@@ -34,13 +37,27 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
 
         const files: Express.Multer.File[] = req.files as Express.Multer.File[];
 
-        const media =
-            files?.map((file: any) => {
-                return {
-                    url: `${file.destination}/${file.filename}`,
-                    type: mediaType(file.mimetype),
-                };
-            }) || [];
+        const media = files
+            ? await Promise.all(
+                files.map(async (file: any) => {
+                    const formData = new FormData();
+                    formData.append("image", fs.createReadStream(file.path));
+
+                    const response = await UploadService.upload(formData);
+                    const imageUrl = response.data.data.url;
+
+                    fs.unlinkSync(file.path);
+
+                    console.log(imageUrl);
+
+                    return {
+                        url: imageUrl,
+                        type: mediaType(file.mimetype),
+                    };
+                })
+            )
+            : [];
+
 
         const post = await Post.create({
             author,

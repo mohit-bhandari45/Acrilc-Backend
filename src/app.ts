@@ -38,7 +38,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/auth", authRoutes);
 app.use("/api", apiRoutes);
-app.use(express.static(path.join(__dirname, "../public")));
 
 app.get("/up", (req: Request, res: Response) => {
     res.status(200).json({

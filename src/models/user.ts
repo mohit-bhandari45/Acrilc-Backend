@@ -62,6 +62,9 @@ const userSchema: Schema<IUser> = new Schema(
                 enum: ["Woolen Craft", "Poetry", "Exclusive"],
             },
         ],
+        services: [{
+            type: String,
+        }],
         isOnline: {
             type: Boolean,
             default: false,
