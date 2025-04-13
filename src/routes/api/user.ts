@@ -23,7 +23,7 @@ router.get("/:userId", getUserProfileHandler);
 /* Signup Continuation */
 router.post("/username", setUsernameHandler);
 router.post("/preferences", setPreferencesHandler);
-router.post("/profile-pic", upload.single("profilePic"), addProfilePicHandler);
+router.post("/profile-pic", addProfilePicHandler);
 
 /* General Settings */
 router.get("/", getPersonalDetailsHandler);

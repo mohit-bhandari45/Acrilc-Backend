@@ -40,18 +40,18 @@ const postSchema: Schema<IPost> = new Schema(
         author: { type: Schema.Types.ObjectId, ref: "user", required: true },
         title: {
             type: String,
-            required: true,
+            // required: true,
         },
         subtitle: {
             type: String,
         },
         size: {
             type: String,
-            required: true,
+            // required: true,
         },
         story: {
             type: String,
-            required: true,
+            // required: true,
         },
         links: [{ type: String }],
         hashTags: [{ type: String }],

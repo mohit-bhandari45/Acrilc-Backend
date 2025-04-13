@@ -10,6 +10,8 @@ import Collection from "../models/collection.js";
 import UploadService from "../services/service.js";
 import FormData from "form-data";
 import { normalizeToArray } from "../utils/post.js";
+import upload from "../lib/multer.js";
+import { MulterError } from "multer";
 
 function mediaType(type: string): string {
     if (type.startsWith("image")) {
@@ -29,6 +31,20 @@ function mediaType(type: string): string {
  */
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
+    upload.array("media", 10)(req, res, function (err) {
+        // Check for Multer specific errors
+        if (err instanceof MulterError) {
+            return res.status(400).json({ error: err.message });
+        }
+
+        // Catch any other errors
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal server error", details: err.message });
+        }
+    });
+
+    /* Controller Logic */
     const author = req.user?.id;
     const { title, subtitle, story, size, links, hashTags, mentions, location, forte, collectionId } = req.body;
 

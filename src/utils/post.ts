@@ -1,5 +1,5 @@
 const normalizeToArray = (input: any): string[] => {
-    if (!input && input === "") return [];
+    if (!input || input === undefined || input === "") return [];
 
     if (Array.isArray(input)) return input;
 

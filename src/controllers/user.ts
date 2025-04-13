@@ -10,6 +10,8 @@ import { createTransporter } from "../utils/email.js";
 import { IResponse } from "../types/response.js";
 import UploadService from "../services/service.js";
 import Post from "../models/post.js";
+import upload from "../lib/multer.js";
+import { MulterError } from "multer";
 
 /* Getting Profiles */
 
@@ -171,6 +173,20 @@ async function updatePersonalDetailsHandler(req: Request, res: Response): Promis
  * @route POST api/user/profile-pic
  */
 async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
+    upload.single("profilePic")(req, res, function (err) {
+        // Check for Multer specific errors
+        if (err instanceof MulterError) {
+            return res.status(400).json({ error: err.message });
+        }
+
+        // Catch any other errors
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal server error", details: err.message });
+        }
+    });
+
+    /* Controller Logic */
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
 
     try {
