@@ -6,11 +6,13 @@ interface IConversation {
     messages: IMessage[];
 }
 
+type Status = "sent" | "delivered" | "read";
+
 interface IMessage {
     senderId: Schema.Types.ObjectId;
     recipientId: Schema.Types.ObjectId;
     content: string;
-    status: "sent" | "delivered" | "read";
+    status: Status;
     createdAt?: Date;
     updatedAt?: Date;
 }

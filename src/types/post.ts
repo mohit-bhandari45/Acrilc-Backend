@@ -1,9 +1,11 @@
 import { Schema } from "mongoose";
 
 /* Post Interfaces */
+type MediaType = "image" | "video" | "audio" | "gif";
+
 interface IMedia {
     url: string;
-    type: "image" | "video" | "audio" | "gif";
+    type: MediaType;
     thumbnail?: string;
     duration?: number;
 }

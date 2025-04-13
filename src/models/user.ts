@@ -66,7 +66,7 @@ const userSchema: Schema<IUser> = new Schema(
         services: [
             {
                 type: String,
-                enumL: SERVICES_ENUM,
+                enum: SERVICES_ENUM,
             },
         ],
         isOnline: {
