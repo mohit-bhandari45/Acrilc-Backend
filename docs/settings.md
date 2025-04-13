@@ -44,7 +44,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "User Found",
-        "user": {
+        "data": {
             "_id": "507f1f77bcf86cd799439011",
             "username": "jane_doe",
             "fullName": "Jane Doe",
@@ -70,7 +70,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "User Found",
-        "user": {
+        "data": {
             "_id": "507f1f77bcf86cd799439011",
             "username": "john_doe",
             "fullName": "John Doe",
@@ -101,7 +101,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "Username Set",
-        "username": "example@34"
+        "data": "example@34"
     }
     ```
 
@@ -117,7 +117,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "Profile Pic Added",
-        "profilePic": "https://i.ibb.co/VYsfQqMY/2.jpg"
+        "data": "https://i.ibb.co/VYsfQqMY/2.jpg"
     }
     ```
 
@@ -137,7 +137,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "Preferences Added Successfully",
-        "preferences": ["Woolen Craft", "Pottery"]
+        "data": ["Woolen Craft", "Pottery"]
     }
     ```
 
@@ -153,7 +153,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "Preferences Added Successfully",
-        "user": {
+        "data": {
             "username": "example@34",
             "fullName": "example rawat",
             "bio": "This is example",
@@ -208,7 +208,7 @@ All endpoints require a valid JWT token unless specified otherwise. The token mu
     ```json
     {
         "msg": "Profile Pic Updated",
-        "profilePic": "https://i.ibb.co/VYsfQqMY/2.jpg"
+        "data": "https://i.ibb.co/VYsfQqMY/2.jpg"
     }
     ```
 

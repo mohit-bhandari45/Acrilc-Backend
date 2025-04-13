@@ -50,7 +50,7 @@ async function discoverHandler(req: Request, res: Response): Promise<any> {
             .sort({ score: { $meta: "textScore" }, createdAt: -1 })
             .limit(limit);
 
-        response.posts = posts;
+        response.data = posts;
         res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));

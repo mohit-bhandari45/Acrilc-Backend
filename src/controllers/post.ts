@@ -91,7 +91,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
         }
 
         response.msg = "Post Created Successfully";
-        response.post = post;
+        response.data = post;
         return res.status(200).json(response);
     } catch (error) {
         console.log(error);
@@ -124,7 +124,7 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
         }
 
         response.msg = "Post updated successfully!";
-        response.post = updatedPost;
+        response.data = updatedPost;
         return res.status(200).json(response);
     } catch (error) {
         console.log(error);
@@ -155,7 +155,7 @@ async function getPostsHandler(req: Request, res: Response): Promise<any> {
             .sort({ createdAt: -1 });
 
         response.msg = posts.length === 0 ? "No Posts Found!" : "Got All posts";
-        response.posts = posts;
+        response.data = posts;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -185,7 +185,7 @@ async function getSpecificPostHandler(req: Request, res: Response): Promise<any>
         }
 
         response.msg = "Post Found";
-        response.post = post;
+        response.data = post;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -240,7 +240,7 @@ async function allApplaudsHandler(req: Request, res: Response): Promise<any> {
         }
 
         response.msg = post.applauds.length === 0 ? "No Applauds Yet!" : "Fetched all users applauds";
-        response.users = post.applauds as unknown as IUser[];
+        response.data = post.applauds as unknown as IUser[];
 
         return res.status(200).json(response);
     } catch (error) {
@@ -273,7 +273,7 @@ async function applaudPostHandler(req: Request, res: Response): Promise<any> {
         const updatedPost = await Post.findByIdAndUpdate(postId, isLiked ? { $pull: { applauds: userId } } : { $addToSet: { applauds: userId } }, { new: true });
 
         response.msg = isLiked ? "UnApplauded a Post" : "Applauded a Post";
-        response.post = updatedPost!;
+        response.data = updatedPost!;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -301,7 +301,7 @@ async function allCommentsHandler(req: Request, res: Response): Promise<any> {
         }
 
         response.msg = post.comments.length === 0 ? "No Comments Yet!" : "Fetched all comments";
-        response.comments = post.comments;
+        response.data = post.comments;
 
         return res.status(200).json(response);
     } catch (error) {
@@ -338,7 +338,7 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
         }
 
         response.msg = "Commented Successfully";
-        response.post = post;
+        response.data = post;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -375,7 +375,7 @@ async function updateCommentHandler(req: Request, res: Response): Promise<any> {
         await post.save();
 
         response.msg = "Comment Updated Successfully";
-        response.comment = comment;
+        response.data = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -404,7 +404,7 @@ async function deleteCommentHandler(req: Request, res: Response): Promise<any> {
         await post.save();
 
         response.msg = "Comment Deleted Successfully";
-        response.comments = post.comments;
+        response.data = post.comments;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -447,7 +447,7 @@ async function addPostCommentApplaudHandler(req: Request, res: Response): Promis
         await post.save();
 
         response.msg = isApplauded ? "UnApplauded Comment" : "Applauded Comment";
-        response.comment = comment;
+        response.data = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -488,7 +488,7 @@ async function addReplyHandler(req: Request, res: Response): Promise<any> {
         await post.save();
 
         response.msg = "Replied Successfully";
-        response.comment = comment;
+        response.data = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -529,7 +529,7 @@ async function updateReplyHandler(req: Request, res: Response): Promise<any> {
         await post.save();
 
         response.msg = "Reply Updated Successfully";
-        response.comment = comment;
+        response.data = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -569,7 +569,7 @@ async function deleteReplyHandler(req: Request, res: Response): Promise<any> {
         await post.save();
 
         response.msg = "Reply Deleted Successfully";
-        response.comment = comment;
+        response.data = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -612,7 +612,7 @@ async function addApplaudPostCommentReplyHandler(req: Request, res: Response): P
         await post.save();
 
         response.msg = "Applauded Successfully in the Reply";
-        response.comment = comment;
+        response.data = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));

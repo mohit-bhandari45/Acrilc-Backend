@@ -63,7 +63,7 @@
     ```json
     {
         "msg": "Post Created Successfully",
-        "post": {
+        "data": {
             "_id": "6530a3f29bde3f001d432fbc",
             "title": "A Journey to Remember",
             "subtitle": "Exploring new places",
@@ -121,7 +121,7 @@
     ```json
     {
         "msg": "Post Updated Successfully",
-        "post": {
+        "data": {
             "_id": "6530a3f29bde3f001d432fbc",
             "title": "A Journey to Remember",
             "subtitle": "Exploring new places",
@@ -167,7 +167,7 @@
     {
         "msg": "Got All Posts" or "No Posts found!",
         // if post is there
-        "posts": [
+        "data": [
             {
                 "_id": "6530a3f29bde3f001d432fbc",
                 "title": "My Fitness Journey",
@@ -203,7 +203,7 @@
     ```json
     {
         "msg": "Post Found",
-        "post": {
+        "data": {
             "_id": "6530a3f29bde3f001d432fbc",
             "title": "A Journey to Remember",
             "subtitle": "Exploring new places",
@@ -263,7 +263,7 @@
     ```json
     {
         "msg": "No Applauds Yet!" or "Fetched all applauds users",
-        "users": [
+        "data": [
             {
                 "fullName": "John Doe",
                 "username": "john_doe",
@@ -302,7 +302,7 @@
         ```json
         {
             "msg": "Applauded Post",
-            "post": {
+            "data": {
                 "_id": "6530a3f29bde3f001d432fbc",
                 "title": "A Journey to Remember",
                 "subtitle": "Exploring new places",
@@ -315,7 +315,7 @@
         ```json
         {
             "msg": "UnApplauded Post",
-            "post": {
+            "data": {
                 "_id": "6530a3f29bde3f001d432fbc",
                 "title": "A Journey to Remember",
                 "subtitle": "Exploring new places",
@@ -349,7 +349,7 @@
     {
         "msg": "No Comments Yet!" or "Fetched all comments",
         if there are comments
-        "comments": [
+        "data": [
             {
                 "_id": "6530a3f29bde3f001d432fbd",
                 "user": {
@@ -405,7 +405,7 @@
     ```json
     {
         "msg": "Commented Successfully",
-        "post": {
+        "data": {
             "_id": "6530a3f29bde3f001d432fbc",
             "title": "A Journey to Remember",
             "comments": [
@@ -450,7 +450,7 @@
     ```json
     {
         "msg": "Comment Updated Successfully",
-        "comment": {
+        "data": {
             "_id": "6530a3f29bde3f001d432fbd",
             "user": "user123",
             "text": "Updated comment text",
@@ -517,7 +517,7 @@
         ```json
         {
             "msg": "Applauded Post",
-            "comment": {
+            "data": {
                 "_id": "6530a3f29bde3f001d432fbd",
                 "user": "user123",
                 "text": "Great post!",
@@ -529,7 +529,7 @@
         ```json
         {
             "msg": "UnApplauded Post",
-            "comment": {
+            "data": {
                 "_id": "6530a3f29bde3f001d432fbd",
                 "user": "user123",
                 "text": "Great post!",
@@ -575,7 +575,7 @@
     ```json
     {
         "msg": "Replied Successfully",
-        "comment": {
+        "data": {
             "_id": "6530a3f29bde3f001d432fbd",
             "user": "user123",
             "text": "Great post!",
@@ -626,7 +626,7 @@
     ```json
     {
         "msg": "Reply Updated Successfully",
-        "comment": {
+        "data": {
             "_id": "6530a3f29bde3f001d432fbd",
             "user": "user123",
             "text": "Great post!",
@@ -677,7 +677,7 @@
     ```json
     {
         "msg": "Reply Deleted Successfully",
-        "comment": {
+        "data": {
             "_id": "6530a3f29bde3f001d432fbd",
             "user": "user123",
             "text": "Great post!",
@@ -722,7 +722,7 @@
     ```json
     {
         "msg": "Applauded Successfully in the Reply",
-        "comment": {
+        "data": {
             "_id": "6530a3f29bde3f001d432fbd",
             "user": "user123",
             "text": "Great post!",

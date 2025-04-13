@@ -49,7 +49,7 @@ async function getAllFollowersHandler(req: Request, res: Response): Promise<any>
         user.followers = user.followers ?? [];
 
         response.msg = "Got Followers";
-        response.followers = user.followers;
+        response.data = user.followers;
         return res.status(200).json(response);
     } catch (error) {
         console.log(error);
@@ -74,7 +74,7 @@ async function getAllFollowingHandler(req: Request, res: Response): Promise<any>
         user.following = user.following ?? [];
 
         response.msg = "Got Following";
-        response.following = user.following;
+        response.data = user.following;
         return res.status(200).json(response);
     } catch (error) {
         console.log(error);

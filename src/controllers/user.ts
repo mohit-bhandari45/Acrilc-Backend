@@ -30,7 +30,7 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
         });
 
         response.msg = "User Found";
-        response.all = {
+        response.data = {
             ...(user as unknown as IUser),
             posts: posts.length,
         };
@@ -55,7 +55,7 @@ async function getUserProfileHandler(req: Request, res: Response): Promise<any> 
         const user = (await User.findById(userId)) as IUser;
 
         response.msg = "User Found";
-        response.user = user;
+        response.data = user;
 
         return res.status(200).json(response);
     } catch (error) {
@@ -91,7 +91,7 @@ async function getPersonalDetailsHandler(req: Request, res: Response): Promise<a
         };
 
         response.msg = "User Found";
-        response.user = updatedUserDetails;
+        response.data = updatedUserDetails;
 
         return res.status(200).json(response);
     } catch (error) {
@@ -123,7 +123,7 @@ async function setUsernameHandler(req: Request, res: Response): Promise<any> {
         );
 
         response.msg = "Username Set";
-        response.username = username;
+        response.data = username;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -196,7 +196,7 @@ async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
         );
 
         r.msg = "Profile Pic Added";
-        r.profilePic = imageUrl;
+        r.data = imageUrl;
         return res.status(200).json(r);
     } catch (error) {
         console.log(error);
@@ -235,7 +235,7 @@ async function updateProfilePicHandler(req: Request, res: Response): Promise<any
         );
 
         r.msg = "Profile Pic Updated";
-        r.profilePic = imageUrl;
+        r.data = imageUrl;
         return res.status(200).json(r);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -288,7 +288,7 @@ async function setPreferencesHandler(req: Request, res: Response): Promise<any> 
         );
 
         response.msg = "Preferences Added Successfully";
-        response.preferences = user?.preferences;
+        response.data = user?.preferences;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));

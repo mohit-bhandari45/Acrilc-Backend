@@ -7,27 +7,14 @@ interface IAll extends IUser {
     posts: number;
 }
 
+type ResponseData = string | IPost | IPost[] | IUser | IUser[] | ICollection | ICollection[] | IComment | IComment[] | Schema.Types.ObjectId[] | Partial<IUser> | IAll | null;
+
 /* Response Interface */
 interface IResponse {
     msg: string;
+    data?: ResponseData;
     token?: string | null;
     err?: string;
-    post?: IPost;
-    users?: IUser[];
-    posts?: IPost[];
-    preferences?: string;
-    user?: Partial<IUser>;
-    all?: IAll;
-    profilePic?: string;
-    link?: string;
-    username?: string;
-    collections?: ICollection[];
-    collection?: ICollection;
-    comments?: IComment[];
-    comment?: IComment;
-    followers?: Schema.Types.ObjectId[];
-    following?: Schema.Types.ObjectId[];
-    cursor?: string;
 }
 
 export { IResponse, IAll };

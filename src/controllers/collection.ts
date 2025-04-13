@@ -24,7 +24,7 @@ async function getCollectionHandler(req: Request, res: Response): Promise<any> {
         }
 
         response.msg = "Collections Found";
-        response.collections = collections;
+        response.data = collections;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -52,7 +52,7 @@ async function addCollectionHandler(req: Request, res: Response): Promise<any> {
         });
 
         response.msg = "Collection Created";
-        response.collection = collection;
+        response.data = collection;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -122,7 +122,7 @@ async function getCollectionPostsHandler(req: Request, res: Response): Promise<a
         const collection = await Collection.findById(collectionId).populate("posts");
 
         response.msg = "All Posts";
-        response.posts = collection?.posts as unknown as IPost[];
+        response.data = collection?.posts as unknown as IPost[];
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));

@@ -32,7 +32,7 @@
     ```json
     {
         "msg": "Collections Found",
-        "collections": [
+        "data": [
             {
                 "_id": "613b32a1f3f99b001a2b4c21",
                 "title": "My Favorite Videos",
@@ -61,7 +61,7 @@
     ```json
     {
         "msg": "Collection Created",
-        "collection": {
+        "data": {
             "_id": "613b32a1f3f99b001a2b4c21",
             "title": "My New Collection",
             "userId": "613b32a1f3f99b001a2b4c20",
@@ -111,7 +111,7 @@
     ```json
     {
         "msg": "All Posts",
-        "posts": [
+        "data": [
             {
                 "_id": "613b32a1f3f99b001a2b4c25",
                 "title": "Sample Post",

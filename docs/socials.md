@@ -62,7 +62,7 @@
     ```json
     {
         "msg": "Got Followers",
-        "followers": [
+        "data": [
             {
                 "_id": "6530a3f29bde3f001d432fbc",
                 "username": "john_doe",
@@ -92,7 +92,7 @@
     ```json
     {
         "msg": "Got Following",
-        "following": [
+        "data": [
             {
                 "_id": "6530a3f29bde3f001d432fbd",
                 "username": "jane_doe",
