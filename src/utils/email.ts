@@ -24,9 +24,9 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
     const emailContent = `
         <div style="font-family: Arial, sans-serif; color: #333;">
             <h2>Hi ${user.fullName},</h2>
-            <p>Welcome to <strong>Acrilic</strong>! We’re thrilled to have you join our vibrant community of artists, creators, and art lovers. Whether you’re an aspiring artist, a seasoned professional, or an art enthusiast, Acrilic is here to help you showcase your talent, connect with like-minded creators, and grow your artistic journey.</p>
+            <p>Welcome to <strong>Acrilc</strong>! We’re thrilled to have you join our vibrant community of artists, creators, and art lovers. Whether you’re an aspiring artist, a seasoned professional, or an art enthusiast, Acrilc is here to help you showcase your talent, connect with like-minded creators, and grow your artistic journey.</p>
 
-            <h3>Acrilic is more than just a platform—it’s a thriving ecosystem designed to empower artists like you. Here’s what you can do to get started:</h3>
+            <h3>Acrilc is more than just a platform—it’s a thriving ecosystem designed to empower artists like you. Here’s what you can do to get started:</h3>
             <ul>
                 <li><strong>Create Your Artist Profile:</strong> Add your bio, profile picture, and social links to let the world know who you are.</li>
                 <li><strong>Showcase Your Art:</strong> Upload your artwork to your gallery, organize it into collections, and share it with our community.</li>
@@ -38,26 +38,26 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
         <p><strong>Ready to dive in? Let’s get started!</strong></p>
             <a href="${process.env.BASE_URL}/profile" style="background-color: #FF6200; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Complete Your Profile Now</a>
 
-            <p>Explore our platform, upload your first piece of art, and connect with the Acrilic community. We can’t wait to see what you create!</p>
+            <p>Explore our platform, upload your first piece of art, and connect with the Acrilc community. We can’t wait to see what you create!</p>
 
             <h4>Stay Updated:</h4>
             <p>Keep an eye on your inbox for updates on art challenges, events, and exclusive opportunities.</p>
             <h4>Need Help?</h4>
-            <p>Check out our <a href="${process.env.BASE_URL}/help">Help Center</a> or reach out to our support team at <a href="mailto:support@acrilic.com">support@acrilic.com</a>.</p>
+            <p>Check out our <a href="${process.env.BASE_URL}/help">Help Center</a> or reach out to our support team at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
 
-            <p>We’re so excited to see your creativity come to life on Acrilic. Let’s build something amazing together!</p>
-            <p><strong>Happy Creating,</strong><br>The Acrilic Team</p>
-            <p><a href="${process.env.BASE_URL}">Website</a> | <a href="https://instagram.com/acrilic">Instagram</a> | <a href="https://twitter.com/acrilic">Twitter</a></p>
+            <p>We’re so excited to see your creativity come to life on Acrilc. Let’s build something amazing together!</p>
+            <p><strong>Happy Creating,</strong><br>The Acrilc Team</p>
+            <p><a href="${process.env.BASE_URL}">Website</a> | <a href="https://instagram.com/Acrilc">Instagram</a> | <a href="https://twitter.com/Acrilc">Twitter</a></p>
 
             <hr>
-            <p style="font-size: 12px; color: #777;">© 2025 Acrilic. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
+            <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
         </div>
     `;
 
     // Email options
     const mailOptions: EmailOptions = {
         to: user.email,
-        subject: "🎨 Welcome to Acrilic – Unleash Your Creativity!",
+        subject: "🎨 Welcome to Acrilc – Unleash Your Creativity!",
         html: emailContent,
     };
 

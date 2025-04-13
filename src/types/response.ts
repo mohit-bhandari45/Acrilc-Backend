@@ -4,7 +4,7 @@ import { IComment, IPost } from "./post.js";
 import { IUser } from "./user.js";
 
 interface IAll extends IUser {
-    posts: number
+    posts: number;
 }
 
 /* Response Interface */

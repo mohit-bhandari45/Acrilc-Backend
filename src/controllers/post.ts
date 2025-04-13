@@ -9,6 +9,7 @@ import fs from "fs";
 import Collection from "../models/collection.js";
 import UploadService from "../services/service.js";
 import FormData from "form-data";
+import { normalizeToArray } from "../utils/post.js";
 
 function mediaType(type: string): string {
     if (type.startsWith("image")) {
@@ -26,9 +27,14 @@ function mediaType(type: string): string {
  * @desc Create post
  * @route POST /api/posts
  */
+
 async function createPostHandler(req: Request, res: Response): Promise<any> {
     const author = req.user?.id;
     const { title, subtitle, story, size, links, hashTags, mentions, location, forte, collectionId } = req.body;
+
+    const normalizedMentions = normalizeToArray(mentions);
+    const normalizedLinks = normalizeToArray(links);
+    const normalizedHashTags = normalizeToArray(hashTags);
 
     try {
         let response: IResponse = {
@@ -39,25 +45,24 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
 
         const media = files
             ? await Promise.all(
-                files.map(async (file: any) => {
-                    const formData = new FormData();
-                    formData.append("image", fs.createReadStream(file.path));
+                  files.map(async (file: any) => {
+                      const formData = new FormData();
+                      formData.append("image", fs.createReadStream(file.path));
 
-                    const response = await UploadService.upload(formData);
-                    const imageUrl = response.data.data.url;
+                      const response = await UploadService.upload(formData);
+                      const imageUrl = response.data.data.url;
 
-                    fs.unlinkSync(file.path);
+                      fs.unlinkSync(file.path);
 
-                    console.log(imageUrl);
+                      console.log(imageUrl);
 
-                    return {
-                        url: imageUrl,
-                        type: mediaType(file.mimetype),
-                    };
-                })
-            )
+                      return {
+                          url: imageUrl,
+                          type: mediaType(file.mimetype),
+                      };
+                  })
+              )
             : [];
-
 
         const post = await Post.create({
             author,
@@ -67,9 +72,9 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
             story,
             media,
             forte,
-            links,
-            hashTags,
-            mentions,
+            links: normalizedLinks,
+            hashTags: normalizedHashTags,
+            mentions: normalizedMentions,
             location: location,
         });
 

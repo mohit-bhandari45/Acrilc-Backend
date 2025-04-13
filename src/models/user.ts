@@ -3,6 +3,7 @@ import { Model, Schema, model } from "mongoose";
 import { IResponse } from "../controllers/auth.js";
 import { IUser } from "../types/user.js";
 import { encode } from "../utils/jwt.js";
+import { PREFERENCE_ENUM, SERVICES_ENUM } from "../types/enums.js";
 
 interface IUserModel extends Model<IUser> {
     matchPasswordAndGenerateToken(email: string, password: string, response: IResponse): Promise<boolean>;
@@ -59,12 +60,15 @@ const userSchema: Schema<IUser> = new Schema(
         preferences: [
             {
                 type: String,
-                enum: ["Woolen Craft", "Poetry", "Exclusive"],
+                enum: PREFERENCE_ENUM,
             },
         ],
-        services: [{
-            type: String,
-        }],
+        services: [
+            {
+                type: String,
+                enumL: SERVICES_ENUM,
+            },
+        ],
         isOnline: {
             type: Boolean,
             default: false,

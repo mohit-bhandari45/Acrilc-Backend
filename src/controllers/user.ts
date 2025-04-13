@@ -24,15 +24,15 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
         let response: IResponse = {
             msg: "",
         };
-        let user = await User.findById(ownerId).lean()
+        let user = await User.findById(ownerId).lean();
         const posts = await Post.find({
             author: ownerId,
         });
 
         response.msg = "User Found";
         response.all = {
-            ...user as unknown as IUser,
-            posts: posts.length
+            ...(user as unknown as IUser),
+            posts: posts.length,
         };
 
         return res.status(200).json(response);
