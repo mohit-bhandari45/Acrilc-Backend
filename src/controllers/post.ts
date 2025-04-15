@@ -56,21 +56,21 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
 
         const media = files
             ? await Promise.all(
-                files.map(async (file) => {
-                    const formData = new FormData();
-                    formData.append("image", fs.createReadStream(file.path));
+                  files.map(async (file) => {
+                      const formData = new FormData();
+                      formData.append("image", fs.createReadStream(file.path));
 
-                    const response = await UploadService.upload(formData);
-                    const imageUrl = response.data.data.url;
+                      const response = await UploadService.upload(formData);
+                      const imageUrl = response.data.data.url;
 
-                    fs.unlinkSync(file.path);
+                      fs.unlinkSync(file.path);
 
-                    return {
-                        url: imageUrl,
-                        type: mediaType(file.mimetype),
-                    };
-                })
-            )
+                      return {
+                          url: imageUrl,
+                          type: mediaType(file.mimetype),
+                      };
+                  })
+              )
             : [];
 
         const post = await Post.create({
@@ -88,18 +88,15 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
         });
 
         if (collectionId) {
-            await Collection.findByIdAndUpdate(
-                collectionId,
-                { $push: { posts: post.id } },
-                { new: true }
-            );
+            await Collection.findByIdAndUpdate(collectionId, { $push: { posts: post.id } }, { new: true });
         }
 
         return res.status(200).json({ msg: "Post Created Successfully", data: post });
     } catch (err: any) {
         const status = err.status || 500;
         const message = err.error || "Internal Server Error";
-        return res.status(status).json({ error: message });
+        console.log(err);
+        return res.status(status).json({ error: err });
     }
 }
 

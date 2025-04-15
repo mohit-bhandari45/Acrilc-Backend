@@ -13,7 +13,7 @@ This server handles real-time messaging using **Socket.IO**, managing user prese
 
 ```js
 socket.on("connect", () => {
-  // Connection established
+    // Connection established
 });
 ```
 
@@ -29,12 +29,13 @@ Send a message to another user.
 
 ```ts
 {
-  message: string;
-  to: string; // recipient userId
+    message: string;
+    to: string; // recipient userId
 }
 ```
 
 **Behavior:**
+
 - If recipient is online, message is delivered instantly.
 - Otherwise, message is marked as "sent" and delivered when the recipient connects.
 
@@ -48,7 +49,7 @@ Indicates that a user is typing.
 
 ```ts
 {
-  to: string; // recipient userId
+    to: string; // recipient userId
 }
 ```
 
@@ -62,7 +63,7 @@ Indicates that a user has stopped typing.
 
 ```ts
 {
-  to: string; // recipient userId
+    to: string; // recipient userId
 }
 ```
 
@@ -76,8 +77,8 @@ Marks messages from a conversation as "read".
 
 ```ts
 {
-  conversationId: string;
-  fromUserId: string; // sender userId
+    conversationId: string;
+    fromUserId: string; // sender userId
 }
 ```
 
@@ -90,7 +91,7 @@ Marks messages from a conversation as "read".
 Sent immediately after connection.
 
 ```ts
-"Hi Welcome to the chats"
+"Hi Welcome to the chats";
 ```
 
 ---
@@ -103,8 +104,8 @@ Sent when a message is received (real-time or pending).
 
 ```ts
 {
-  message: string;
-  from: string; // sender userId
+    message: string;
+    from: string; // sender userId
 }
 ```
 
@@ -118,7 +119,7 @@ Notifies that another user is typing.
 
 ```ts
 {
-  from: string; // sender userId
+    from: string; // sender userId
 }
 ```
 
@@ -132,7 +133,7 @@ Notifies that the user stopped typing.
 
 ```ts
 {
-  from: string; // sender userId
+    from: string; // sender userId
 }
 ```
 
@@ -143,6 +144,7 @@ Notifies that the user stopped typing.
 **Event:** `disconnect`  
 **Description:** Triggered when the user disconnects from the socket.  
 **Behavior:**
+
 - The server updates the user’s status to `isOnline: false`.
 
 ---
@@ -159,9 +161,9 @@ Notifies that the user stopped typing.
 
 ```js
 const socket = io("http://localhost:PORT", {
-  auth: {
-    token: "yourJWTtokenHere"
-  }
+    auth: {
+        token: "yourJWTtokenHere",
+    },
 });
 
 socket.on("welcome", (msg) => console.log(msg));
@@ -169,6 +171,6 @@ socket.on("welcome", (msg) => console.log(msg));
 socket.emit("send-message", { message: "Hey there!", to: "USER_ID" });
 
 socket.on("receive-message", ({ message, from }) => {
-  console.log("Received:", message, "from:", from);
+    console.log("Received:", message, "from:", from);
 });
 ```
