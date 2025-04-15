@@ -31,53 +31,46 @@ function mediaType(type: string): string {
  */
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
-    upload.array("media", 10)(req, res, function (err) {
-        // Check for Multer specific errors
-        if (err instanceof MulterError) {
-            return res.status(400).json({ error: err.message });
-        }
-
-        // Catch any other errors
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Internal server error", details: err.message });
-        }
-    });
-
-    /* Controller Logic */
-    const author = req.user?.id;
-    const { title, subtitle, story, size, links, hashTags, mentions, location, forte, collectionId } = req.body;
-
-    const normalizedMentions = normalizeToArray(mentions);
-    const normalizedLinks = normalizeToArray(links);
-    const normalizedHashTags = normalizeToArray(hashTags);
-
     try {
-        let response: IResponse = {
-            msg: "",
-        };
+        // Wrap multer in a promise so we can await it
+        await new Promise<void>((resolve, reject) => {
+            upload.array("media", 10)(req, res, (err: any) => {
+                if (err instanceof MulterError) {
+                    return reject({ status: 400, error: err.message });
+                } else if (err) {
+                    return reject({ status: 500, error: err.message });
+                }
+                resolve();
+            });
+        });
+
+        // Now multer has parsed the request, so you can safely access req.body and req.files
+        const author = req.user?.id;
+        const { title, subtitle, story, size, links, hashTags, mentions, location, forte, collectionId } = req.body;
+
+        const normalizedMentions = normalizeToArray(mentions);
+        const normalizedLinks = normalizeToArray(links);
+        const normalizedHashTags = normalizeToArray(hashTags);
 
         const files: Express.Multer.File[] = req.files as Express.Multer.File[];
 
         const media = files
             ? await Promise.all(
-                  files.map(async (file: any) => {
-                      const formData = new FormData();
-                      formData.append("image", fs.createReadStream(file.path));
+                files.map(async (file) => {
+                    const formData = new FormData();
+                    formData.append("image", fs.createReadStream(file.path));
 
-                      const response = await UploadService.upload(formData);
-                      const imageUrl = response.data.data.url;
+                    const response = await UploadService.upload(formData);
+                    const imageUrl = response.data.data.url;
 
-                      fs.unlinkSync(file.path);
+                    fs.unlinkSync(file.path);
 
-                      console.log(imageUrl);
-
-                      return {
-                          url: imageUrl,
-                          type: mediaType(file.mimetype),
-                      };
-                  })
-              )
+                    return {
+                        url: imageUrl,
+                        type: mediaType(file.mimetype),
+                    };
+                })
+            )
             : [];
 
         const post = await Post.create({
@@ -91,27 +84,22 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
             links: normalizedLinks,
             hashTags: normalizedHashTags,
             mentions: normalizedMentions,
-            location: location,
+            location,
         });
 
         if (collectionId) {
             await Collection.findByIdAndUpdate(
                 collectionId,
-                {
-                    $push: {
-                        posts: post.id,
-                    },
-                },
+                { $push: { posts: post.id } },
                 { new: true }
             );
         }
 
-        response.msg = "Post Created Successfully";
-        response.data = post;
-        return res.status(200).json(response);
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+        return res.status(200).json({ msg: "Post Created Successfully", data: post });
+    } catch (err: any) {
+        const status = err.status || 500;
+        const message = err.error || "Internal Server Error";
+        return res.status(status).json({ error: message });
     }
 }
 
