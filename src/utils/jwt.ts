@@ -21,9 +21,14 @@ function encode(user: IUser) {
     return token;
 }
 
-function decode(token: string) {
-    const user = jwt.verify(token, ENV.jwt_secret) as jwt.JwtPayload;
-    return user;
+function decode(token: string){
+    try {
+        const user = jwt.verify(token, ENV.jwt_secret) as jwt.JwtPayload;
+        return user;
+    } catch (e) {
+        console.error(e, {token});
+        return false;
+    }
 }
 
 export { encode, decode };
