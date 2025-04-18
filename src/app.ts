@@ -10,6 +10,7 @@ import generalRoutes from "./routes/general/general.js";
 import dotenv from "dotenv";
 import { connectDB } from "./db.js";
 import { socketAuthMiddleware } from "./middlewares/socket.js";
+import morgan from "morgan";
 dotenv.config();
 connectDB();
 
@@ -24,6 +25,9 @@ const io = new Server(server, {
         credentials: true,
     },
 });
+
+// request logger
+app.use(morgan("dev"));
 
 io.use(socketAuthMiddleware); //socket middleware
 io.on("connection", socketHandler(io));
