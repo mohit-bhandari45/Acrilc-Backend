@@ -3,7 +3,7 @@ import { Model, Schema, model } from "mongoose";
 import { IResponse } from "../controllers/auth.js";
 import { IUser } from "../types/user.js";
 import { encode } from "../utils/jwt.js";
-import { PREFERENCE_ENUM, SERVICES_ENUM } from "../types/enums.js";
+import { PREFERENCE_ENUM, SERVICES_ENUM } from "../utils/enums.js";
 
 interface IUserModel extends Model<IUser> {
     matchPasswordAndGenerateToken(email: string, password: string, response: IResponse): Promise<boolean>;

@@ -1,14 +1,11 @@
 import cors from "cors";
 import express, { Express, Request, Response } from "express";
 import http from "http";
-import path from "path";
 import { Server } from "socket.io";
-import { fileURLToPath } from "url";
 import apiRoutes from "./routes/api/index.js";
 import authRoutes from "./routes/auth/auth.js";
 import socketHandler from "./socket.js";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import generalRoutes from "./routes/general/general.js";
 
 import dotenv from "dotenv";
 import { connectDB } from "./db.js";
@@ -38,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/auth", authRoutes);
 app.use("/api", apiRoutes);
+app.use("/general", generalRoutes);
 
 app.get("/up", (req: Request, res: Response) => {
     res.status(200).json({
