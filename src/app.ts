@@ -13,6 +13,7 @@ const __dirname = path.dirname(__filename);
 import dotenv from "dotenv";
 import { connectDB } from "./db.js";
 import { socketAuthMiddleware } from "./middlewares/socket.js";
+import morgan from "morgan";
 dotenv.config();
 connectDB();
 
@@ -27,6 +28,9 @@ const io = new Server(server, {
         credentials: true,
     },
 });
+
+// request logger
+app.use(morgan("dev"));
 
 io.use(socketAuthMiddleware); //socket middleware
 io.on("connection", socketHandler(io));
