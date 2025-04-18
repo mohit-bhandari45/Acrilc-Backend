@@ -93,6 +93,17 @@ async function seedUsers() {
     }
 }
 
+const images = [
+    "https://i.ibb.co/DDR018pj/unsplash-00-Sz-LJ6y-QOk.png",
+    "https://i.ibb.co/MymDhhMc/unsplash-s-Sv-Yv-QIqu-N8.png",
+    "https://i.ibb.co/p6r9CNRL/unsplash-BLvyqm-Em0-PA.png",
+    "https://i.ibb.co/LB7vLpc/Group-1000006017.png",
+    "https://i.ibb.co/r2j9yFdP/Group-1000006019.png",
+    "https://i.ibb.co/9H4FHk1F/Group-1000006018.png",
+    "https://i.ibb.co/BVPCFLkF/Group-1000006022.png",
+    "https://i.ibb.co/WW3W0qJ8/Group-1000006021.png"
+]
+
 async function seedPosts(users: any) {
     if (!users || users.length === 0) {
         console.log("No Users");
@@ -169,7 +180,7 @@ async function seedPosts(users: any) {
             story: `This post explores the topic of ${title} and its impact on modern society...`,
             links: [`https://example.com/${title.replace(/\s+/g, "-").toLowerCase()}`],
             hashTags: [`#${forteTags[index]}`, "#Trending"],
-            media: [{ url: `https://example.com/image${index + 1}.jpg`, type: "image" }],
+            media: [{ url: images[Math.floor(Math.random() * images.length)], type: "image" }, { url: images[Math.floor(Math.random() * images.length)], type: "image" }],
             forte: getRandomForte(),
             location: locations[Math.floor(Math.random() * locations.length)],
             applauds: getRandomUsers(3),
