@@ -4,6 +4,7 @@ import User from "./models/user.js";
 import Post from "./models/post.js";
 dotenv.config();
 import bcrypt from "bcrypt";
+import redis from "./redis.js";
 
 async function connectDB() {
     mongoose
@@ -78,6 +79,7 @@ async function seedUsers() {
 
     try {
         await User.deleteMany();
+        await redis.flushAll();
         const usersWithHashedPasswords = await Promise.all(
             userData.map(async (user) => ({
                 ...user,
@@ -101,8 +103,8 @@ const images = [
     "https://i.ibb.co/r2j9yFdP/Group-1000006019.png",
     "https://i.ibb.co/9H4FHk1F/Group-1000006018.png",
     "https://i.ibb.co/BVPCFLkF/Group-1000006022.png",
-    "https://i.ibb.co/WW3W0qJ8/Group-1000006021.png"
-]
+    "https://i.ibb.co/WW3W0qJ8/Group-1000006021.png",
+];
 
 async function seedPosts(users: any) {
     if (!users || users.length === 0) {
@@ -180,7 +182,10 @@ async function seedPosts(users: any) {
             story: `This post explores the topic of ${title} and its impact on modern society...`,
             links: [`https://example.com/${title.replace(/\s+/g, "-").toLowerCase()}`],
             hashTags: [`#${forteTags[index]}`, "#Trending"],
-            media: [{ url: images[Math.floor(Math.random() * images.length)], type: "image" }, { url: images[Math.floor(Math.random() * images.length)], type: "image" }],
+            media: [
+                { url: images[Math.floor(Math.random() * images.length)], type: "image" },
+                { url: images[Math.floor(Math.random() * images.length)], type: "image" },
+            ],
             forte: getRandomForte(),
             location: locations[Math.floor(Math.random() * locations.length)],
             applauds: getRandomUsers(3),

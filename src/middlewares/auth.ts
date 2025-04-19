@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import UserService, { IUser } from "../services/userService.js";
+import { getCachedUser, setCachedUser } from "../utils/cache.js";
 import { decode } from "../utils/jwt.js";
-import { IUser } from "../types/express.js";
 
 async function authCheckMiddleware(req: Request, res: Response, next: NextFunction): Promise<any> {
     const authHeader: string = req.headers.authorization!;
@@ -14,15 +15,28 @@ async function authCheckMiddleware(req: Request, res: Response, next: NextFuncti
     const token: string = authHeader.split("Bearer ")[1];
 
     try {
-        const user = decode(token);
+        const decoded = decode(token);
 
-        if (!user) {
+        if (!decoded) {
             return res.status(401).json({
                 msg: "Unauthorized Access - Invalid Token",
             });
         }
 
-        req.user = user as IUser;
+        let cachedUser = await getCachedUser<IUser>(decoded.id);
+        console.log("Redis User", cachedUser);
+
+        if (!cachedUser) {
+            cachedUser = await UserService.getUserById(decoded.id);
+
+            if (!cachedUser) {
+                return res.status(401).json({ message: "User not found. Token may be stale or invalid." });
+            }
+
+            await setCachedUser(decoded.id, cachedUser);
+        }
+
+        req.user = cachedUser as IUser;
         return next();
     } catch (error) {
         console.error("Token decoding error:", error);

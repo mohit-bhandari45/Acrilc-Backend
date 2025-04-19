@@ -11,6 +11,8 @@ import dotenv from "dotenv";
 import { connectDB } from "./db.js";
 import { socketAuthMiddleware } from "./middlewares/socket.js";
 import morgan from "morgan";
+import { redisConnect } from "./redis.js";
+redisConnect();
 dotenv.config();
 connectDB();
 

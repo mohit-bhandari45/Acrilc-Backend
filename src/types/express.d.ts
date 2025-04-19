@@ -1,8 +1,8 @@
 import { JwtPayload } from "jsonwebtoken";
 
 export interface IUser extends JwtPayload {
-    email: string;
-    role: string;
+    email: string | undefined;
+    role: string | undefined;
 }
 
 declare module "express-serve-static-core" {

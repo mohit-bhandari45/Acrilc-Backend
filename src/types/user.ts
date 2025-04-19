@@ -4,13 +4,13 @@ import { IAll } from "./response.js";
 type Visibility = "public" | "private" | "followers";
 
 /* User Interface */
-interface IUser extends Document {
+interface IUser {
     toObject(): IAll;
     fullName: string;
     username: string;
     email: string;
-    newEmail: string | null;
-    newEmailToken: string | null;
+    newEmail?: string | null;
+    newEmailToken?: string | null;
     googleId: string;
     password: string;
     profilePicture: string;
