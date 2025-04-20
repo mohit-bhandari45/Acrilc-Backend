@@ -34,6 +34,9 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
     try {
         // Wrap multer in a promise so we can await it
         await new Promise<void>((resolve, reject) => {
+            if (!fs.existsSync("./uploads")) {
+                fs.mkdirSync("uploads");
+            }
             upload.array("media", 10)(req, res, (err: any) => {
                 if (err instanceof MulterError) {
                     return reject({ status: 400, error: err.message });
@@ -53,6 +56,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
         const normalizedHashTags = normalizeToArray(hashTags);
 
         const files: Express.Multer.File[] = req.files as Express.Multer.File[];
+        console.log(files);
 
         const media = files
             ? await Promise.all(
