@@ -5,7 +5,7 @@ const redis = createClient({
     socket: {
         reconnectStrategy: false, // ⛔ no retries
     },
-})
+});
 
 redis.on("error", (err) => {
     console.error("❌ Redis connection error:", err);
@@ -16,6 +16,6 @@ export const redisConnect = async () => {
         await redis.connect();
         console.log("✅ Connected to Redis");
     }
-}
+};
 
 export default redis;

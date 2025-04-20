@@ -3,7 +3,7 @@ import { createStoryBoardHandler, getStoryBoardHandler } from "../../controllers
 
 const router = Router();
 
-router.get("/", getStoryBoardHandler);
+router.get("/user/:userId", getStoryBoardHandler);
 router.post("/", createStoryBoardHandler);
 
 export default router;

@@ -3,10 +3,10 @@ import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 
 export interface IUser extends jwt.JwtPayload {
-    id: Schema.Types.ObjectId,
-    fullName: string,
-    email: string,
-    role: "user" | "admin",
+    id: Schema.Types.ObjectId;
+    fullName: string;
+    email: string;
+    role: "user" | "admin";
 }
 
 class UserService {

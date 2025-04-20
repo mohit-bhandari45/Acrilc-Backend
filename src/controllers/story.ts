@@ -10,7 +10,7 @@ async function createStoryBoardHandler(req: Request, res: Response): Promise<any
     try {
         const response: IResponse = {
             msg: "",
-        }
+        };
 
         const storyBoard = await Story.create({
             author: userId,
@@ -25,18 +25,18 @@ async function createStoryBoardHandler(req: Request, res: Response): Promise<any
         response.data = storyBoard;
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
 
 async function getStoryBoardHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id;
+    const { userId } = req.params;
 
     try {
         const response: IResponse = {
             msg: "",
-        }
+        };
 
         const storyBoards = await Story.find({
             author: userId,
@@ -46,7 +46,7 @@ async function getStoryBoardHandler(req: Request, res: Response): Promise<any> {
         response.data = storyBoards;
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }

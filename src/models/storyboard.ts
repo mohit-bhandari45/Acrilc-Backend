@@ -36,24 +36,27 @@ const mediaSchema: Schema<IMedia> = new Schema({
     },
 });
 
-const storyBoardSchema: Schema<IStoryBoard> = new mongoose.Schema({
-    author: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "user",
+const storyBoardSchema: Schema<IStoryBoard> = new mongoose.Schema(
+    {
+        author: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: "user",
+        },
+        title: {
+            type: String,
+            required: true,
+        },
+        media: [mediaSchema],
+        description: {
+            type: String,
+            required: true,
+        },
+        applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
+        comments: [commentSchema],
     },
-    title: {
-        type: String,
-        required: true,
-    },
-    media: [mediaSchema],
-    description: {
-        type: String,
-        required: true,
-    },
-    applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
-    comments: [commentSchema],
-}, { timestamps: true });
+    { timestamps: true }
+);
 
 const Story = model<IStoryBoard>("storyBoard", storyBoardSchema);
 export default Story;

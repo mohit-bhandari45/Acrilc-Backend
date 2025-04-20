@@ -8,7 +8,22 @@ interface IAll extends IUser {
     posts: number;
 }
 
-type ResponseData = string | IPost | IPost[] | IUser | IUser[] | ICollection | ICollection[] | IComment | IComment[] | Schema.Types.ObjectId[] | Partial<IUser> | IAll | IStoryBoard | IStoryBoard[] | null;
+type ResponseData =
+    | string
+    | IPost
+    | IPost[]
+    | IUser
+    | IUser[]
+    | ICollection
+    | ICollection[]
+    | IComment
+    | IComment[]
+    | Schema.Types.ObjectId[]
+    | Partial<IUser>
+    | IAll
+    | IStoryBoard
+    | IStoryBoard[]
+    | null;
 
 /* Response Interface */
 interface IResponse {
