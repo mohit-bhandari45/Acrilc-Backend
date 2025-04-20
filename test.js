@@ -6,7 +6,7 @@ const images = [
     "https://i.ibb.co/r2j9yFdP/Group-1000006019.png",
     "https://i.ibb.co/9H4FHk1F/Group-1000006018.png",
     "https://i.ibb.co/BVPCFLkF/Group-1000006022.png",
-    "https://i.ibb.co/WW3W0qJ8/Group-1000006021.png"
-]
+    "https://i.ibb.co/WW3W0qJ8/Group-1000006021.png",
+];
 
-console.log(Math.floor(Math.random() * images.length))
+console.log(Math.floor(Math.random() * images.length));
