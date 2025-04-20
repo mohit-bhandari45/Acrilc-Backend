@@ -56,21 +56,21 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
 
         const media = files
             ? await Promise.all(
-                files.map(async (file) => {
-                    const formData = new FormData();
-                    formData.append("image", fs.createReadStream(file.path));
+                  files.map(async (file) => {
+                      const formData = new FormData();
+                      formData.append("image", fs.createReadStream(file.path));
 
-                    const response = await UploadService.upload(formData);
-                    const imageUrl = response.data.data.url;
+                      const response = await UploadService.upload(formData);
+                      const imageUrl = response.data.data.url;
 
-                    fs.unlinkSync(file.path);
+                      fs.unlinkSync(file.path);
 
-                    return {
-                        url: imageUrl,
-                        type: mediaType(file.mimetype),
-                    };
-                })
-            )
+                      return {
+                          url: imageUrl,
+                          type: mediaType(file.mimetype),
+                      };
+                  })
+              )
             : [];
 
         const post = await Post.create({
@@ -219,10 +219,4 @@ async function deletePostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-export {
-    createPostHandler,
-    updatePostHandler,
-    getPostsHandler,
-    getSpecificPostHandler,
-    deletePostHandler,
-};
+export { createPostHandler, updatePostHandler, getPostsHandler, getSpecificPostHandler, deletePostHandler };

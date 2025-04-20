@@ -15,6 +15,8 @@
     - [Follow/Unfollow a User](#1-followunfollow-a-user)
     - [Get All Followers](#2-get-all-followers)
     - [Get All Following](#3-get-all-following)
+    - [Get All Applauds in a Section(Post/Storyboard)(#4-get-all-applauds-in-a-sectionpoststoryboard)]
+    - [Applauded or Unapplauded a Post](#5-applaud-or-unapplaud-a-sectionpoststoryboard)
 
 ## User Routes
 
@@ -108,3 +110,80 @@
         "msg": "No User"
     }
     ```
+
+### 4. Get All Applauds in a Section(Post/StoryBoard)
+
+- **URL**: `/api/socials/:section/:sectionId/applauds`
+- **Method**: `GET`
+- **Headers**:
+
+    - `Authorization: Bearer <your_token>`
+
+- **Description**: Get all users who applauded a specific post
+
+- **Success Response**: `200`
+
+    ```json
+    {
+        "msg": "No Applauds Yet!" or "Fetched all applauds users",
+        "data": [
+            {
+                "fullName": "John Doe",
+                "username": "john_doe",
+                "email": "john@example.com"
+            },
+            {
+                "fullName": "Jane Smith",
+                "username": "jane_smith",
+                "email": "jane@example.com"
+            }
+        ]
+    }
+    ```
+
+- **Error Response**:
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "Post Not found"
+        }
+        ```
+
+### 5. Applaud or UnApplaud a Section(post/storyboard)
+
+- **URL**: `/api/socials/:section/:sectionId/applaud`
+- **Method**: `GET`
+- **Headers**:
+
+    - `Authorization: Bearer <your_token>`
+
+- **Description**: Applaud or UnApplaud a specific section based on current user's applaud status. If already Applauded, it will unapplaud; if not applauded, it will applaud.
+
+- **Success Response**: `200`
+
+    - **When Applauding a Section**:
+        ```json
+        {
+            "msg": "Applauded a Post or Applauded a Story",
+            "data": {
+                "applauds": ["user123"]
+            }
+        }
+        ```
+    - **When UnApplauding a Section**:
+        ```json
+        {
+            "msg": "UnApplauded Post or UpApplauded a Story",
+            "data": {
+                "applauds": []
+            }
+        }
+        ```
+
+- **Error Response**:
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "Post Not found"
+        }
+        ```

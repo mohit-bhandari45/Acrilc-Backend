@@ -5,7 +5,7 @@ import {
     addReplyHandler,
     allApplaudsHandler,
     allCommentsHandler,
-    applaudPostHandler,
+    applaudSectionHandler,
     commentPostHandler,
     deleteCommentHandler,
     deleteReplyHandler,
@@ -17,7 +17,7 @@ const router = Router({ mergeParams: true });
 
 /* Likes Routes */
 router.get("/:sectionId/applauds", allApplaudsHandler); //(done)
-router.get("/:sectionId/applaud", applaudPostHandler); //(done)
+router.get("/:postId/applaud", applaudSectionHandler); //(done)
 
 /* Comment Routes */
 router.get("/:sectionId/comments", allCommentsHandler); //(done)

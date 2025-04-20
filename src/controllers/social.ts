@@ -110,7 +110,7 @@ async function allApplaudsHandler(req: Request, res: Response): Promise<any> {
             return res.status(404).json(response);
         }
 
-        response.msg = (data.applauds === undefined || data.applauds.length === 0) ? "No Applauds Yet!" : "Fetched all users applauds";
+        response.msg = data.applauds === undefined || data.applauds.length === 0 ? "No Applauds Yet!" : "Fetched all users applauds";
         response.data = data.applauds as unknown as IUser[];
 
         return res.status(200).json(response);
@@ -121,11 +121,11 @@ async function allApplaudsHandler(req: Request, res: Response): Promise<any> {
 }
 
 /***
- * @desc Applaud or unApplaud in a post
+ * @desc Applaud or unApplaud in a section(post/storyboard)
  * @route GET /api/socials/:section/:sectionId/applaud
  */
-async function applaudPostHandler(req: Request, res: Response): Promise<any> {
-    const { section, sectionId } = req.params;
+async function applaudSectionHandler(req: Request, res: Response): Promise<any> {
+    const { section, postId } = req.params;
     const userId = req.user?.id;
 
     try {
@@ -133,33 +133,45 @@ async function applaudPostHandler(req: Request, res: Response): Promise<any> {
             msg: "",
         };
 
-        let data;
-        if (section === "post") {
-            data = await Post.findById(sectionId);
-        } else {
-            // data = await Story.findById(sectionId);
-        }
+        const post = await Post.findById(postId);
 
-        if (!data) {
+        if (!post) {
             response.msg = section === "post" ? "Post Not found" : "Storyboard not found";
             return res.status(404).json(response);
         }
 
-        data.applauds = data.applauds ?? [];
-        console.log(data);
-        const isLiked: boolean = data.applauds.includes(userId);
-        console.log(isLiked);
+        let isLiked: boolean;
 
         if (section === "post") {
-            const updatedPost = await Post.findByIdAndUpdate(sectionId, isLiked ? { $pull: { applauds: userId } } : { $addToSet: { applauds: userId } }, { new: true });
+            isLiked = post.applauds.includes(userId);
+
+            if (isLiked) {
+                post.applauds = post.applauds.filter((applaud) => {
+                    return applaud.toString() !== userId.toString();
+                });
+            } else {
+                post.applauds.push(userId);
+            }
+
             response.msg = isLiked ? "UnApplauded a Post" : "Applauded a Post";
-            response.data = updatedPost;
+            response.data = post.applauds;
         } else {
-            // const updatedStory = await Story.findByIdAndUpdate(sectionId, isLiked ? { $pull: { applauds: userId } } : { $addToSet: { applauds: userId } }, { new: true });
-            // response.msg = isLiked ? "UnApplauded a Story" : "Applauded a Story";
-            // response.data = updatedStory;
+            post.storyBoard.applauds = post.storyBoard.applauds ?? [];
+            isLiked = post.storyBoard.applauds.includes(userId);
+
+            if (isLiked) {
+                post.storyBoard.applauds = post.storyBoard.applauds.filter((applaud) => {
+                    return applaud.toString() !== userId.toString();
+                });
+            } else {
+                post.storyBoard.applauds.push(userId);
+            }
+
+            response.msg = isLiked ? "UnApplauded a Story" : "Applauded a Story";
+            response.data = post.storyBoard.applauds;
         }
 
+        await post.save();
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -506,8 +518,18 @@ async function addApplaudPostCommentReplyHandler(req: Request, res: Response): P
 }
 
 export {
-    addApplaudPostCommentReplyHandler, addPostCommentApplaudHandler, addReplyHandler, allApplaudsHandler, allCommentsHandler, applaudPostHandler, commentPostHandler, deleteCommentHandler, deleteReplyHandler, followUnfollowHandler,
+    addApplaudPostCommentReplyHandler,
+    addPostCommentApplaudHandler,
+    addReplyHandler,
+    allApplaudsHandler,
+    allCommentsHandler,
+    applaudSectionHandler,
+    commentPostHandler,
+    deleteCommentHandler,
+    deleteReplyHandler,
+    followUnfollowHandler,
     getAllFollowersHandler,
-    getAllFollowingHandler, updateCommentHandler, updateReplyHandler
+    getAllFollowingHandler,
+    updateCommentHandler,
+    updateReplyHandler,
 };
-

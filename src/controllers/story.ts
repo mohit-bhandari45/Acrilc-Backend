@@ -46,10 +46,7 @@ async function getStoryBoardHandler(req: Request, res: Response): Promise<any> {
 
         const posts = await Post.find({ author: userId });
 
-        const storyBoards: IStoryBoard[] = posts
-            .filter((post) => post.storyBoard !== undefined)
-            .map((post) => post.storyBoard);
-
+        const storyBoards: IStoryBoard[] = posts.filter((post) => post.storyBoard !== undefined).map((post) => post.storyBoard);
 
         response.msg = "StoryBoards found";
         response.data = storyBoards;
