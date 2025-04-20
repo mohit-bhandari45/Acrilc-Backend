@@ -79,6 +79,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
 
         const post = await Post.create({
             author,
+
             title,
             subtitle,
             size,
