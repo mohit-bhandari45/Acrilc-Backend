@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import CacheService from "../services/cache.js";
 import UserService, { IUser } from "../services/userService.js";
-import { getCachedUser, setCachedUser } from "../utils/cache.js";
 import { decode } from "../utils/jwt.js";
 
 async function authCheckMiddleware(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -23,7 +23,7 @@ async function authCheckMiddleware(req: Request, res: Response, next: NextFuncti
             });
         }
 
-        let cachedUser = await getCachedUser<IUser>(decoded.id);
+        let cachedUser = await CacheService.getCachedUser<IUser>(decoded.id);
         console.log("Redis User", cachedUser);
 
         if (!cachedUser) {
@@ -33,7 +33,7 @@ async function authCheckMiddleware(req: Request, res: Response, next: NextFuncti
                 return res.status(401).json({ message: "User not found. Token may be stale or invalid." });
             }
 
-            await setCachedUser(decoded.id, cachedUser);
+            await CacheService.setCachedUser(decoded.id, cachedUser);
         }
 
         req.user = cachedUser as IUser;

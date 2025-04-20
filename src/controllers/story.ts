@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { setErrorDetails } from "../utils/helper.js";
-import Story from "../models/storyboard.js";
 import { IResponse } from "./auth.js";
+import Post from "../models/post.js";
+import { IStoryBoard } from "../types/storyboard.js";
 
 async function createStoryBoardHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id;
+    const { postId } = req.params;
     const { title, description, media } = req.body;
 
     try {
@@ -12,17 +13,22 @@ async function createStoryBoardHandler(req: Request, res: Response): Promise<any
             msg: "",
         };
 
-        const storyBoard = await Story.create({
-            author: userId,
+        const post = await Post.findById(postId);
+        if (!post) {
+            response.msg = "Post Not Found";
+            return res.status(200).json(response);
+        }
+
+        post.storyBoard = {
             title,
             description,
             media,
-        });
+        };
 
-        await storyBoard.save();
+        await post.save();
 
         response.msg = "StoryBoard created";
-        response.data = storyBoard;
+        response.data = post?.storyBoard;
         return res.status(200).json(response);
     } catch (error) {
         console.log(error);
@@ -38,9 +44,12 @@ async function getStoryBoardHandler(req: Request, res: Response): Promise<any> {
             msg: "",
         };
 
-        const storyBoards = await Story.find({
-            author: userId,
-        });
+        const posts = await Post.find({ author: userId });
+
+        const storyBoards: IStoryBoard[] = posts
+            .filter((post) => post.storyBoard !== undefined)
+            .map((post) => post.storyBoard);
+
 
         response.msg = "StoryBoards found";
         response.data = storyBoards;

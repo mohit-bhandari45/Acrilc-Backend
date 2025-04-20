@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import User from "./models/user.js";
-import Post from "./models/post.js";
-dotenv.config();
 import bcrypt from "bcrypt";
-import redis from "./redis.js";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import Post from "./models/post.js";
+import User from "./models/user.js";
+dotenv.config();
 
 async function connectDB() {
     mongoose
@@ -79,7 +78,7 @@ async function seedUsers() {
 
     try {
         await User.deleteMany();
-        await redis.flushAll();
+        // await redis.flushAll();
         const usersWithHashedPasswords = await Promise.all(
             userData.map(async (user) => ({
                 ...user,

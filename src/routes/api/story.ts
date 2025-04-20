@@ -4,6 +4,6 @@ import { createStoryBoardHandler, getStoryBoardHandler } from "../../controllers
 const router = Router();
 
 router.get("/user/:userId", getStoryBoardHandler);
-router.post("/", createStoryBoardHandler);
+router.post("/:postId", createStoryBoardHandler);
 
 export default router;

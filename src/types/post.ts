@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+import { IStoryBoard } from "./storyboard.js";
 
 /* Post Interfaces */
 type MediaType = "image" | "video" | "audio" | "gif";
@@ -43,6 +44,7 @@ interface IPost {
     forte: string;
     applauds: Schema.Types.ObjectId[];
     comments: IComment[];
+    storyBoard: IStoryBoard;
     location: Location;
     score: number;
     createdAt: Date;

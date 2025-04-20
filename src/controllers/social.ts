@@ -4,8 +4,6 @@ import Post from "../models/post.js";
 import User, { IUser } from "../models/user.js";
 import { IResponse } from "../types/response.js";
 import { setErrorDetails } from "../utils/helper.js";
-import { getData } from "../utils/controllers.js";
-import Story from "../models/storyboard.js";
 
 async function followUnfollowHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
@@ -99,14 +97,20 @@ async function allApplaudsHandler(req: Request, res: Response): Promise<any> {
             msg: "",
         };
 
-        const data = await getData(section, sectionId);
+        let data;
+        if (section === "post") {
+            data = await Post.findById(sectionId).populate("applauds");
+        } else {
+            data = await Post.findById(sectionId).populate("storyboard.applauds");
+            data = data?.storyBoard;
+        }
 
         if (!data) {
             response.msg = section === "post" ? "Post Not found" : "Storyboard not found";
             return res.status(404).json(response);
         }
 
-        response.msg = data.applauds.length === 0 ? "No Applauds Yet!" : "Fetched all users applauds";
+        response.msg = (data.applauds === undefined || data.applauds.length === 0) ? "No Applauds Yet!" : "Fetched all users applauds";
         response.data = data.applauds as unknown as IUser[];
 
         return res.status(200).json(response);
@@ -118,7 +122,7 @@ async function allApplaudsHandler(req: Request, res: Response): Promise<any> {
 
 /***
  * @desc Applaud or unApplaud in a post
- * @route GET /api/posts/post/:postId/applaud
+ * @route GET /api/socials/:section/:sectionId/applaud
  */
 async function applaudPostHandler(req: Request, res: Response): Promise<any> {
     const { section, sectionId } = req.params;
@@ -133,7 +137,7 @@ async function applaudPostHandler(req: Request, res: Response): Promise<any> {
         if (section === "post") {
             data = await Post.findById(sectionId);
         } else {
-            data = await Story.findById(sectionId);
+            // data = await Story.findById(sectionId);
         }
 
         if (!data) {
@@ -151,9 +155,9 @@ async function applaudPostHandler(req: Request, res: Response): Promise<any> {
             response.msg = isLiked ? "UnApplauded a Post" : "Applauded a Post";
             response.data = updatedPost;
         } else {
-            const updatedStory = await Story.findByIdAndUpdate(sectionId, isLiked ? { $pull: { applauds: userId } } : { $addToSet: { applauds: userId } }, { new: true });
-            response.msg = isLiked ? "UnApplauded a Story" : "Applauded a Story";
-            response.data = updatedStory;
+            // const updatedStory = await Story.findByIdAndUpdate(sectionId, isLiked ? { $pull: { applauds: userId } } : { $addToSet: { applauds: userId } }, { new: true });
+            // response.msg = isLiked ? "UnApplauded a Story" : "Applauded a Story";
+            // response.data = updatedStory;
         }
 
         return res.status(200).json(response);

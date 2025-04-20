@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { IComment, IMedia, IPost, IReply } from "../types/post.js";
+import { IStoryBoard } from "../types/storyboard.js";
 
 const replySchema: Schema<IReply> = new Schema(
     {
@@ -35,6 +36,23 @@ const mediaSchema: Schema<IMedia> = new Schema({
     },
 });
 
+const storyBoardSchema: Schema<IStoryBoard> = new Schema(
+    {
+        title: {
+            type: String,
+            required: true,
+        },
+        media: [mediaSchema],
+        description: {
+            type: String,
+            required: true,
+        },
+        applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
+        comments: [commentSchema],
+    },
+    { timestamps: true }
+);
+
 const postSchema: Schema<IPost> = new Schema(
     {
         author: { type: Schema.Types.ObjectId, ref: "user", required: true },
@@ -67,6 +85,7 @@ const postSchema: Schema<IPost> = new Schema(
         },
         applauds: [{ type: Schema.Types.ObjectId, ref: "user" }],
         comments: [commentSchema],
+        storyBoard: storyBoardSchema,
         location: { type: String },
         score: {
             type: Number,

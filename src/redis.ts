@@ -13,7 +13,7 @@ redis.on("error", (err) => {
 
 export const redisConnect = async () => {
     if (!redis.isOpen) {
-        await redis.connect();
+        // await redis.connect();
         console.log("✅ Connected to Redis");
     }
 };
