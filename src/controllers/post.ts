@@ -101,6 +101,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
         const status = err.status || 500;
         const message = err.error || "Internal Server Error";
         console.log(err);
+
         return res.status(status).json({ error: err });
     }
 }
