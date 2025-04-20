@@ -14,8 +14,8 @@
         "format": "prettier --write .",
         "seed": "yarn build && node dist/seed.js"
     },
-    "lint:staged": {
-        "**/*.{ts}": [
+    "lint-staged": {
+        "**/*.ts": [
             "eslint --fix",
             "prettier --write"
         ]
