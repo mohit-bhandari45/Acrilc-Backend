@@ -7,7 +7,6 @@
     "scripts": {
         "build": "tsc",
         "start": "node dist/index.js",
-        "prepare": "husky install",
         "dev": "tsc-watch --onSuccess \"yarn start\"",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
@@ -16,8 +15,8 @@
     },
     "lint-staged": {
         "**/*.ts": [
-            "npm run lint:fix",
-            "npm run format"
+            "yarn lint:fix",
+            "yarn format"
         ]
     },
     "devDependencies": {
@@ -37,10 +36,10 @@
         "eslint": "^9.21.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-prettier": "^5.2.3",
-        "husky": "^8.0.0",
         "lint-staged": "^15.5.1",
         "prettier": "^3.5.2",
-        "typescript": "^5.8.2"
+        "typescript": "^5.8.2",
+        "husky": "^8.0.0"
     },
     "dependencies": {
         "@types/nodemailer": "^6.4.17",
