@@ -27,6 +27,7 @@ function decode(token: string) {
         return user;
     } catch (e) {
         console.error(e, { token });
+        return false;
     }
 }
 
