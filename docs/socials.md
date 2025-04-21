@@ -9,8 +9,6 @@
     }
     ```
 
-done(1,2,3,6,7,8,9)
-
 ## Table of Contents
 
 1. [User Routes](#user-routes)
@@ -19,10 +17,12 @@ done(1,2,3,6,7,8,9)
     - [Get All Following](#3-get-all-following)
     - [Get All Applauds in a Section](#4-get-all-applauds-in-a-sectionpoststoryboard)]
     - [Applauded or Unapplauded a Post](#5-applaud-or-unapplaud-a-sectionpoststoryboard)
-    - [Comment on a Post](#6-comment-on-a-sectionpoststoryboard)
-    - [Get All Comments in a Post](#7-get-all-comments-in-a-sectionpoststoryboard)
+    - [Comment on a Section(Post/Storyboard)](#6-comment-on-a-sectionpoststoryboard)
+    - [Get All Comments in a Section(Post/Storyboard)](#7-get-all-comments-in-a-sectionpoststoryboard)
     - [Update a Comment](#8-update-a-comment)
     - [Delete a Comment](#9-delete-a-comment)
+    - [Applaud a Section(Post/Storyboard) Comment](#10-applaud-a-sectionpoststoryboard-comment)
+    - [Reply to a Section(Post/Storyboard) Comment](#11-reply-to-a-sectionpoststoryboard-comment)
 
 ## User Routes
 
@@ -289,7 +289,7 @@ done(1,2,3,6,7,8,9)
     }
     ```
 
-- **Description**: Updates the text of a specific comment on a section(post/storyboard)
+- **Description**: Updates the text of a specific comment on a section(Post/Storyboard)
 
 - **Success Response**: `200`
 
@@ -333,13 +333,13 @@ done(1,2,3,6,7,8,9)
 
     - `Authorization: Bearer <your_token>`
 
-- **Description**: Deletes a specific comment from a section(post/storyboard)
+- **Description**: Deletes a specific comment from a section(Post/Storyboard)
 
 - **Success Response** : `200`
 
     ```json
     {
-        "msg": "Comment Deleted Successfully",
+        "msg": "Comment Deleted Successfully"
     }
     ```
 
@@ -348,5 +348,109 @@ done(1,2,3,6,7,8,9)
         ```json
         {
             "msg": "No Post Found"
+        }
+        ```
+
+### 10. Applaud a Section(Post/Storyboard) Comment
+
+- **URL**: `/api/socials/:sections/:sectionId/comment/:commentId/applaud`
+- **Method**: `GET`
+- **Headers**:
+
+    - `Authorization: Bearer <your_token>`
+
+- **Description**: Applaud or unApplaud a specific comment on a section(Post/Storyboard) based on current user's applaud status
+
+- **Success Response**: `200`
+
+    - **When Applauding a Comment**:
+        ```json
+        {
+            "msg": "Applauded Post",
+            "data": {
+                "_id": "6804aa97ba95371c5c510c1a",
+                "username": "john_doe"
+            }
+        }
+        ```
+    - **When UnApplauding a Comment**:
+        ```json
+        {
+            "msg": "UnApplauded Post",
+        }
+        ```
+
+- **Error Response**:
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "Post Not found"
+        }
+        ```
+        ```json
+        {
+            "msg": "Storyboard Not found"
+        }
+        ```
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "Comment Not found"
+        }
+        ```
+
+### 11. Reply to a Section(Post/Storyboard) Comment
+
+- **URL**: `/api/socials/:sections/:sectionId/comment/:commentId/reply`
+- **Method**: `POST`
+- **Headers**:
+
+    - `Authorization: Bearer <your_token>`
+
+- **Request Body**:
+
+    ```json
+    {
+        "text": "Thanks for the comment!"
+    }
+    ```
+
+- **Description**: Add a reply to a specific comment on a section(post/storyboard)
+
+- **Success Response**: `200`
+
+    ```json
+    {
+        "msg": "Replied Successfully",
+        "data": {
+            "user": {
+                "_id": "6804aa97ba95371c5c510c1a",
+                "username": "john_doe"
+            },
+            "text": "You are shit",
+            "applauds": [],
+            "_id": "68060e122aeb23d1a95dc03d",
+            "createdAt": "2025-04-21T09:21:22.874Z",
+            "updatedAt": "2025-04-21T09:21:22.874Z"
+        }
+    }
+    ```
+
+- **Error Response**:
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "No Post Found"
+        }
+        ```
+        ```json
+        {
+            "msg": "No Storyboard Found"
+        }
+        ```
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "No Comment Found"
         }
         ```

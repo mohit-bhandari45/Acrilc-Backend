@@ -16,8 +16,8 @@ import {
 const router = Router({ mergeParams: true });
 
 /* Likes Routes */
-router.get("/:sectionId/applauds", allApplaudsHandler); //(done)
-router.get("/:postId/applaud", applaudSectionHandler); //(done)
+router.get("/:sectionId/applauds", allApplaudsHandler);
+router.get("/:postId/applaud", applaudSectionHandler);
 
 /* Comment Routes */
 router.get("/:sectionId/comments", allCommentsHandler); //(done)
@@ -28,8 +28,8 @@ router.delete("/:sectionId/comment/:commentId", deleteCommentHandler); //(done)
 /* Comment Interact Routes */
 router.get("/:sectionId/comment/:commentId/applaud", addPostCommentApplaudHandler); //(done)
 router.post("/:sectionId/comment/:commentId/reply", addReplyHandler); //(done)
-router.patch("/:sectionId/comment/:commentId/reply/:replyId", updateReplyHandler); //(done)
-router.delete("/:sectionId/comment/:commentId/reply/:replyId", deleteReplyHandler); //(done)
-router.get("/:sectionId/comment/:commentId/reply/:replyId/applaud", addApplaudPostCommentReplyHandler); //(done)
+router.patch("/:sectionId/comment/:commentId/reply/:replyId", updateReplyHandler);
+router.delete("/:sectionId/comment/:commentId/reply/:replyId", deleteReplyHandler);
+router.get("/:sectionId/comment/:commentId/reply/:replyId/applaud", addApplaudPostCommentReplyHandler);
 
 export default router;

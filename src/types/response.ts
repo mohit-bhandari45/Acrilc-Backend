@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 import { ICollection } from "./collection.js";
-import { IComment, IPost } from "./post.js";
+import { IComment, IPost, IReply } from "./post.js";
 import { IUser } from "./user.js";
 import { IStoryBoard } from "./storyboard.js";
 
@@ -13,6 +13,7 @@ type ResponseData =
     | IPost
     | IPost[]
     | IUser
+    | Partial<IUser>
     | IUser[]
     | ICollection
     | ICollection[]
@@ -23,7 +24,8 @@ type ResponseData =
     | IAll
     | IStoryBoard
     | IStoryBoard[]
-    | null;
+    | null
+    | IReply;
 
 /* Response Interface */
 interface IResponse {

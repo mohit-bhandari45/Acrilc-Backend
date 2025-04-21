@@ -438,40 +438,83 @@ async function deleteCommentHandler(req: Request, res: Response): Promise<any> {
 /* Comment Interaction Controllers */
 
 /***
- * @desc Applaud in a post comment
- * @route GET /api/posts/post/comment/like/:commentId
+ * @desc Applaud in a section(Post/Storyboard) comment
+ * @route GET /api/socials/:section/:sectionId/comment/:commentId/applaud
  */
 async function addPostCommentApplaudHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id;
-    const { commentId, postId } = req.params;
+    const { section, sectionId, commentId } = req.params;
 
     try {
         let response: IResponse = {
             msg: "",
         };
 
-        const post = await Post.findById(postId);
-        if (!post) {
-            response.msg = "Post Not found";
-            return res.status(404).json(response);
-        }
+        const isPostSection: boolean = section === "post";
 
-        const comment = post.comments.find((comment) => comment._id.toString() === commentId);
-        if (!comment) {
-            response.msg = "Comment Not found";
-            return res.status(404).json(response);
-        }
+        let post;
+        let isApplauded;
+        if (isPostSection) {
+            post = await Post.findById(sectionId);
+            if (!post) {
+                response.msg = "Post Not found";
+                return res.status(404).json(response);
+            }
 
-        const isApplauded: boolean = (comment.applauds ?? []).includes(userId);
-        if (isApplauded) {
-            comment.applauds = comment.applauds?.filter((applaud) => applaud.toString() !== userId);
+            const comment = post.comments.find((comment) => comment._id.toString() === commentId);
+            if (!comment) {
+                response.msg = "Comment Not found";
+                return res.status(404).json(response);
+            }
+
+            isApplauded = (comment.applauds ?? []).includes(userId);
+            if (isApplauded) {
+                comment.applauds = comment.applauds?.filter((applaud) => applaud.toString() !== userId);
+            } else {
+                comment.applauds?.push(userId);
+            }
+
+            await post.populate({
+                path: "comments.applauds",
+                select: "_id username profilepic",
+            });
+
+            comment.applauds = comment.applauds ?? [];
+            response.data = comment.applauds[comment.applauds?.length - 1] as Partial<IUser>;
         } else {
-            comment.applauds?.push(userId);
-        }
-        await post.save();
+            post = await Post.findOne({
+                "storyBoard._id": sectionId,
+            });
+            if (!post) {
+                response.msg = "StoryBoard Not found";
+                return res.status(404).json(response);
+            }
 
+            post.storyBoard.comments = post.storyBoard.comments ?? [];
+            const comment = post.storyBoard.comments.find((comment) => comment._id.toString() === commentId);
+            if (!comment) {
+                response.msg = "Comment Not found";
+                return res.status(404).json(response);
+            }
+
+            isApplauded = (comment.applauds ?? []).includes(userId);
+            if (isApplauded) {
+                comment.applauds = comment.applauds?.filter((applaud) => applaud.toString() !== userId);
+            } else {
+                comment.applauds?.push(userId);
+            }
+
+            await post.populate({
+                path: "storyBoard.comments.applauds",
+                select: "_id username profilepic",
+            });
+
+            comment.applauds = comment.applauds ?? [];
+            response.data = comment.applauds[comment.applauds?.length - 1] as Partial<IUser>;
+        }
+
+        await post.save();
         response.msg = isApplauded ? "UnApplauded Comment" : "Applauded Comment";
-        response.data = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -479,40 +522,78 @@ async function addPostCommentApplaudHandler(req: Request, res: Response): Promis
 }
 
 /***
- * @desc Reply in a post comment
- * @route POST /api/posts/post/:postId/comment/:commentId/reply
+ * @desc Reply in a section(Post/Storyboard) comment
+ * @route POST /api/section/:section/:sectionId/comment/:commentId/reply
  */
 async function addReplyHandler(req: Request, res: Response): Promise<any> {
-    const { text } = req.body;
-    const { postId, commentId } = req.params;
     const userId = req.user?.id;
+    const { text } = req.body;
+    const { section, sectionId, commentId } = req.params;
 
     try {
         let response: IResponse = {
             msg: "",
         };
 
-        const post = await Post.findById(postId);
-        if (!post) {
-            response.msg = "No Post Found";
-            return res.status(404).json(response);
+        const isPostSection: boolean = section === "post";
+
+        let post;
+        if (isPostSection) {
+            post = await Post.findById(sectionId);
+            if (!post) {
+                response.msg = "No Post Found";
+                return res.status(404).json(response);
+            }
+
+            const comment = post.comments.find((c) => c._id.toString() === commentId);
+            if (!comment) {
+                response.msg = "Comment Not found";
+                return res.status(404).json(response);
+            }
+            comment.replies = comment.replies || [];
+            comment.replies.push({
+                user: userId,
+                text: text,
+            });
+
+            console.log(post.comments);
+
+            await post.populate({
+                path: "comments.replies.user",
+                select: "_id username profilepic",
+            });
+
+            response.data = comment.replies[comment.replies.length - 1];
+        } else {
+            post = await Post.findById(sectionId);
+            if (!post) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
+
+            post.storyBoard.comments = post.storyBoard.comments ?? [];
+            const comment = post.storyBoard.comments.find((c) => c._id.toString() === commentId);
+            if (!comment) {
+                response.msg = "Comment Not found";
+                return res.status(404).json(response);
+            }
+
+            comment.replies = comment.replies || [];
+            comment.replies.push({
+                user: userId,
+                text: text,
+            });
+
+            await post.populate({
+                path: "storyBoard.comments.replies.user",
+                select: "_id username profilepic",
+            });
+
+            response.data = comment.replies[comment.replies.length - 1];
         }
 
-        const comment = post.comments.find((comment) => comment._id.toString() === commentId);
-        if (!comment) {
-            response.msg = "Comment Not found";
-            return res.status(404).json(response);
-        }
-
-        comment.replies = comment.replies || [];
-        comment.replies.push({
-            user: userId,
-            text: text,
-        });
         await post.save();
-
         response.msg = "Replied Successfully";
-        response.data = comment;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
