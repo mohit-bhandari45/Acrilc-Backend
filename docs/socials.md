@@ -9,7 +9,7 @@
     }
     ```
 
-done(1,2,3,6,7)
+done(1,2,3,6,7,8,9)
 
 ## Table of Contents
 
@@ -17,10 +17,12 @@ done(1,2,3,6,7)
     - [Follow/Unfollow a User](#1-followunfollow-a-user)
     - [Get All Followers](#2-get-all-followers)
     - [Get All Following](#3-get-all-following)
-    - [Get All Applauds in a Section(Post/Storyboard)(#4-get-all-applauds-in-a-sectionpoststoryboard)]
+    - [Get All Applauds in a Section](#4-get-all-applauds-in-a-sectionpoststoryboard)]
     - [Applauded or Unapplauded a Post](#5-applaud-or-unapplaud-a-sectionpoststoryboard)
-    - [Comment on a Post](#6-comment-on-a-post)
-    - [Get All Comments in a Post](#7-get-all-comments-in-a-post)
+    - [Comment on a Post](#6-comment-on-a-sectionpoststoryboard)
+    - [Get All Comments in a Post](#7-get-all-comments-in-a-sectionpoststoryboard)
+    - [Update a Comment](#8-update-a-comment)
+    - [Delete a Comment](#9-delete-a-comment)
 
 ## User Routes
 
@@ -192,7 +194,7 @@ done(1,2,3,6,7)
         }
         ```
 
-### 6. Comment on a Post
+### 6. Comment on a Section(Post/Storyboard)
 
 - **URL**: `/api/socials/:section/:sectionId/comment`
 - **Method**: `POST`
@@ -208,7 +210,7 @@ done(1,2,3,6,7)
     }
     ```
 
-- **Description**: Add a new comment to a specific section(storyboard/post)
+- **Description**: Add a new comment to a specific section(Post/Storyboard)
 
 - **Success Response**: `200`
 
@@ -238,7 +240,7 @@ done(1,2,3,6,7)
         }
         ```
 
-### 7. Get All Comments in a Post
+### 7. Get All Comments in a Section(Post/Storyboard)
 
 - **URL**: `/api/posts/post/:postId/comments`
 - **Method**: `GET`
@@ -246,7 +248,7 @@ done(1,2,3,6,7)
 
     - `Authorization: Bearer <your_token>`
 
-- **Description**: Retrieve all comments and their replies for a specific section(storyboard/post)
+- **Description**: Retrieve all comments and their replies for a specific section(Post/Storyboard)
 
 - **Success Response**: `200`
 
@@ -270,3 +272,81 @@ done(1,2,3,6,7)
         ]
     }
     ```
+
+### 8. Update a Comment
+
+- **URL**: `/api/socials/:section/:sectionId/comment/:commentId`
+- **Method**: `PATCH`
+- **Headers**:
+
+    - `Authorization: Bearer <your_token>`
+
+- **Request Body**:
+
+    ```json
+    {
+        "text": "Updated comment text"
+    }
+    ```
+
+- **Description**: Updates the text of a specific comment on a section(post/storyboard)
+
+- **Success Response**: `200`
+
+    ```json
+    {
+        "msg": "Comment Updated Successfully",
+        "data": {
+            "user": {
+                "_id": "6804aa97ba95371c5c510c1a",
+                "username": "john_doe"
+            },
+            "text": "Hello Man",
+            "applauds": [],
+            "_id": "6805e9ea0b1df5aa9d282bae",
+            "replies": [],
+            "createdAt": "2025-04-21T06:47:06.867Z",
+            "updatedAt": "2025-04-21T07:33:45.826Z"
+        }
+    }
+    ```
+
+- **Error Response**:
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "No Post Found"
+        }
+        ```
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "No Comment Found"
+        }
+        ```
+
+### 9. Delete a Comment
+
+- **URL**: `/api/socials/:section/:sectionId/comment/:commentId`
+- **Method**: `DELETE`
+- **Headers**:
+
+    - `Authorization: Bearer <your_token>`
+
+- **Description**: Deletes a specific comment from a section(post/storyboard)
+
+- **Success Response** : `200`
+
+    ```json
+    {
+        "msg": "Comment Deleted Successfully",
+    }
+    ```
+
+- **Error Response**:
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "No Post Found"
+        }
+        ```

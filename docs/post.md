@@ -19,8 +19,6 @@
     - [Get Single Post](#4-get-single-post)
     - [Delete a Post](#5-delete-a-post)
     
-    - [Update a Comment](#10-update-a-comment)
-    - [Delete a Comment](#11-delete-a-comment)
     - [Applaud a Post Comment](#12-applaud-a-post-comment)
     - [Reply to a Post Comment](#13-reply-to-a-post-comment)
     - [Update a Reply](#14-update-a-reply)
@@ -244,80 +242,6 @@
         "msg": "Post Not Found"
     }
     ```
-
-### 10. Update a Comment
-
-- **URL**: `/api/posts/post/comment/:commentId`
-- **Method**: `PATCH`
-- **Headers**:
-
-    - `Authorization: Bearer <your_token>`
-
-- **Request Body**:
-
-    ```json
-    {
-        "text": "Updated comment text"
-    }
-    ```
-
-- **Description**: Updates the text of a specific comment on a post
-
-- **Success Response**: `200`
-
-    ```json
-    {
-        "msg": "Comment Updated Successfully",
-        "data": {
-            "_id": "6530a3f29bde3f001d432fbd",
-            "user": "user123",
-            "text": "Updated comment text",
-            "replies": [],
-            "applauds": []
-        }
-    }
-    ```
-
-- **Error Response**:
-    - **Status Code**: `404`
-        ```json
-        {
-            "msg": "No Post Found"
-        }
-        ```
-    - **Status Code**: `404`
-        ```json
-        {
-            "msg": "No Comment Found"
-        }
-        ```
-
-### 11. Delete a Comment
-
-- **URL**: `/api/posts/post/:commentId/comment/:commentId`
-- **Method**: `DELETE`
-- **Headers**:
-
-    - `Authorization: Bearer <your_token>`
-
-- **Description**: Deletes a specific comment from a post
-
-- **Success Response** : `200`
-
-    ```json
-    {
-        "msg": "Comment Deleted Successfully",
-        "comments": []
-    }
-    ```
-
-- **Error Response**:
-    - **Status Code**: `404`
-        ```json
-        {
-            "msg": "No Post Found"
-        }
-        ```
 
 ### 12. Applaud a Post Comment
 

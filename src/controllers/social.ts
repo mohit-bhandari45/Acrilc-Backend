@@ -328,10 +328,10 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
 
 /***
  * @desc Update a comment
- * @route Patch /api/posts/post/:postId/comment/:commentId
+ * @route Patch /api/socials/:section/:sectionId/comment/:commentId
  */
 async function updateCommentHandler(req: Request, res: Response): Promise<any> {
-    const { postId, commentId } = req.params;
+    const { section, sectionId, commentId } = req.params;
     let { text } = req.body;
 
     try {
@@ -339,13 +339,30 @@ async function updateCommentHandler(req: Request, res: Response): Promise<any> {
             msg: "",
         };
 
-        const post = await Post.findById(postId);
-        if (!post) {
-            response.msg = "No Post Found";
-            return res.status(404).json(response);
-        }
+        const isPostSection: boolean = section === "post";
+        let post;
+        let comment;
 
-        const comment = post.comments.find((comment) => comment._id.toString() === commentId);
+        if (isPostSection) {
+            post = await Post.findById(sectionId);
+            if (!post) {
+                response.msg = "No Post Found";
+                return res.status(404).json(response);
+            }
+
+            comment = post.comments.find((comment) => comment._id.toString() === commentId);
+        } else {
+            post = await Post.findOne({
+                "storyBoard._id": sectionId,
+            });
+            if (!post) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
+
+            post.storyBoard.comments = post.storyBoard.comments ?? [];
+            comment = post.storyBoard.comments.find((comment) => comment._id.toString() === commentId);
+        }
 
         if (!comment) {
             response.msg = "No Comment Found";
@@ -353,10 +370,21 @@ async function updateCommentHandler(req: Request, res: Response): Promise<any> {
         }
 
         comment.text = text;
-        await post.save();
+        if (isPostSection) {
+            await post.populate({
+                path: "comments.user",
+                select: "_id username profilepic",
+            });
+        } else {
+            await post.populate({
+                path: "storyBoard.comments.user",
+                select: "_id username profilepic",
+            });
+        }
 
-        response.msg = "Comment Updated Successfully";
+        await post.save();
         response.data = comment;
+        response.msg = "Comment Updated Successfully";
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -365,27 +393,42 @@ async function updateCommentHandler(req: Request, res: Response): Promise<any> {
 
 /***
  * @desc Delete a comment
- * @route Delete /api/posts/post/:postId/comment/:commentId
+ * @route Delete /api/socials/:section/:sectionId/comment/:commentId
  */
 async function deleteCommentHandler(req: Request, res: Response): Promise<any> {
-    const { commentId, postId } = req.params;
+    const { section, sectionId, commentId } = req.params;
 
     try {
         let response: IResponse = {
             msg: "",
         };
 
-        const post = await Post.findById(postId);
-        if (!post) {
-            response.msg = "No Post Found";
-            return res.status(404).json(response);
+        const isPostSection: boolean = section === "post";
+        let post;
+
+        if (isPostSection) {
+            post = await Post.findById(sectionId);
+            if (!post) {
+                response.msg = "No Post Found";
+                return res.status(404).json(response);
+            }
+
+            post.comments = post.comments.filter((comment) => comment._id.toString() !== commentId);
+        } else {
+            post = await Post.findOne({
+                "storyBoard._id": sectionId,
+            });
+            if (!post) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
+
+            post.storyBoard.comments = post.storyBoard.comments ?? [];
+            post.storyBoard.comments = post.storyBoard.comments.filter((comment) => comment._id.toString() !== commentId);
         }
 
-        post.comments = post.comments.filter((comment) => comment._id.toString() !== commentId);
         await post.save();
-
         response.msg = "Comment Deleted Successfully";
-        response.data = post.comments;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
