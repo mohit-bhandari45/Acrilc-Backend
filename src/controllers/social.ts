@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import Post from "../models/post.js";
 import User, { IUser } from "../models/user.js";
 import { IResponse } from "../types/response.js";
 import { setErrorDetails } from "../utils/helper.js";
 
+/***
+ * @desc Follow/Unfollow a user
+ * @route GET /api/:userId/follow
+ */
 async function followUnfollowHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
     const loggedUser = req.user?.id;
@@ -33,6 +37,10 @@ async function followUnfollowHandler(req: Request, res: Response): Promise<any> 
     }
 }
 
+/***
+ * @desc Get all followers of a user
+ * @route GET /api/:userId/followers
+ */
 async function getAllFollowersHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
 
@@ -58,6 +66,10 @@ async function getAllFollowersHandler(req: Request, res: Response): Promise<any>
     }
 }
 
+/***
+ * @desc Get all followings of a user
+ * @route GET /api/:userId/following
+ */
 async function getAllFollowingHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
 
@@ -82,6 +94,8 @@ async function getAllFollowingHandler(req: Request, res: Response): Promise<any>
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }
+
+/* Post and Storyboard Interaction Handlers */
 
 /* Applaud Handlers */
 
@@ -181,25 +195,51 @@ async function applaudSectionHandler(req: Request, res: Response): Promise<any> 
 /* Comment Handler */
 
 /***
- * @desc Get all comments in a post
- * @route GET /api/posts/post/:postId/comments
+ * @desc Get all comments in a section(post/storyboard)
+ * @route GET /api/socials/:section/:sectionId/comments
  */
 async function allCommentsHandler(req: Request, res: Response): Promise<any> {
-    const { postId } = req.params;
+    const { section, sectionId } = req.params;
 
     try {
         let response: IResponse = {
             msg: "",
         };
 
-        const post = await Post.findById(postId).populate([{ path: "comments.user" }, { path: "comments.applauds" }, { path: "comments.replies.user" }]);
-        if (!post) {
-            response.msg = "Post Not found";
-            return res.status(404).json(response);
-        }
+        const isPostSection: boolean = section === "post";
 
-        response.msg = post.comments.length === 0 ? "No Comments Yet!" : "Fetched all comments";
-        response.data = post.comments;
+        if (isPostSection) {
+            const post = await Post.findById(sectionId).populate([
+                { path: "comments.user", select: "_id username profilepic" },
+                { path: "comments.applauds", select: "_id username profilepic" },
+                { path: "comments.replies.user", select: "_id username profilepic" },
+            ]);
+
+            if (!post) {
+                response.msg = "Post Not found";
+                return res.status(404).json(response);
+            }
+
+            response.msg = post.comments.length === 0 ? "No Comments Yet!" : "Fetched all comments";
+            response.data = post.comments;
+        } else {
+            const post = await Post.findOne({
+                "storyBoard._id": sectionId,
+            }).populate([
+                { path: "storyBoard.comments.user", select: "_id username profilepic" },
+                { path: "storyBoard.comments.applauds", select: "_id username profilepic" },
+                { path: "storyBoard.comments.replies.user", select: "_id username profilepic" },
+            ]);
+
+            if (!post) {
+                response.msg = "Storyboard Not found";
+                return res.status(404).json(response);
+            }
+
+            post.storyBoard.comments = post.storyBoard.comments ?? [];
+            response.msg = post.storyBoard.comments.length === 0 ? "No Comments Yet!" : "Fetched all comments";
+            response.data = post.storyBoard.comments;
+        }
 
         return res.status(200).json(response);
     } catch (error) {
@@ -209,11 +249,11 @@ async function allCommentsHandler(req: Request, res: Response): Promise<any> {
 }
 
 /***
- * @desc Comment in a post
- * @route POST /api/posts/post/:postId/comment
+ * @desc Comment in a section(post/storyboard)
+ * @route POST /api/socials/:section/:sectionId/comment
  */
 async function commentPostHandler(req: Request, res: Response): Promise<any> {
-    const { postId } = req.params;
+    const { section, sectionId } = req.params;
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
     const { text } = req.body;
 
@@ -222,23 +262,66 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
             msg: "",
         };
 
-        const post = await Post.findByIdAndUpdate(
-            postId,
-            {
-                $push: { comments: { user: userId, text: text } },
-            },
-            { new: true }
-        );
+        const isPostSection: boolean = section === "post";
 
-        if (!post) {
-            response.msg = "No Post Found";
-            return res.status(404).json(response);
+        if (isPostSection) {
+            const post = await Post.findByIdAndUpdate(
+                sectionId,
+                {
+                    $push: {
+                        comments: {
+                            user: userId,
+                            text: text,
+                        },
+                    },
+                },
+                { new: true }
+            );
+
+            if (!post) {
+                response.msg = "No Post Found";
+                return res.status(404).json(response);
+            }
+
+            await post.populate({
+                path: "comments.user",
+                select: "_id username profilepic",
+            });
+            const comment = post.comments[post.comments.length - 1];
+
+            response.data = comment;
+        } else {
+            const post = await Post.findOne({
+                "storyBoard._id": sectionId,
+            });
+            if (!post) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
+
+            post.storyBoard.comments = post.storyBoard.comments ?? [];
+
+            post.storyBoard.comments.push({
+                _id: new mongoose.Types.ObjectId(),
+                user: userId,
+                text,
+            });
+
+            await post.populate({
+                path: "storyBoard.comments.user",
+                select: "_id username profilepic",
+            });
+
+            await post.save();
+
+            const comment = post.storyBoard.comments[post.storyBoard.comments.length - 1];
+            response.data = comment;
         }
 
         response.msg = "Commented Successfully";
-        response.data = post;
         return res.status(200).json(response);
     } catch (error) {
+        console.log(error);
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
     }
 }

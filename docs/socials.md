@@ -9,6 +9,8 @@
     }
     ```
 
+done(1,2,3,6,7)
+
 ## Table of Contents
 
 1. [User Routes](#user-routes)
@@ -17,6 +19,8 @@
     - [Get All Following](#3-get-all-following)
     - [Get All Applauds in a Section(Post/Storyboard)(#4-get-all-applauds-in-a-sectionpoststoryboard)]
     - [Applauded or Unapplauded a Post](#5-applaud-or-unapplaud-a-sectionpoststoryboard)
+    - [Comment on a Post](#6-comment-on-a-post)
+    - [Get All Comments in a Post](#7-get-all-comments-in-a-post)
 
 ## User Routes
 
@@ -187,3 +191,82 @@
             "msg": "Post Not found"
         }
         ```
+
+### 6. Comment on a Post
+
+- **URL**: `/api/socials/:section/:sectionId/comment`
+- **Method**: `POST`
+- **Headers**:
+
+    - `Authorization: Bearer <your_token>`
+
+- **Request Body**: `200`:
+
+    ```json
+    {
+        "text": "Great post!"
+    }
+    ```
+
+- **Description**: Add a new comment to a specific section(storyboard/post)
+
+- **Success Response**: `200`
+
+    ```json
+    {
+        "msg": "Commented Successfully",
+        "data": {
+            "user": {
+                "_id": "6804aa97ba95371c5c510c1a",
+                "username": "john_doe"
+            },
+            "text": "hello Hated the video",
+            "applauds": [],
+            "_id": "6805e9ea0b1df5aa9d282bae",
+            "replies": [],
+            "createdAt": "2025-04-21T06:47:06.867Z",
+            "updatedAt": "2025-04-21T06:47:06.867Z"
+        }
+    }
+    ```
+
+- **Error Response**:
+    - **Status Code**: `404`
+        ```json
+        {
+            "msg": "No Post Found"
+        }
+        ```
+
+### 7. Get All Comments in a Post
+
+- **URL**: `/api/posts/post/:postId/comments`
+- **Method**: `GET`
+- **Headers**:
+
+    - `Authorization: Bearer <your_token>`
+
+- **Description**: Retrieve all comments and their replies for a specific section(storyboard/post)
+
+- **Success Response**: `200`
+
+    ```json
+    {
+        "msg": "No Comments Yet!" or "Fetched all comments",
+        if there are comments
+        "data": [
+            {
+                "user": {
+                    "_id": "6804aa97ba95371c5c510c1a",
+                    "username": "john_doe"
+                },
+                "text": "hello Hated the video",
+                "applauds": [],
+                "_id": "6805e9ea0b1df5aa9d282bae",
+                "replies": [],
+                "createdAt": "2025-04-21T06:47:06.867Z",
+                "updatedAt": "2025-04-21T06:47:06.867Z"
+            }
+        ]
+    }
+    ```
