@@ -376,7 +376,7 @@
     - **When UnApplauding a Comment**:
         ```json
         {
-            "msg": "UnApplauded Post",
+            "msg": "UnApplauded Post"
         }
         ```
 
