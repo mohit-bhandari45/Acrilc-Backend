@@ -1,4 +1,5 @@
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { IStoryBoard } from "./storyboard.js";
 
 /* Post Interfaces */
 type MediaType = "image" | "video" | "audio" | "gif";
@@ -20,7 +21,7 @@ interface IReply {
 }
 
 interface IComment {
-    _id: Schema.Types.ObjectId;
+    _id: mongoose.Types.ObjectId;
     user: Schema.Types.ObjectId;
     text: string;
     applauds?: Schema.Types.ObjectId[];
@@ -43,10 +44,11 @@ interface IPost {
     forte: string;
     applauds: Schema.Types.ObjectId[];
     comments: IComment[];
+    storyBoard: IStoryBoard | null | undefined;
     location: Location;
     score: number;
     createdAt: Date;
     updatedAt: Date;
 }
 
-export { IPost, IComment, IMedia, IReply };
+export { IComment, IMedia, IPost, IReply };
