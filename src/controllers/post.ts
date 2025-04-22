@@ -111,6 +111,41 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
  * @route PATCH /api/posts/:postId
  */
 async function updatePostHandler(req: Request, res: Response): Promise<any> {
+    await new Promise<void>((resolve, reject) => {
+        if (!fs.existsSync("./uploads")) {
+            fs.mkdirSync("uploads");
+        }
+        upload.array("media", 10)(req, res, (err: any) => {
+            if (err instanceof MulterError) {
+                return reject({ status: 400, error: err.message });
+            } else if (err) {
+                return reject({ status: 500, error: err.message });
+            }
+            resolve();
+        });
+    });
+
+    const files: Express.Multer.File[] = req.files as Express.Multer.File[];
+
+    const media = files
+        ? await Promise.all(
+              files.map(async (file) => {
+                  const formData = new FormData();
+                  formData.append("image", fs.createReadStream(file.path));
+
+                  const response = await UploadService.upload(formData);
+                  const imageUrl = response.data.data.url;
+
+                  fs.unlinkSync(file.path);
+
+                  return {
+                      url: imageUrl,
+                      type: mediaType(file.mimetype),
+                  };
+              })
+          )
+        : [];
+
     const { postId } = req.params; // Post ID from URL
     const updates = req.body; // Data to update
 
@@ -121,9 +156,11 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
 
         const updatedPost = await Post.findByIdAndUpdate(
             postId,
-            { $set: updates }, // Only update specified fields
+            { $set: { updates, media: media } }, // Only update specified fields
             { new: true, runValidators: true } // Return updated post & apply schema validation
         );
+
+        console.log(updatedPost);
 
         if (!updatedPost) {
             response.msg = "Post Not Found!";
@@ -181,10 +218,28 @@ async function getSpecificPostHandler(req: Request, res: Response): Promise<any>
             msg: "",
         };
 
-        const post = await Post.findById(postId).populate({
-            path: "applauds",
-            select: "fullName username email",
-        });
+        const post = await Post.findById(postId).populate([
+            {
+                path: "applauds",
+                select: "_id username profilepic",
+            },
+            {
+                path: "comments.user",
+                select: "_id username profilepic",
+            },
+            {
+                path: "comments.applauds",
+                select: "_id username profilepic",
+            },
+            {
+                path: "comments.replies.user",
+                select: "_id username profilepic",
+            },
+            {
+                path: "comments.replies.applauds",
+                select: "_id username profilepic",
+            },
+        ]);
 
         if (!post) {
             response.msg = "Post Not found";

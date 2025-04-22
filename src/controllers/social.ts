@@ -170,6 +170,10 @@ async function applaudSectionHandler(req: Request, res: Response): Promise<any> 
             response.msg = isLiked ? "UnApplauded a Post" : "Applauded a Post";
             response.data = post.applauds;
         } else {
+            if (!post.storyBoard) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
             post.storyBoard.applauds = post.storyBoard.applauds ?? [];
             isLiked = post.storyBoard.applauds.includes(userId);
 
@@ -235,6 +239,10 @@ async function allCommentsHandler(req: Request, res: Response): Promise<any> {
                 response.msg = "Storyboard Not found";
                 return res.status(404).json(response);
             }
+            if (!post.storyBoard) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
 
             post.storyBoard.comments = post.storyBoard.comments ?? [];
             response.msg = post.storyBoard.comments.length === 0 ? "No Comments Yet!" : "Fetched all comments";
@@ -295,6 +303,10 @@ async function commentPostHandler(req: Request, res: Response): Promise<any> {
                 "storyBoard._id": sectionId,
             });
             if (!post) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
+            if (!post.storyBoard) {
                 response.msg = "No Storyboard Found";
                 return res.status(404).json(response);
             }
@@ -359,6 +371,10 @@ async function updateCommentHandler(req: Request, res: Response): Promise<any> {
                 response.msg = "No Storyboard Found";
                 return res.status(404).json(response);
             }
+            if (!post.storyBoard) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
 
             post.storyBoard.comments = post.storyBoard.comments ?? [];
             comment = post.storyBoard.comments.find((comment) => comment._id.toString() === commentId);
@@ -419,6 +435,10 @@ async function deleteCommentHandler(req: Request, res: Response): Promise<any> {
                 "storyBoard._id": sectionId,
             });
             if (!post) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
+            if (!post.storyBoard) {
                 response.msg = "No Storyboard Found";
                 return res.status(404).json(response);
             }
@@ -487,6 +507,10 @@ async function addPostCommentApplaudHandler(req: Request, res: Response): Promis
             });
             if (!post) {
                 response.msg = "StoryBoard Not found";
+                return res.status(404).json(response);
+            }
+            if (!post.storyBoard) {
+                response.msg = "No Storyboard Found";
                 return res.status(404).json(response);
             }
 
@@ -567,6 +591,10 @@ async function addReplyHandler(req: Request, res: Response): Promise<any> {
         } else {
             post = await Post.findById(sectionId);
             if (!post) {
+                response.msg = "No Storyboard Found";
+                return res.status(404).json(response);
+            }
+            if (!post.storyBoard) {
                 response.msg = "No Storyboard Found";
                 return res.status(404).json(response);
             }
