@@ -42,7 +42,9 @@
     }
     ```
 - **Success Response**:
+
     - Status Code: 200
+
     ```json
     {
         "msg": "StoryBoard created",
@@ -87,7 +89,9 @@
     }
     ```
 - **Success Response**:
+
     - Status Code: 200
+
     ```json
     {
         "msg": "Storyboard updated successfully!",
@@ -119,6 +123,7 @@
 - **Description**: Get all storyboards for a user.
 - **Headers**: `Content-Type: application/json`
 - **Response Body**:
+
     - **Success Response**:
         - Status Code: 200
         ```json
@@ -164,6 +169,7 @@
 - **Description**: Get details of a specific storyboard.
 - **Headers**: `Content-Type: application/json`
 - **Response Body**:
+
     - **Success Response**:
         - Status Code: 200
         ```json
@@ -197,7 +203,9 @@
 - **Description**: Delete a specific storyboard.
 - **Headers**: `Content-Type: application/json`
 - **Success Response**:
+
     - Status Code: 200
+
     ```json
     {
         "msg": "Storyboard Deleted Successfully"
