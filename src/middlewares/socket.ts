@@ -1,4 +1,3 @@
-import { Socket } from "socket.io";
 import { decode } from "../utils/jwt.js";
 import { CustomSocket, CustomUser } from "../types/socket.js";
 

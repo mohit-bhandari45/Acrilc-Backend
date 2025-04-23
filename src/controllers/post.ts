@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { Express } from "express";
-import { Schema } from "mongoose";
 import Post from "../models/post.js";
 import { setErrorDetails } from "../utils/helper.js";
-import { IUser } from "../types/user.js";
 import { IResponse } from "../types/response.js";
 import fs from "fs";
 import Collection from "../models/collection.js";
@@ -99,9 +97,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
         return res.status(200).json({ msg: "Post Created Successfully", data: post });
     } catch (err: any) {
         const status = err.status || 500;
-        const message = err.error || "Internal Server Error";
         console.log(err);
-
         return res.status(status).json({ error: err });
     }
 }

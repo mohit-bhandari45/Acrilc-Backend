@@ -6,6 +6,8 @@ import { IStoryBoard } from "./storyboard.js";
 
 interface IAll extends IUser {
     posts: number;
+    totalFollowers: number;
+    totalFollowing: number;
 }
 
 type ResponseData =
