@@ -9,7 +9,4 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true
     },
-    "exclude": [
-        "commitlint.config.ts"
-    ]
 }

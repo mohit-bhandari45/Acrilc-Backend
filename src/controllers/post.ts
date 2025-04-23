@@ -143,7 +143,7 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
         : [];
 
     const { postId } = req.params; // Post ID from URL
-    const updates = req.body; // Data to update
+    const updates = req.body;
 
     try {
         let response: IResponse = {
@@ -152,11 +152,9 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
 
         const updatedPost = await Post.findByIdAndUpdate(
             postId,
-            { $set: { updates, media: media } }, // Only update specified fields
+            { $set: { ...updates, media: media } }, // Only update specified fields
             { new: true, runValidators: true } // Return updated post & apply schema validation
         );
-
-        console.log(updatedPost);
 
         if (!updatedPost) {
             response.msg = "Post Not Found!";
