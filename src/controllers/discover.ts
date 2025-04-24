@@ -9,7 +9,7 @@ import { IResponse } from "../types/response.js";
  * */
 async function getTrendingForteHandler(req: Request, res: Response): Promise<any> {
     try {
-        const trendingFortes = await Post.aggregate([
+        let trendingFortes = await Post.aggregate([
             {
                 $group: {
                     _id: "$forte",
@@ -20,13 +20,21 @@ async function getTrendingForteHandler(req: Request, res: Response): Promise<any
             { $sort: { totalScore: -1 } },
         ]);
 
-        trendingFortes.forEach(async (forte) => {
-            const posts = await Post.find({
-                forte: forte._id,
-            });
-            const sorted = posts.sort((a, b) => (b.score || 0) - (a.score || 0));
-            forte.topPostURL = sorted[0].media[0].url;
+        trendingFortes = trendingFortes.filter((forte) => {
+            return forte._id != undefined;
         });
+
+        trendingFortes = await Promise.all(
+            trendingFortes.map(async (forte) => {
+                const posts = await Post.find({
+                    forte: forte._id,
+                });
+                const sorted = posts.sort((a, b) => (b.score || 0) - (a.score || 0));
+                forte.topPostURL = sorted[0]?.media[0]?.url;
+                console.log(forte);
+                return forte;
+            })
+        );
 
         return res.status(200).json(trendingFortes);
     } catch (error) {
