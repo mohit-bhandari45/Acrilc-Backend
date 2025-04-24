@@ -7,8 +7,6 @@ type MediaType = "image" | "video" | "audio" | "gif";
 interface IMedia {
     url: string;
     type: MediaType;
-    thumbnail?: string;
-    duration?: number;
 }
 
 interface IReply {
@@ -40,6 +38,7 @@ interface IPost {
     links: string[];
     hashTags: string[];
     mentions: Schema.Types.ObjectId[];
+    thumbnail?: string;
     media: IMedia[];
     forte: string;
     applauds: Schema.Types.ObjectId[];

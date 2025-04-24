@@ -54,7 +54,6 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
         const normalizedHashTags = normalizeToArray(hashTags);
 
         const files: Express.Multer.File[] = req.files as Express.Multer.File[];
-        console.log(files);
 
         const media = files
             ? await Promise.all(
@@ -77,12 +76,12 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
 
         const post = await Post.create({
             author,
-
             title,
             subtitle,
             size,
             story,
             media,
+            thumbnail: media[0].url,
             forte,
             links: normalizedLinks,
             hashTags: normalizedHashTags,

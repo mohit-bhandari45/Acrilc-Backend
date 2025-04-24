@@ -80,6 +80,9 @@ const postSchema: Schema<IPost> = new Schema(
             },
         ],
         media: [mediaSchema],
+        thumbnail: {
+            type: String,
+        },
         forte: {
             type: String,
         },
