@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { Express } from "express";
-import { Schema } from "mongoose";
 import Post from "../models/post.js";
 import { setErrorDetails } from "../utils/helper.js";
-import { IUser } from "../types/user.js";
 import { IResponse } from "../types/response.js";
 import fs from "fs";
 import Collection from "../models/collection.js";
@@ -99,9 +97,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
         return res.status(200).json({ msg: "Post Created Successfully", data: post });
     } catch (err: any) {
         const status = err.status || 500;
-        const message = err.error || "Internal Server Error";
         console.log(err);
-
         return res.status(status).json({ error: err });
     }
 }
@@ -147,7 +143,7 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
         : [];
 
     const { postId } = req.params; // Post ID from URL
-    const updates = req.body; // Data to update
+    const updates = req.body;
 
     try {
         let response: IResponse = {
@@ -156,11 +152,9 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
 
         const updatedPost = await Post.findByIdAndUpdate(
             postId,
-            { $set: { updates, media: media } }, // Only update specified fields
+            { $set: { ...updates, media: media } }, // Only update specified fields
             { new: true, runValidators: true } // Return updated post & apply schema validation
         );
-
-        console.log(updatedPost);
 
         if (!updatedPost) {
             response.msg = "Post Not Found!";

@@ -3,7 +3,6 @@ import { Schema } from "mongoose";
 import User, { IUser } from "../models/user.js";
 import { setErrorDetails } from "../utils/helper.js";
 import fs from "fs";
-import axios from "axios";
 import FormData from "form-data";
 import bcrypt from "bcrypt";
 import { createTransporter } from "../utils/email.js";
@@ -26,14 +25,23 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
         let response: IResponse = {
             msg: "",
         };
-        let user = await User.findById(ownerId).lean();
+        let user = await User.findById(ownerId);
         const posts = await Post.find({
             author: ownerId,
         });
 
         response.msg = "User Found";
         response.data = {
-            ...(user as unknown as IUser),
+            _id: user?._id,
+            username: user?.username,
+            fullName: user?.fullName,
+            profilePicture: user?.profilePicture,
+            bio: user?.bio,
+            story: user?.story,
+            preferences: user?.preferences,
+            services: user?.services,
+            totalFollowers: user?.followers.length,
+            totalFollowing: user?.following.length,
             posts: posts.length,
         };
 
