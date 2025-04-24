@@ -20,6 +20,14 @@ async function getTrendingForteHandler(req: Request, res: Response): Promise<any
             { $sort: { totalScore: -1 } },
         ]);
 
+        trendingFortes.forEach(async (forte) => {
+            const posts = await Post.find({
+                forte: forte._id,
+            });
+            const sorted = posts.sort((a, b) => (b.score || 0) - (a.score || 0));
+            forte.topPostURL = sorted[0].media[0].url;
+        });
+
         return res.status(200).json(trendingFortes);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
