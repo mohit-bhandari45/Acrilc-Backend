@@ -172,7 +172,16 @@ async function seedPosts(users: any) {
         }));
     }
 
+    function getRandomeMedia() {
+        return images[Math.floor(Math.random() * images.length)];
+    }
+
     const posts = postTemplates.map((title, index) => {
+        const media = [];
+        for (let i = 0; i < 2; i++) {
+            media.push({ url: getRandomeMedia(), type: "image" });
+        }
+
         return new Post({
             author: users[Math.floor(Math.random() * users.length)],
             title: title,
@@ -185,6 +194,7 @@ async function seedPosts(users: any) {
                 { url: images[Math.floor(Math.random() * images.length)], type: "image" },
                 { url: images[Math.floor(Math.random() * images.length)], type: "image" },
             ],
+            thumbnail: media[0].url,
             forte: getRandomForte(),
             location: locations[Math.floor(Math.random() * locations.length)],
             applauds: getRandomUsers(3),

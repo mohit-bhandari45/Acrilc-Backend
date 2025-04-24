@@ -30,7 +30,7 @@ async function getTrendingForteHandler(req: Request, res: Response): Promise<any
                     forte: forte._id,
                 });
                 const sorted = posts.sort((a, b) => (b.score || 0) - (a.score || 0));
-                forte.topPostURL = sorted[0]?.media[0]?.url;
+                forte.topPostURL = sorted[0].thumbnail;
                 console.log(forte);
                 return forte;
             })
