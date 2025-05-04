@@ -30,7 +30,6 @@ function mediaType(type: string): string {
  */
 async function createStoryBoardHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id;
-    const { title, description } = req.body;
 
     try {
         await new Promise<void>((resolve, reject) => {
@@ -67,6 +66,8 @@ async function createStoryBoardHandler(req: Request, res: Response): Promise<any
                   })
               )
             : [];
+        const { title, description } = req.body;
+
         const response: IResponse = {
             msg: "",
         };
@@ -163,7 +164,7 @@ async function createStoryBoardHandler(req: Request, res: Response): Promise<any
 //  * @route PATCH /api/user/:userId
 //  */
 async function getStoryBoardHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id;
+    const { userId } = req.params;
 
     try {
         const response: IResponse = {
