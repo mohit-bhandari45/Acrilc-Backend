@@ -244,7 +244,9 @@ async function updateProfilePicHandler(req: Request, res: Response): Promise<any
         const formData = new FormData();
         formData.append("image", fs.createReadStream(file!.path));
 
+        console.log("this is good", file);
         const response = await UploadService.upload(formData);
+        console.log(response);
 
         const imageUrl = response.data.data.url;
 
@@ -257,6 +259,7 @@ async function updateProfilePicHandler(req: Request, res: Response): Promise<any
             },
             { new: true }
         );
+        console.log("user updated");
 
         r.msg = "Profile Pic Updated";
         r.data = imageUrl;

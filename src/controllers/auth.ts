@@ -7,6 +7,7 @@ import { IResponse } from "../types/response.js";
 
 async function signUpHandler(req: Request, res: Response): Promise<any> {
     const { fullName, email, password } = req.body;
+    console.log(fullName, email, password);
     const formattedEmail: string = email.toLowerCase();
 
     try {
@@ -37,6 +38,7 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
 
         return res.status(201).send(response);
     } catch (err) {
+        console.log(err);
         return res.status(500).json(setErrorDetails("Internal Server Error", err as string));
     }
 }

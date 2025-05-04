@@ -30,7 +30,6 @@ function mediaType(type: string): string {
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
     try {
-        // Wrap multer in a promise so we can await it
         await new Promise<void>((resolve, reject) => {
             if (!fs.existsSync("./uploads")) {
                 fs.mkdirSync("uploads");

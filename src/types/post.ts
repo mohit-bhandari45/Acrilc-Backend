@@ -43,7 +43,6 @@ interface IPost {
     forte: string;
     applauds: Schema.Types.ObjectId[];
     comments: IComment[];
-    storyBoard: IStoryBoard | null | undefined;
     location: Location;
     score: number;
     createdAt: Date;
