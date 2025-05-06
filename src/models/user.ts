@@ -104,6 +104,7 @@ userSchema.static("matchPasswordAndGenerateToken", async function (email, passwo
     const token: string = encode(user);
     response.msg = "Login Success";
     response.token = token;
+    response.data = user;
 
     return true;
 });

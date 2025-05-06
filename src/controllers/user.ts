@@ -117,10 +117,18 @@ async function setUsernameHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
     const { username } = req.body;
 
+    const response: IResponse = {
+        msg: "",
+    };
     try {
-        const response: IResponse = {
-            msg: "",
-        };
+        const exist = await User.findOne({
+            username: username,
+        });
+
+        if (exist) {
+            response.msg = "Username Already Exists";
+            return res.status(409).json(response);
+        }
 
         await User.findByIdAndUpdate(
             userId,
@@ -136,7 +144,9 @@ async function setUsernameHandler(req: Request, res: Response): Promise<any> {
         response.data = username;
         return res.status(200).json(response);
     } catch (error) {
-        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+        console.log(error);
+        response.msg = "Something Went Wrong. Try Again";
+        return res.status(500).json(response);
     }
 }
 
