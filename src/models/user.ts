@@ -44,6 +44,9 @@ const userSchema: Schema<IUser> = new Schema(
         story: {
             type: String,
         },
+        portfolioURL: {
+            type: String,
+        },
         socialLinks: { type: Map, of: String },
         visibility: {
             type: String,

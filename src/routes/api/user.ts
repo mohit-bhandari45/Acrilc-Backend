@@ -6,7 +6,6 @@ import {
     deleteProfilePicHandler,
     getOwnProfileHandler,
     getPersonalDetailsHandler,
-    getUserProfileHandler,
     setPreferencesHandler,
     setUsernameHandler,
     updatePersonalDetailsHandler,
@@ -18,7 +17,6 @@ const router = Router();
 
 /* Getting Profiles */
 router.get("/me", getOwnProfileHandler);
-router.get("/:userId", getUserProfileHandler);
 
 /* Signup Continuation */
 router.post("/username", setUsernameHandler);

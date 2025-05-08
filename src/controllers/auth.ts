@@ -54,6 +54,7 @@ async function loginHandler(req: Request, res: Response): Promise<any> {
         };
 
         const check = await User.matchPasswordAndGenerateToken(formattedEmail, password, response);
+        console.log(response);
 
         if (check) {
             return res.status(200).json(response);

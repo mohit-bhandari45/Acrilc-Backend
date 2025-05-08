@@ -20,6 +20,7 @@ interface IUser {
     visibility: Visibility;
     following: Schema.Types.ObjectId[];
     followers: Schema.Types.ObjectId[];
+    portfolioURL: string;
     role: "user" | "admin";
     preferences: string;
     services: string;

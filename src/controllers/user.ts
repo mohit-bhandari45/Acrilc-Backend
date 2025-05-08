@@ -56,13 +56,15 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
  * @route Get api/user/:userId
  */
 async function getUserProfileHandler(req: Request, res: Response): Promise<any> {
-    const { userId } = req.params;
+    const { username } = req.params;
 
     try {
         let response: IResponse = {
             msg: "",
         };
-        const user = (await User.findById(userId)) as IUser;
+        const user = (await User.findOne({
+            username: username,
+        })) as IUser;
 
         response.msg = "User Found";
         response.data = user;
