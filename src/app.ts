@@ -1,17 +1,18 @@
 import cors from "cors";
 import express, { Express, Request, Response } from "express";
 import http from "http";
+import os from "os";
 import { Server } from "socket.io";
 import apiRoutes from "./routes/api/index.js";
 import authRoutes from "./routes/auth/auth.js";
-import socketHandler from "./socket.js";
 import generalRoutes from "./routes/general/general.js";
 import publicRoutes from "./routes/public/index.js";
+import socketHandler from "./socket.js";
 
 import dotenv from "dotenv";
+import morgan from "morgan";
 import { connectDB } from "./db.js";
 import { socketAuthMiddleware } from "./middlewares/socket.js";
-import morgan from "morgan";
 import { redisConnect } from "./redis.js";
 redisConnect();
 dotenv.config();
@@ -45,9 +46,33 @@ app.use("/api", apiRoutes);
 app.use("/general", generalRoutes);
 app.use("/public", publicRoutes);
 
-app.get("/up", (req: Request, res: Response) => {
+/* Health Route */
+const bytetoGb = (bytes: number) => bytes / 1024 ** 3;
+app.get("/", (req: Request, res: Response) => {
+    const up = Math.floor(os.uptime() / 3600);
+    const totalMem = bytetoGb(os.totalmem());
+    const freeMem = bytetoGb(os.freemem());
+    const usedMem = totalMem - freeMem;
+
+    const memUsagePercent = ((usedMem / totalMem) * 100).toFixed(2);
+
+    const cpuLoad = os.loadavg()[0];
+
     res.status(200).json({
         msg: "Server is up and running",
+        uptime: up + "Hrs",
+        memory: {
+            total: totalMem.toFixed(2) + "GiB",
+            free: freeMem.toFixed(2) + "GiB",
+            used: usedMem.toFixed(2) + "GiB",
+            usagePercent: memUsagePercent + "%",
+        },
+        cpu: {
+            load: cpuLoad,
+        },
+        platform: os.platform(),
+        arch: os.arch(),
+        hostname: os.hostname(),
     });
 });
 

@@ -10,7 +10,7 @@ import { IResponse } from "../types/response.js";
  * @route Get api/collections
  */
 async function getCollectionHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const userId = req.user?.id;
 
     try {
         let response: IResponse = {
@@ -36,7 +36,7 @@ async function getCollectionHandler(req: Request, res: Response): Promise<any> {
  * @route POST api/collections
  */
 async function addCollectionHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const userId = req.user?.id;
     const { title, visibility, posts } = req.body;
 
     try {

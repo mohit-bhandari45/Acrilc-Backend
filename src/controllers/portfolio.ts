@@ -6,10 +6,11 @@ async function addPortfolioURLHandler(req: Request, res: Response): Promise<any>
     const userId = req.user?.id;
 
     try {
-        const user = await User.findByIdAndUpdate(userId, { portfolioURL: url }, { new: true });
+        await User.findByIdAndUpdate(userId, { portfolioURL: url }, { new: true });
 
         return res.status(200).json({ msg: "Portfolio URL added" });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ msg: "Something went wrong. Please Try again!" });
     }
 }
@@ -26,17 +27,16 @@ async function checkURLHandler(req: Request, res: Response): Promise<any> {
 
         return res.status(200).json({ msg: "No URL found" });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ msg: "Something went wrong. Please Try again!" });
     }
 }
 
 async function getPortfolioHandler(req: Request, res: Response): Promise<any> {
     const { url } = req.query;
-    console.log(url);
 
     try {
         const user = await User.findOne({ portfolioURL: url });
-        console.log("This is user", user);
 
         if (!user) {
             return res.status(400).json({ msg: "No user found!" });
@@ -44,6 +44,7 @@ async function getPortfolioHandler(req: Request, res: Response): Promise<any> {
 
         return res.status(200).json({ msg: "Got user", data: user });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ msg: "Something went wrong. Please Try again!" });
     }
 }

@@ -157,7 +157,7 @@ async function setUsernameHandler(req: Request, res: Response): Promise<any> {
  * @route PUT api/user/
  */
 async function updatePersonalDetailsHandler(req: Request, res: Response): Promise<any> {
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const userId = req.user?.id;
     const { fullName, username, bio, story, socialLinks, visibility, preferences } = req.body;
 
     try {
@@ -207,7 +207,7 @@ async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
     });
 
     /* Controller Logic */
-    const userId = req.user?.id as unknown as Schema.Types.ObjectId;
+    const userId = req.user?.id;
 
     try {
         let r: IResponse = {
@@ -256,9 +256,7 @@ async function updateProfilePicHandler(req: Request, res: Response): Promise<any
         const formData = new FormData();
         formData.append("image", fs.createReadStream(file!.path));
 
-        console.log("this is good", file);
         const response = await UploadService.upload(formData);
-        console.log(response);
 
         const imageUrl = response.data.data.url;
 
@@ -271,7 +269,6 @@ async function updateProfilePicHandler(req: Request, res: Response): Promise<any
             },
             { new: true }
         );
-        console.log("user updated");
 
         r.msg = "Profile Pic Updated";
         r.data = imageUrl;

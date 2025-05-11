@@ -142,6 +142,8 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
 
     const { postId } = req.params; // Post ID from URL
     const updates = req.body;
+    console.log(updates);
+    console.log(media);
 
     try {
         let response: IResponse = {
