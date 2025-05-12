@@ -14,6 +14,7 @@ interface IUser {
     googleId: string;
     password: string;
     profilePicture: string;
+    bannerPicture: string;
     story: string;
     bio: string;
     socialLinks: Map<string, string>;

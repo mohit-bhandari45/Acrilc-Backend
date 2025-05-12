@@ -43,6 +43,7 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
             totalFollowers: user?.followers.length,
             totalFollowing: user?.following.length,
             posts: posts.length,
+            socialLinks: user?.socialLinks,
         };
 
         return res.status(200).json(response);
@@ -83,6 +84,7 @@ async function getUserProfileHandler(req: Request, res: Response): Promise<any> 
             totalFollowers: user?.followers.length,
             totalFollowing: user?.following.length,
             posts: posts.length,
+            socialLinks: user?.socialLinks,
         };
 
         return res.status(200).json(response);
@@ -176,6 +178,13 @@ async function updatePersonalDetailsHandler(req: Request, res: Response): Promis
     const userId = req.user?.id;
     const { fullName, username, bio, story, socialLinks, visibility, preferences } = req.body;
 
+    const map = new Map();
+    if (socialLinks) {
+        socialLinks.forEach((link: { [x: string]: any }) => {
+            map.set(link["platform"], link["url"]);
+        });
+    }
+
     try {
         const response: IResponse = {
             msg: "",
@@ -189,7 +198,7 @@ async function updatePersonalDetailsHandler(req: Request, res: Response): Promis
                     fullName: fullName && fullName,
                     bio: bio && bio,
                     story: story && story,
-                    socialLinks: socialLinks && socialLinks,
+                    socialLinks: map && map,
                     visibility: visibility && visibility,
                     preferences: preferences && preferences,
                 },
@@ -248,6 +257,54 @@ async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
         );
 
         r.msg = "Profile Pic Added";
+        r.data = imageUrl;
+        return res.status(200).json(r);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+async function addBannerPicHandler(req: Request, res: Response): Promise<any> {
+    upload.single("bannerPic")(req, res, function (err) {
+        // Check for Multer specific errors
+        if (err instanceof MulterError) {
+            return res.status(400).json({ error: err.message });
+        }
+
+        // Catch any other errors
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal server error", details: err.message });
+        }
+    });
+
+    /* Controller Logic */
+    const userId = req.user?.id;
+
+    try {
+        let r: IResponse = {
+            msg: "",
+        };
+
+        const file = req.file;
+        const formData = new FormData();
+        formData.append("image", fs.createReadStream(file!.path));
+
+        const response = await UploadService.upload(formData);
+        const imageUrl = response.data.data.url;
+
+        fs.unlinkSync(file?.path!);
+
+        await User.findByIdAndUpdate(
+            userId,
+            {
+                bannerPicture: imageUrl,
+            },
+            { new: true }
+        );
+
+        r.msg = "Banner Pic Added";
         r.data = imageUrl;
         return res.status(200).json(r);
     } catch (error) {
@@ -470,4 +527,5 @@ export {
     changeEmailHandler,
     verifyEmailHandler,
     changePasswordHandler,
+    addBannerPicHandler,
 };

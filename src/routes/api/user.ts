@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    addBannerPicHandler,
     addProfilePicHandler,
     changeEmailHandler,
     changePasswordHandler,
@@ -27,6 +28,7 @@ router.post("/profile-pic", addProfilePicHandler);
 router.get("/", getPersonalDetailsHandler);
 router.put("/", updatePersonalDetailsHandler);
 router.put("/profile-pic", upload.single("profilePic"), updateProfilePicHandler);
+router.put("/banner-pic", upload.single("bannerPic"), addBannerPicHandler);
 router.delete("/profile-pic", deleteProfilePicHandler);
 
 /* Account and Settings */

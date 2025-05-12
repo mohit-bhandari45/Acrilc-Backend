@@ -38,6 +38,9 @@ const userSchema: Schema<IUser> = new Schema(
         profilePicture: {
             type: String,
         },
+        bannerPicture: {
+            type: String,
+        },
         bio: {
             type: String,
         },
