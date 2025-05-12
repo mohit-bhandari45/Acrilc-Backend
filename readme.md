@@ -48,15 +48,15 @@ REDIS_URL=redis://localhost:6379
 
 ## 🛠️ Scripts
 
-| Command        | Description                       |
-|----------------|-----------------------------------|
-| `yarn dev`     | Run in development mode           |
-| `yarn build`   | Compile TypeScript to JavaScript  |
-| `yarn start`   | Start the production server       |
-| `yarn lint`    | Run ESLint checks                 |
-| `yarn lint:fix`| Fix linting issues automatically  |
-| `yarn format`  | Format code using Prettier        |
-| `yarn seed`    | Seed the database                 |
+| Command         | Description                      |
+| --------------- | -------------------------------- |
+| `yarn dev`      | Run in development mode          |
+| `yarn build`    | Compile TypeScript to JavaScript |
+| `yarn start`    | Start the production server      |
+| `yarn lint`     | Run ESLint checks                |
+| `yarn lint:fix` | Fix linting issues automatically |
+| `yarn format`   | Format code using Prettier       |
+| `yarn seed`     | Seed the database                |
 
 ---
 

@@ -62,12 +62,28 @@ async function getUserProfileHandler(req: Request, res: Response): Promise<any> 
         let response: IResponse = {
             msg: "",
         };
-        const user = (await User.findOne({
+        const user = await User.findOne({
             username: username,
-        })) as IUser;
+        });
+
+        const posts = await Post.find({
+            author: user!._id,
+        });
 
         response.msg = "User Found";
-        response.data = user;
+        response.data = {
+            _id: user?._id,
+            username: user?.username,
+            fullName: user?.fullName,
+            profilePicture: user?.profilePicture,
+            bio: user?.bio,
+            story: user?.story,
+            preferences: user?.preferences,
+            services: user?.services,
+            totalFollowers: user?.followers.length,
+            totalFollowing: user?.following.length,
+            posts: posts.length,
+        };
 
         return res.status(200).json(response);
     } catch (error) {
