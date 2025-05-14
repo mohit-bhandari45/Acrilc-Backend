@@ -14,6 +14,7 @@ const userSchema: Schema<IUser> = new Schema(
         username: {
             type: String,
             unique: true,
+            sparse: true,
         },
         fullName: {
             type: String,
@@ -22,6 +23,7 @@ const userSchema: Schema<IUser> = new Schema(
         email: {
             type: String,
             required: true,
+            unique: true,
         },
         newEmail: {
             type: String,
@@ -32,6 +34,7 @@ const userSchema: Schema<IUser> = new Schema(
         googleId: {
             type: String,
             unique: true,
+            sparse: true,
         },
         password: {
             type: String,
