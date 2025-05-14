@@ -36,6 +36,7 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
             username: user?.username,
             fullName: user?.fullName,
             profilePicture: user?.profilePicture,
+            bannerPicture: user?.bannerPicture,
             bio: user?.bio,
             story: user?.story,
             preferences: user?.preferences,
@@ -45,6 +46,8 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
             posts: posts.length,
             socialLinks: user?.socialLinks,
         };
+        console.log(response.data);
+        console.log(response.data);
 
         return res.status(200).json(response);
     } catch (error) {
@@ -266,19 +269,6 @@ async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
 }
 
 async function addBannerPicHandler(req: Request, res: Response): Promise<any> {
-    upload.single("bannerPic")(req, res, function (err) {
-        // Check for Multer specific errors
-        if (err instanceof MulterError) {
-            return res.status(400).json({ error: err.message });
-        }
-
-        // Catch any other errors
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Internal server error", details: err.message });
-        }
-    });
-
     /* Controller Logic */
     const userId = req.user?.id;
 
@@ -306,6 +296,7 @@ async function addBannerPicHandler(req: Request, res: Response): Promise<any> {
 
         r.msg = "Banner Pic Added";
         r.data = imageUrl;
+        console.log(r);
         return res.status(200).json(r);
     } catch (error) {
         console.log(error);
