@@ -36,7 +36,7 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
             </ul>
 
         <p><strong>Ready to dive in? Let’s get started!</strong></p>
-            <a href="${process.env.BASE_URL}/profile" style="background-color: #FF6200; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Complete Your Profile Now</a>
+            <a href="${process.env.BASE_URL}/auth/username" style="background-color: #FF6200; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Complete Your Profile Now</a>
 
             <p>Explore our platform, upload your first piece of art, and connect with the Acrilc community. We can’t wait to see what you create!</p>
 
@@ -47,7 +47,12 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
 
             <p>We’re so excited to see your creativity come to life on Acrilc. Let’s build something amazing together!</p>
             <p><strong>Happy Creating,</strong><br>The Acrilc Team</p>
-            <p><a href="${process.env.BASE_URL}">Website</a> | <a href="https://instagram.com/Acrilc">Instagram</a> | <a href="https://twitter.com/Acrilc">Twitter</a></p>
+            <p>
+                <a href="${process.env.BASE_URL}">Website</a> | 
+                <a href="https://www.instagram.com/theacrilc?igsh=NjRndzAydDdqcnF0">Instagram</a> | 
+                <a href="https://www.linkedin.com/company/acrilc/">Linkedin</a> | 
+                <a href="https://pin.it/2LBlIjfr6">Pinterest</a>
+            </p>
 
             <hr>
             <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
