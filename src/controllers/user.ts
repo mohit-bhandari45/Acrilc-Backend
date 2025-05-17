@@ -216,86 +216,27 @@ async function updatePersonalDetailsHandler(req: Request, res: Response): Promis
     }
 }
 
-/***
- * @desc Add Personal General Details
- * @route POST api/user/profile-pic
- */
-async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
-    upload.single("profilePic")(req, res, function (err) {
-        // Check for Multer specific errors
-        if (err instanceof MulterError) {
-            return res.status(400).json({ error: err.message });
-        }
-
-        // Catch any other errors
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Internal server error", details: err.message });
-        }
-    });
-
-    /* Controller Logic */
-    const userId = req.user?.id;
-
-    try {
-        let r: IResponse = {
-            msg: "",
-        };
-
-        const file = req.file;
-        const formData = new FormData();
-        formData.append("image", fs.createReadStream(file!.path));
-
-        const response = await UploadService.upload(formData);
-        const imageUrl = response.data.data.url;
-
-        fs.unlinkSync(file?.path!);
-
-        await User.findByIdAndUpdate(
-            userId,
-            {
-                profilePicture: imageUrl,
-            },
-            { new: true }
-        );
-
-        r.msg = "Profile Pic Added";
-        r.data = imageUrl;
-        return res.status(200).json(r);
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
-    }
-}
-
 async function addBannerPicHandler(req: Request, res: Response): Promise<any> {
     /* Controller Logic */
     const userId = req.user?.id;
+    const { bannerURL } = req.body;
+    console.log(bannerURL);
 
     try {
         let r: IResponse = {
             msg: "",
         };
 
-        const file = req.file;
-        const formData = new FormData();
-        formData.append("image", fs.createReadStream(file!.path));
-
-        const response = await UploadService.upload(formData);
-        const imageUrl = response.data.data.url;
-
-        fs.unlinkSync(file?.path!);
-
         await User.findByIdAndUpdate(
             userId,
             {
-                bannerPicture: imageUrl,
+                bannerPicture: bannerURL,
             },
             { new: true }
         );
 
         r.msg = "Banner Pic Added";
-        r.data = imageUrl;
+        r.data = bannerURL;
         console.log(r);
         return res.status(200).json(r);
     } catch (error) {
@@ -308,34 +249,23 @@ async function addBannerPicHandler(req: Request, res: Response): Promise<any> {
  * @desc Update Profile Pic
  * @route PUT api/user/profile-pic
  */
-async function updateProfilePicHandler(req: Request, res: Response): Promise<any> {
+async function addProfilePicHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
-
+    const { imageURL } = req.body;
     try {
         let r: IResponse = {
             msg: "",
         };
 
-        const file = req.file;
-        const formData = new FormData();
-        formData.append("image", fs.createReadStream(file!.path));
-
-        const response = await UploadService.upload(formData);
-
-        const imageUrl = response.data.data.url;
-
-        fs.unlinkSync(file?.path!);
-
         await User.findByIdAndUpdate(
             userId,
             {
-                profilePicture: imageUrl,
+                profilePicture: imageURL,
             },
             { new: true }
         );
 
-        r.msg = "Profile Pic Updated";
-        r.data = imageUrl;
+        r.msg = "Profile Pic Added";
         return res.status(200).json(r);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -512,7 +442,6 @@ export {
     getPersonalDetailsHandler,
     updatePersonalDetailsHandler,
     addProfilePicHandler,
-    updateProfilePicHandler,
     deleteProfilePicHandler,
     setPreferencesHandler,
     changeEmailHandler,
