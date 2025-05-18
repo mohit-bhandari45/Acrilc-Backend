@@ -11,7 +11,6 @@ import {
     setUsernameHandler,
     updatePersonalDetailsHandler,
 } from "../../controllers/user.js";
-import upload from "../../lib/multer.js";
 
 const router = Router();
 

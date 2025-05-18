@@ -10,6 +10,7 @@ import discoverRoutes from "./discover.js";
 import conversationRoutes from "./chat.js";
 import storyRoutes from "./story.js";
 import portfolioRoutes from "./portfolio.js";
+import utilRoutes from "./utils.js";
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use("/posts", postsRoutes);
 router.use("/story", storyRoutes);
 router.use("/socials", socialRoutes);
 router.use("/portfolio", portfolioRoutes);
+router.use("/utils", utilRoutes);
 
 export default router;

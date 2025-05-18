@@ -86,7 +86,6 @@ async function seedUsers() {
             }))
         );
         const users = await User.insertMany(usersWithHashedPasswords);
-        console.log("Inserted Users");
         return users;
     } catch (error) {
         console.log(error);

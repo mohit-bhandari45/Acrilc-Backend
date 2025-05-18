@@ -1,16 +1,11 @@
+import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import { Schema } from "mongoose";
-import User, { IUser } from "../models/user.js";
-import { setErrorDetails } from "../utils/helper.js";
-import fs from "fs";
-import FormData from "form-data";
-import bcrypt from "bcrypt";
-import { createTransporter } from "../utils/email.js";
-import { IResponse } from "../types/response.js";
-import UploadService from "../services/service.js";
 import Post from "../models/post.js";
-import upload from "../lib/multer.js";
-import { MulterError } from "multer";
+import User, { IUser } from "../models/user.js";
+import { IResponse } from "../types/response.js";
+import { createTransporter } from "../utils/email.js";
+import { setErrorDetails } from "../utils/helper.js";
 
 /* Getting Profiles */
 
@@ -46,8 +41,6 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
             posts: posts.length,
             socialLinks: user?.socialLinks,
         };
-        console.log(response.data);
-        console.log(response.data);
 
         return res.status(200).json(response);
     } catch (error) {
@@ -220,7 +213,6 @@ async function addBannerPicHandler(req: Request, res: Response): Promise<any> {
     /* Controller Logic */
     const userId = req.user?.id;
     const { bannerURL } = req.body;
-    console.log(bannerURL);
 
     try {
         let r: IResponse = {
@@ -237,7 +229,6 @@ async function addBannerPicHandler(req: Request, res: Response): Promise<any> {
 
         r.msg = "Banner Pic Added";
         r.data = bannerURL;
-        console.log(r);
         return res.status(200).json(r);
     } catch (error) {
         console.log(error);
@@ -436,16 +427,16 @@ async function changePasswordHandler(req: Request, res: Response): Promise<any> 
 }
 
 export {
-    getOwnProfileHandler,
-    getUserProfileHandler,
-    setUsernameHandler,
-    getPersonalDetailsHandler,
-    updatePersonalDetailsHandler,
-    addProfilePicHandler,
-    deleteProfilePicHandler,
-    setPreferencesHandler,
-    changeEmailHandler,
-    verifyEmailHandler,
-    changePasswordHandler,
     addBannerPicHandler,
+    addProfilePicHandler,
+    changeEmailHandler,
+    changePasswordHandler,
+    deleteProfilePicHandler,
+    getOwnProfileHandler,
+    getPersonalDetailsHandler,
+    getUserProfileHandler,
+    setPreferencesHandler,
+    setUsernameHandler,
+    updatePersonalDetailsHandler,
+    verifyEmailHandler,
 };

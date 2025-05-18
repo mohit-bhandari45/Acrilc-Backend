@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { ENV } from "./util.js";
+import { ENV } from "./utils.js";
 
 interface IUser {
     _id: any;

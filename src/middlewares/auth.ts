@@ -24,7 +24,6 @@ async function authCheckMiddleware(req: Request, res: Response, next: NextFuncti
         }
 
         let cachedUser = await CacheService.getCachedUser<IUser>(decoded.id);
-        console.log("Redis User", cachedUser);
 
         if (!cachedUser) {
             cachedUser = await UserService.getUserById(decoded.id);
