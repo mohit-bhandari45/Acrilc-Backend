@@ -11,6 +11,7 @@ import conversationRoutes from "./chat.js";
 import storyRoutes from "./story.js";
 import portfolioRoutes from "./portfolio.js";
 import utilRoutes from "./utils.js";
+import marketplaceRoutes from "./marketplace.js";
 
 const router = Router();
 
@@ -26,5 +27,6 @@ router.use("/story", storyRoutes);
 router.use("/socials", socialRoutes);
 router.use("/portfolio", portfolioRoutes);
 router.use("/utils", utilRoutes);
+router.use("/projects", marketplaceRoutes);
 
 export default router;
