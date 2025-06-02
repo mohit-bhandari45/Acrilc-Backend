@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import Project from "../models/marketplace.js";
+import { IResponse } from "./auth.js";
+import { setErrorDetails } from "../utils/helper.js";
 
 async function createMarketplaceProjectHandler(req: Request, res: Response): Promise<void> {
     const userId = req.user?.id;
@@ -57,4 +59,50 @@ async function getSingleMarketProjectHandler(req: Request, res: Response): Promi
     }
 }
 
-export { createMarketplaceProjectHandler, getSingleMarketProjectHandler };
+async function getAllMarketPlaceApiHandler(req: Request, res: Response): Promise<void> {
+    const userId = req.user?.id;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const projects = await Project.find({
+            author: userId,
+        });
+
+        response.msg = projects.length === 0 ? "No Projects Found!" : "Got All Projects";
+        response.data = projects;
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+async function getAllMarketPlaceHandler(req: Request, res: Response): Promise<void> {
+    const { userId } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const projects = await Project.find({
+            author: userId,
+        })
+            .skip(skip)
+            .limit(10)
+            .sort({ createdAt: -1 });
+
+        response.msg = projects.length === 0 ? "No Projects Found!" : "Got All Projects";
+        response.data = projects;
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+export { createMarketplaceProjectHandler, getSingleMarketProjectHandler, getAllMarketPlaceApiHandler, getAllMarketPlaceHandler };

@@ -3,6 +3,7 @@ import { ICollection } from "./collection.js";
 import { IComment, IPost, IReply } from "./post.js";
 import { IUser } from "./user.js";
 import { IStoryBoard } from "./storyboard.js";
+import { IMarketplace } from "./marketplace.js";
 
 interface IAll extends IUser {
     posts: number;
@@ -27,7 +28,8 @@ type ResponseData =
     | IStoryBoard
     | IStoryBoard[]
     | null
-    | IReply;
+    | IReply
+    | IMarketplace[];
 
 /* Response Interface */
 interface IResponse {
