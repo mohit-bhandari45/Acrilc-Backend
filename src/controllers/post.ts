@@ -1,27 +1,9 @@
 import { Request, Response } from "express";
-import { Express } from "express";
-import Post from "../models/post.js";
-import { setErrorDetails } from "../utils/helper.js";
-import { IResponse } from "../types/response.js";
-import fs from "fs";
 import Collection from "../models/collection.js";
-import UploadService from "../services/service.js";
-import FormData from "form-data";
+import Post from "../models/post.js";
+import { IResponse } from "../types/response.js";
+import { setErrorDetails } from "../utils/helper.js";
 import { normalizeToArray } from "../utils/post.js";
-import upload from "../lib/multer.js";
-import { MulterError } from "multer";
-
-function mediaType(type: string): string {
-    if (type.startsWith("image")) {
-        return "image";
-    } else if (type.startsWith("video")) {
-        return "video";
-    } else if (type.startsWith("audio")) {
-        return "audio";
-    } else {
-        return "gif";
-    }
-}
 
 /***
  * @desc Create post
@@ -30,48 +12,13 @@ function mediaType(type: string): string {
 
 async function createPostHandler(req: Request, res: Response): Promise<any> {
     try {
-        await new Promise<void>((resolve, reject) => {
-            if (!fs.existsSync("./uploads")) {
-                fs.mkdirSync("uploads");
-            }
-            upload.array("media", 10)(req, res, (err: any) => {
-                if (err instanceof MulterError) {
-                    return reject({ status: 400, error: err.message });
-                } else if (err) {
-                    return reject({ status: 500, error: err.message });
-                }
-                resolve();
-            });
-        });
-
         // Now multer has parsed the request, so you can safely access req.body and req.files
         const author = req.user?.id;
-        const { title, subtitle, story, size, links, hashTags, mentions, location, forte, collectionId } = req.body;
+        const { title, subtitle, story, size, links, hashTags, mentions, location, forte, collectionId, media } = req.body;
 
         const normalizedMentions = normalizeToArray(mentions);
         const normalizedLinks = normalizeToArray(links);
         const normalizedHashTags = normalizeToArray(hashTags);
-
-        const files: Express.Multer.File[] = req.files as Express.Multer.File[];
-
-        const media = files
-            ? await Promise.all(
-                  files.map(async (file) => {
-                      const formData = new FormData();
-                      formData.append("image", fs.createReadStream(file.path));
-
-                      const response = await UploadService.upload(formData);
-                      const imageUrl = response.data.data.url;
-
-                      fs.unlinkSync(file.path);
-
-                      return {
-                          url: imageUrl,
-                          type: mediaType(file.mimetype),
-                      };
-                  })
-              )
-            : [];
 
         const post = await Post.create({
             author,
@@ -92,7 +39,7 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
             await Collection.findByIdAndUpdate(collectionId, { $push: { posts: post.id } }, { new: true });
         }
 
-        return res.status(200).json({ msg: "Post Created Successfully", data: post });
+        return res.status(201).json({ msg: "Post Created Successfully", data: post });
     } catch (err: any) {
         const status = err.status || 500;
         console.log(err);
@@ -105,41 +52,6 @@ async function createPostHandler(req: Request, res: Response): Promise<any> {
  * @route PATCH /api/posts/:postId
  */
 async function updatePostHandler(req: Request, res: Response): Promise<any> {
-    await new Promise<void>((resolve, reject) => {
-        if (!fs.existsSync("./uploads")) {
-            fs.mkdirSync("uploads");
-        }
-        upload.array("media", 10)(req, res, (err: any) => {
-            if (err instanceof MulterError) {
-                return reject({ status: 400, error: err.message });
-            } else if (err) {
-                return reject({ status: 500, error: err.message });
-            }
-            resolve();
-        });
-    });
-
-    const files: Express.Multer.File[] = req.files as Express.Multer.File[];
-
-    const media = files
-        ? await Promise.all(
-              files.map(async (file) => {
-                  const formData = new FormData();
-                  formData.append("image", fs.createReadStream(file.path));
-
-                  const response = await UploadService.upload(formData);
-                  const imageUrl = response.data.data.url;
-
-                  fs.unlinkSync(file.path);
-
-                  return {
-                      url: imageUrl,
-                      type: mediaType(file.mimetype),
-                  };
-              })
-          )
-        : [];
-
     const { postId } = req.params; // Post ID from URL
     const updates = req.body;
 
@@ -148,11 +60,7 @@ async function updatePostHandler(req: Request, res: Response): Promise<any> {
             msg: "",
         };
 
-        const updatedPost = await Post.findByIdAndUpdate(
-            postId,
-            { $set: { ...updates, media: media } }, // Only update specified fields
-            { new: true, runValidators: true } // Return updated post & apply schema validation
-        );
+        const updatedPost = await Post.findByIdAndUpdate(postId, { $set: { ...updates } }, { new: true, runValidators: true });
 
         if (!updatedPost) {
             response.msg = "Post Not Found!";
@@ -272,4 +180,4 @@ async function deletePostHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-export { createPostHandler, updatePostHandler, getPostsHandler, getSpecificPostHandler, deletePostHandler };
+export { createPostHandler, deletePostHandler, getPostsHandler, getSpecificPostHandler, updatePostHandler };

@@ -32,41 +32,7 @@ async function createStoryBoardHandler(req: Request, res: Response): Promise<any
     const userId = req.user?.id;
 
     try {
-        await new Promise<void>((resolve, reject) => {
-            if (!fs.existsSync("./uploads")) {
-                fs.mkdirSync("uploads");
-            }
-            upload.array("media", 10)(req, res, (err: any) => {
-                if (err instanceof MulterError) {
-                    return reject({ status: 400, error: err.message });
-                } else if (err) {
-                    return reject({ status: 500, error: err.message });
-                }
-                resolve();
-            });
-        });
-
-        const files: Express.Multer.File[] = req.files as Express.Multer.File[];
-
-        const media = files
-            ? await Promise.all(
-                  files.map(async (file) => {
-                      const formData = new FormData();
-                      formData.append("image", fs.createReadStream(file.path));
-
-                      const response = await UploadService.upload(formData);
-                      const imageUrl = response.data.data.url;
-
-                      fs.unlinkSync(file.path);
-
-                      return {
-                          url: imageUrl,
-                          type: mediaType(file.mimetype),
-                      };
-                  })
-              )
-            : [];
-        const { title, description } = req.body;
+        const { title, description, media } = req.body;
 
         const response: IResponse = {
             msg: "",
@@ -81,7 +47,7 @@ async function createStoryBoardHandler(req: Request, res: Response): Promise<any
 
         response.msg = "StoryBoard created";
         response.data = storyBoard;
-        return res.status(200).json(response);
+        return res.status(201).json(response);
     } catch (error) {
         console.log(error);
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
