@@ -41,4 +41,4 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             cd /home/ubuntu/app
-            pm2 start dist/index.js --name acrilc --interpreter node --node-args="--enable-source-maps"
+            pm2 start dist/index.js --name acrilc --interpreter node
