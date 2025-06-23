@@ -29,7 +29,8 @@ type ResponseData =
     | IStoryBoard[]
     | null
     | IReply
-    | IMarketplace[];
+    | IMarketplace[]
+    | Record<string, IPost[]>;
 
 /* Response Interface */
 interface IResponse {
