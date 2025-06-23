@@ -12,14 +12,12 @@ import storyRoutes from "./story.js";
 import portfolioRoutes from "./portfolio.js";
 import utilRoutes from "./utils.js";
 import marketplaceRoutes from "./marketplace.js";
-import featuredRoutes from "./featured.js";
 
 const router = Router();
 
 router.get("/verify-email", verifyEmailHandler);
 
 router.use(authCheckMiddleware);
-router.use("/featured", featuredRoutes);
 router.use("/user", userRoutes);
 router.use("/collections", collectionRoutes);
 router.use("/discover", discoverRoutes);

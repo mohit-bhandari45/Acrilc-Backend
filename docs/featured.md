@@ -83,42 +83,44 @@ http://localhost:8000
 ```json
 {
     "msg": "Projects found",
-    "data": [{
-        author: "60f6f9c2d4f1b23456789abc",
-        image: "https://example.com/project1.jpg",
-        title: "Urban Skyline Photography",
-        yearOfMaking: "2023",
-        description: "A breathtaking collection of urban skyline photos shot during twilight.",
-        pricingOptions: {
-        basic: 100,
-        premium: 250,
-        deluxe: 500
+    "data": [
+        {
+            "author": "60f6f9c2d4f1b23456789abc",
+            "image": "https://example.com/project1.jpg",
+            "title": "Urban Skyline Photography",
+            "yearOfMaking": "2023",
+            "description": "A breathtaking collection of urban skyline photos shot during twilight.",
+            "pricingOptions": {
+                "basic": 100,
+                "premium": 250,
+                "deluxe": 500
+            },
+            "additionalInfo": "Includes free digital prints for premium and deluxe packages.",
+            "forte": "Photography",
+            "keywords": "urban, skyline, photography, twilight, cityscape",
+            "contactInfo": "email@example.com",
+            "showContactInfo": true,
+            "status": "published"
         },
-        additionalInfo: "Includes free digital prints for premium and deluxe packages.",
-        forte: "Photography",
-        keywords: "urban, skyline, photography, twilight, cityscape",
-        contactInfo: "email@example.com",
-        showContactInfo: true,
-        status: "published"
-    },
-    {
-        author: "60f6f9c2d4f1b23456789abc",
-        image: "https://example.com/project2.jpg",
-        title: "AI-Powered Resume Builder",
-        yearOfMaking: "2024",
-        description: "A smart resume builder that uses AI to tailor content based on job roles.",
-        pricingOptions: {
-        basic: 50,
-        premium: 150,
-        deluxe: 300
-        },
-        additionalInfo: "Includes LinkedIn optimization with premium package.",
-        forte: "Software Development",
-        keywords: "AI, resume, builder, job, automation",
-        contactInfo: "resume.ai@example.com",
-        showContactInfo: false,
-        status: "draft"
-    }]
+        {
+            "author": "60f6f9c2d4f1b23456789abc",
+            "image": "https://example.com/project2.jpg",
+            "title": "AI-Powered Resume Builder",
+            "yearOfMaking": "2024",
+            "description": "A smart resume builder that uses AI to tailor content based on job roles.",
+            "pricingOptions": {
+                "basic": 50,
+                "premium": 150,
+                "deluxe": 300
+            },
+            "additionalInfo": "Includes LinkedIn optimization with premium package.",
+            "forte": "Software Development",
+            "keywords": "AI, resume, builder, job, automation",
+            "contactInfo": "resume.ai@example.com",
+            "showContactInfo": false,
+            "status": "draft"
+        }
+    ]
 }
 ```
 
