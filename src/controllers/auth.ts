@@ -34,6 +34,7 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
         const token: string = encode(user);
         response.msg = "User Created Successfully";
         response.token = token;
+        res.cookie("token", token);
 
         return res.status(201).send(response);
     } catch (err) {
@@ -53,6 +54,7 @@ async function loginHandler(req: Request, res: Response): Promise<any> {
         };
 
         const check = await User.matchPasswordAndGenerateToken(formattedEmail, password, response);
+        res.cookie("token", response.token);
 
         if (check) {
             return res.status(200).json(response);

@@ -4,15 +4,25 @@ import UserService, { IUser } from "../services/userService.js";
 import { decode } from "../utils/jwt.js";
 
 async function authCheckMiddleware(req: Request, res: Response, next: NextFunction): Promise<any> {
-    const authHeader: string = req.headers.authorization!;
+    // Try to get token from Authorization header
+    let token: string | undefined;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    const authHeader: string | undefined = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+        token = authHeader.split("Bearer ")[1];
+    }
+
+    // If not in header, try cookie
+    if (!token && req.cookies?.token) {
+        token = req.cookies.token;
+    }
+
+    // If no token found
+    if (!token) {
         return res.status(401).json({
             msg: "Unauthorized Access - No Token Provided",
         });
     }
-
-    const token: string = authHeader.split("Bearer ")[1];
 
     try {
         const decoded = decode(token);
