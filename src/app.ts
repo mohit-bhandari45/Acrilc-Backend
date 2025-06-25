@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth/auth.js";
 import generalRoutes from "./routes/general/general.js";
 import publicRoutes from "./routes/public/index.js";
 import socketHandler from "./socket.js";
+import cookieParser from "cookie-parser";
 
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -32,6 +33,7 @@ const io = new Server(server, {
 
 // request logger
 app.use(morgan("dev"));
+app.use(cookieParser());
 
 io.use(socketAuthMiddleware); //socket middleware
 io.on("connection", socketHandler(io));
