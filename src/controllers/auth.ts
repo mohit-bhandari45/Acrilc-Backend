@@ -38,7 +38,7 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
         });
 
         return res.status(201).send(response);
@@ -63,7 +63,7 @@ async function loginHandler(req: Request, res: Response): Promise<any> {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
         });
 
         if (check) {
