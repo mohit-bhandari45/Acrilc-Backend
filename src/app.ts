@@ -1,4 +1,4 @@
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import express, { Express, Request, Response } from "express";
 import http from "http";
 import os from "os";
@@ -39,13 +39,21 @@ io.use(socketAuthMiddleware); //socket middleware
 io.on("connection", socketHandler(io));
 
 /* Middlewares */
-app.use(
-    cors({
-        origin: "*",
-        credentials: true,
-    })
-);
+const corsOptions: CorsOptions = {
+    origin: (origin, callback) => {
+        const allowedOrigins = ["https://acrilc.com", "https://www.acrilc.com", "http://localhost:3000"];
 
+        if (!origin || allowedOrigins.includes(origin as string)) {
+            callback(null, origin);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: "200mb" }));
 app.use(express.urlencoded({ extended: true, limit: "200mb" }));
 
