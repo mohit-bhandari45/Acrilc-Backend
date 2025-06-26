@@ -75,7 +75,7 @@ app.get("/", (req: Request, res: Response) => {
     const cpuLoad = os.loadavg()[0];
 
     res.status(200).json({
-        msg: "Server is up and running",
+        msg: "Server is up and running man!",
         uptime: up + "Hrs",
         memory: {
             total: totalMem.toFixed(2) + "GiB",
