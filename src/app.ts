@@ -39,7 +39,13 @@ io.use(socketAuthMiddleware); //socket middleware
 io.on("connection", socketHandler(io));
 
 /* Middlewares */
-app.use(cors());
+app.use(
+    cors({
+        origin: "*",
+        credentials: true,
+    })
+);
+
 app.use(express.json({ limit: "200mb" }));
 app.use(express.urlencoded({ extended: true, limit: "200mb" }));
 
