@@ -34,7 +34,12 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
         const token: string = encode(user);
         response.msg = "User Created Successfully";
         response.token = token;
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            expires: new Date(Date.now() + parseInt(process.env.COOKIE_EXPIRE as string) * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+        });
 
         return res.status(201).send(response);
     } catch (err) {
@@ -54,7 +59,12 @@ async function loginHandler(req: Request, res: Response): Promise<any> {
         };
 
         const check = await User.matchPasswordAndGenerateToken(formattedEmail, password, response);
-        res.cookie("token", response.token);
+        res.cookie("token", response.token, {
+            expires: new Date(Date.now() + parseInt(process.env.COOKIE_EXPIRE as string) * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+        });
 
         if (check) {
             return res.status(200).json(response);
