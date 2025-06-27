@@ -51,6 +51,7 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
 async function loginHandler(req: Request, res: Response): Promise<any> {
     const { email, password } = req.body;
     const formattedEmail: string = email.toLowerCase();
+    console.log(email, password);
 
     try {
         let response: IResponse = {

@@ -98,6 +98,7 @@ userSchema.pre<IUser>("save", async function (next) {
 
 userSchema.static("matchPasswordAndGenerateToken", async function (email, password, response): Promise<boolean> {
     const user = await this.findOne({ email });
+    console.log(user);
 
     if (!user) {
         response.msg = "Invalid Email";
@@ -105,6 +106,7 @@ userSchema.static("matchPasswordAndGenerateToken", async function (email, passwo
     }
 
     const isMatch: boolean = await bcrypt.compare(password, user.password);
+    console.log(isMatch);
 
     if (!isMatch) {
         response.msg = "Invalid Password";
