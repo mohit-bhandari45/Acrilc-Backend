@@ -84,7 +84,7 @@ export class EmailService {
     }
 
     static async sendResetPasswordEmail(user: IUser, resetToken: string): Promise<void> {
-        const resetUrl = `${process.env.BASE_URL}/reset-password/${resetToken}`;
+        const resetUrl = `${process.env.BASE_URL}/auth/reset/${resetToken}`;
         console.log("EMAIL_USER:", process.env.EMAIL_USER);
         console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
         console.log("Reset:", resetUrl);

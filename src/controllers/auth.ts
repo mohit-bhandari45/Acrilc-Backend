@@ -35,14 +35,17 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
         const token: string = encode(user);
         response.msg = "User Created Successfully";
         response.token = token;
-        res.cookie("token", token, {
+
+        const isProduction = process.env.NODE_ENV === "production"
+
+        const option: CookieOptions = {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax'
-        });
+            secure: isProduction,
+            sameSite: isProduction ? "strict" : "lax"
+        }
 
-        return res.status(201).send(response);
+        return res.status(201).cookie("token", response.token, option).send(response);
     } catch (err) {
         console.log(err);
         return res.status(500).json(setErrorDetails("Internal Server Error", err as string));

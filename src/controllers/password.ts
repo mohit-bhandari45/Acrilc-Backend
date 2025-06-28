@@ -1,5 +1,4 @@
 import crypto from "crypto";
-import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import User from "../models/user.js";
 import { EmailService } from "../services/email.service.js";
@@ -57,8 +56,7 @@ async function resetPasswordHandler(req: Request, res: Response): Promise<void> 
             return;
         }
 
-        user.password = await bcrypt.hash(newPassword, 10);
-
+        user.password = newPassword;
         user.resetPasswordToken = null;
         user.resetPasswordExpiry = null;
 
