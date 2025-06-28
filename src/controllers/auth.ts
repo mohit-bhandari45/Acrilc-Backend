@@ -128,6 +128,7 @@ async function googleAuthHandler(req: Request, res: Response): Promise<void> {
                 setCookie(res, token);
 
                 res.status(200).send(response);
+                return;
             }
         } else {
             const newUser = await User.create({
@@ -148,7 +149,20 @@ async function googleAuthHandler(req: Request, res: Response): Promise<void> {
     } catch (error) {
         console.log(error);
         res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+        return;
     }
 }
 
-export { IResponse, loginHandler, signUpHandler, googleAuthHandler };
+async function logoutHandler(req: Request, res: Response): Promise<void> {
+    res.cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+    });
+
+    res.status(200).json({
+        msg: "Logged Out Successfully",
+    });
+    return;
+}
+
+export { IResponse, loginHandler, signUpHandler, googleAuthHandler, logoutHandler };
