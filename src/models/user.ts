@@ -94,7 +94,7 @@ const userSchema: Schema<IUser> = new Schema(
 );
 
 userSchema.pre<IUser>("save", async function (next) {
-    if (this.password) {
+    if (this.password && this.password.length > 0) {
         const hashedPassword = await bcrypt.hash(this.password, 10);
         this.password = hashedPassword;
     }

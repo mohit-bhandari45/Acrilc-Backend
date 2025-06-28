@@ -4,6 +4,8 @@ import { EmailService } from "../services/email.service.js";
 import { IResponse } from "../types/response.js";
 import { setErrorDetails } from "../utils/helper.js";
 import { encode } from "../utils/jwt.js";
+import { firebaseAdmin } from "../services/firebase-admin.js";
+import { setCookie } from "../utils/setCookie.js";
 
 async function signUpHandler(req: Request, res: Response): Promise<any> {
     const { fullName, email, password } = req.body;
@@ -36,14 +38,14 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
         response.msg = "User Created Successfully";
         response.token = token;
 
-        const isProduction = process.env.NODE_ENV === "production"
+        const isProduction = process.env.NODE_ENV === "production";
 
         const option: CookieOptions = {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: isProduction,
-            sameSite: isProduction ? "strict" : "lax"
-        }
+            sameSite: isProduction ? "strict" : "lax",
+        };
 
         return res.status(201).cookie("token", response.token, option).send(response);
     } catch (err) {
@@ -64,15 +66,14 @@ async function loginHandler(req: Request, res: Response): Promise<any> {
 
         const check = await User.matchPasswordAndGenerateToken(formattedEmail, password, response);
 
-
-        const isProduction = process.env.NODE_ENV === "production"
+        const isProduction = process.env.NODE_ENV === "production";
 
         const option: CookieOptions = {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: isProduction,
-            sameSite: isProduction ? "strict" : "lax"
-        }
+            sameSite: isProduction ? "strict" : "lax",
+        };
 
         if (check && typeof response.token === "string" && response.token) {
             return res.status(200).cookie("token", response.token, option).json(response);
@@ -85,4 +86,69 @@ async function loginHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
-export { IResponse, loginHandler, signUpHandler };
+async function googleAuthHandler(req: Request, res: Response): Promise<void> {
+    const { token } = req.body;
+
+    if (!token) {
+        res.status(404).json("Token not found");
+    }
+
+    try {
+        let response: IResponse = {
+            msg: "",
+            token: null,
+        };
+
+        const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+        if (!decodedToken) {
+            res.status(404).json("Google Auth Failed");
+        }
+
+        const { uid, name, email, picture } = decodedToken;
+        const user = await User.findOne({ email });
+
+        if (user) {
+            if (user.googleId === uid) {
+                const token: string = encode(user);
+                response.msg = "User Got Successfully";
+                response.token = token;
+                setCookie(res, token);
+
+                res.status(200).send(response);
+                return;
+            } else {
+                user.googleId = uid;
+                if (!user.profilePicture) {
+                    user.profilePicture = picture!;
+                }
+                await user.save();
+                const token: string = encode(user);
+                response.msg = "User Updated Successfully";
+                response.token = token;
+                setCookie(res, token);
+
+                res.status(200).send(response);
+            }
+        } else {
+            const newUser = await User.create({
+                name,
+                email,
+                profilePicture: picture,
+                googleId: uid,
+            });
+
+            const token: string = encode(newUser);
+            response.msg = "User Created Successfully";
+            response.token = token;
+            setCookie(res, token);
+
+            res.status(201).send(response);
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+export { IResponse, loginHandler, signUpHandler, googleAuthHandler };
