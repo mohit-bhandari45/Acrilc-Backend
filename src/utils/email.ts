@@ -78,4 +78,43 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
     }
 };
 
-export default sendWelcomeEmail;
+const sendPasswordResetEmail = async (user: IUser, resetToken: string): Promise<void> => {
+    const transporter = createTransporter();
+
+    const resetUrl = `${process.env.BASE_URL}/reset-password/${resetToken}`;
+
+    const emailContent = `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2>Hi ${user.fullName},</h2>
+            <p>We received a request to reset your password for your Acrilc account.</p>
+            <p>Click the button below to reset your password:</p>
+            <a href="${resetUrl}" style="display:inline-block; background-color: #FF6200; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px;">Reset Your Password</a>
+            <p>If you didn’t request this, you can safely ignore this email. Your password won’t be changed.</p>
+            <br>
+            <p>For security, this link will expire in 15 minutes.</p>
+            <p>Need help? Contact us at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
+
+            <hr>
+            <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
+        </div>
+    `;
+
+    const mailOptions: EmailOptions = {
+        to: user.email,
+        subject: "🔐 Reset Your Acrilc Password",
+        html: emailContent,
+    };
+
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_FROM,
+            ...mailOptions,
+        });
+        console.log(`Password reset email sent to ${user.email}`);
+    } catch (error) {
+        console.error("Error sending password reset email:", error);
+        throw new Error("Failed to send password reset email");
+    }
+};
+
+export { sendWelcomeEmail, sendPasswordResetEmail };

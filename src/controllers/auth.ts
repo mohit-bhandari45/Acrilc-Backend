@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import User from "../models/user.js";
+import { EmailService } from "../services/email.service.js";
+import { IResponse } from "../types/response.js";
 import { setErrorDetails } from "../utils/helper.js";
 import { encode } from "../utils/jwt.js";
-import sendWelcomeEmail from "../utils/email.js";
-import { IResponse } from "../types/response.js";
 
 async function signUpHandler(req: Request, res: Response): Promise<any> {
     const { fullName, email, password } = req.body;
@@ -29,7 +29,8 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
             password: password,
         });
 
-        await sendWelcomeEmail(user);
+        // email service
+        await EmailService.sendWelcomeEmail(user);
 
         const token: string = encode(user);
         response.msg = "User Created Successfully";
@@ -51,7 +52,6 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
 async function loginHandler(req: Request, res: Response): Promise<any> {
     const { email, password } = req.body;
     const formattedEmail: string = email.toLowerCase();
-    console.log(email, password);
 
     try {
         let response: IResponse = {

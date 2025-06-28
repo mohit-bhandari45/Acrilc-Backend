@@ -4,8 +4,11 @@ import { getPortfolioHandler } from "../../controllers/portfolio.js";
 import { getPostsHandler } from "../../controllers/post.js";
 import { getAllMarketPlaceHandler } from "../../controllers/marketplace.js";
 import { getFeaturedArtsHandler, getFeaturedMarketsHandler, getFeaturedArtistsHandler } from "../../controllers/featured.js";
+import passwordRoutes from "./password.js";
 
 const router = Router();
+
+router.use("/password", passwordRoutes);
 
 /* Get artists */
 router.get("/", getFeaturedArtistsHandler);
