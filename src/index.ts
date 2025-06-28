@@ -4,7 +4,7 @@ import os from "os";
 const PORT = Number(process.env.PORT) || 5000;
 
 server.listen(PORT, "0.0.0.0", async () => {
-    console.log(`✅ Server is live and listening on port ${PORT}`);
+    console.log(`✅ Server is live and listening on port bro! ${PORT}`);
 
     const interfaces = os.networkInterfaces();
     console.log("🔹 Access the server at:");

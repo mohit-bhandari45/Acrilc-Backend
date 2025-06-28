@@ -4,7 +4,7 @@ import { Schema } from "mongoose";
 import Post from "../models/post.js";
 import User, { IUser } from "../models/user.js";
 import { IResponse } from "../types/response.js";
-import { createTransporter } from "../utils/email.js";
+// import { createTransporter } from "../utils/email.js";
 import { setErrorDetails } from "../utils/helper.js";
 
 /* Getting Profiles */
@@ -340,19 +340,19 @@ async function changeEmailHandler(req: Request, res: Response): Promise<any> {
             { new: true }
         );
 
-        const transporter = createTransporter();
+        // const transporter = createTransporter();
 
-        const mailOptions = {
-            to: newEmail,
-            subject: "Verify Your New Email",
-            html: `<p>Click the link below to verify your new email:</p>
-                <a href="http://localhost:8000/api/verify-email?token=${token}">Verify Email</a>`,
-        };
+        // const mailOptions = {
+        //     to: newEmail,
+        //     subject: "Verify Your New Email",
+        //     html: `<p>Click the link below to verify your new email:</p>
+        //         <a href="http://localhost:8000/api/verify-email?token=${token}">Verify Email</a>`,
+        // };
 
-        await transporter.sendMail({
-            from: process.env.EMAIL_FROM,
-            ...mailOptions,
-        });
+        // await transporter.sendMail({
+        //     from: process.env.EMAIL_FROM,
+        //     ...mailOptions,
+        // });
 
         console.log("Verification Email Sent");
 

@@ -31,6 +31,12 @@ const userSchema: Schema<IUser> = new Schema(
         newEmailToken: {
             type: String,
         },
+        resetPasswordToken: {
+            type: String,
+        },
+        resetPasswordExpiry: {
+            type: Date,
+        },
         googleId: {
             type: String,
             unique: true,

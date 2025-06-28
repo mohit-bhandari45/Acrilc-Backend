@@ -53,6 +53,7 @@
         "compromise": "^14.14.4",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
+        "crypto": "^1.0.1",
         "dotenv": "^16.4.7",
         "express": "^5.1.0",
         "form-data": "^4.0.2",

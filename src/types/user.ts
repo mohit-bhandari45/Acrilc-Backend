@@ -11,6 +11,8 @@ interface IUser {
     email: string;
     newEmail?: string | null;
     newEmailToken?: string | null;
+    resetPasswordToken: string | null;
+    resetPasswordExpiry: Date | null;
     googleId: string;
     password: string;
     profilePicture: string;
