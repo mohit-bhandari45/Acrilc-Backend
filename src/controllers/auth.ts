@@ -112,6 +112,7 @@ async function googleAuthHandler(req: Request, res: Response): Promise<void> {
                 const token: string = encode(user);
                 response.msg = "User Got Successfully";
                 response.token = token;
+                response.data = user;
                 setCookie(res, token);
 
                 res.status(200).send(response);
@@ -125,6 +126,7 @@ async function googleAuthHandler(req: Request, res: Response): Promise<void> {
                 const token: string = encode(user);
                 response.msg = "User Updated Successfully";
                 response.token = token;
+                response.data = user;
                 setCookie(res, token);
 
                 res.status(200).send(response);
@@ -141,6 +143,7 @@ async function googleAuthHandler(req: Request, res: Response): Promise<void> {
             const token: string = encode(newUser);
             response.msg = "User Created Successfully";
             response.token = token;
+            response.data = user;
             setCookie(res, token);
 
             res.status(201).send(response);
