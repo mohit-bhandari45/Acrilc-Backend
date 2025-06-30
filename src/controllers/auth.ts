@@ -134,7 +134,7 @@ async function googleAuthHandler(req: Request, res: Response): Promise<void> {
             }
         } else {
             const newUser = await User.create({
-                name,
+                fullName: name,
                 email,
                 profilePicture: picture,
                 googleId: uid,
