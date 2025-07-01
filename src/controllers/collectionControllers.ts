@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { Schema } from "mongoose";
 import Collection from "../models/collection.js";
-import { setErrorDetails } from "../utils/helper.js";
 import { IPost } from "../types/post.js";
 import { IResponse } from "../types/response.js";
+import { setErrorDetails } from "../utils/helper.js";
 
 /***
  * @desc Get All Collections
@@ -161,4 +160,4 @@ async function removeCollectionPostHandler(req: Request, res: Response): Promise
     }
 }
 
-export { getCollectionHandler, addCollectionHandler, updateCollectionHandler, getCollectionPostsHandler, deleteCollectionHandler, removeCollectionPostHandler };
+export { addCollectionHandler, deleteCollectionHandler, getCollectionHandler, getCollectionPostsHandler, removeCollectionPostHandler, updateCollectionHandler };

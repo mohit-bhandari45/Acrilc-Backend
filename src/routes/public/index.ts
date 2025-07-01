@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getFeaturedArtistsHandler, getFeaturedArtsHandler, getFeaturedMarketsHandler } from "../../controllers/featured.js";
-import { getAllMarketPlaceHandler } from "../../controllers/marketplace.js";
-import { getPortfolioHandler } from "../../controllers/portfolio.js";
-import { getPostsHandler } from "../../controllers/post.js";
+import { getFeaturedArtistsHandler, getFeaturedArtsHandler, getFeaturedMarketsHandler } from "../../controllers/featuredControllers.js";
+import { getAllMarketPlaceHandler } from "../../controllers/marketplaceControllers.js";
+import { getPortfolioHandler } from "../../controllers/portfolioControllers.js";
+import { getPostsHandler } from "../../controllers/postControllers.js";
 import passwordRoutes from "./password.js";
 
 const router = Router();

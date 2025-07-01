@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { discoverHandler, getAllFortePosts, getTrendingForteHandler } from "../../controllers/discover.js";
+import { discoverHandler, getAllFortePosts, getTrendingForteHandler } from "../../controllers/discoverControllers.js";
 
 const router = Router();
 

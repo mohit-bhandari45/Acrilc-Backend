@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addPortfolioURLHandler, checkURLHandler, deleteUrlHandler, getPortfolioHandler } from "../../controllers/portfolio.js";
+import { addPortfolioURLHandler, checkURLHandler, deleteUrlHandler, getPortfolioHandler } from "../../controllers/portfolioControllers.js";
 
 const router = Router();
 

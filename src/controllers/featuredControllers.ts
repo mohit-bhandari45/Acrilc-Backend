@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/user.js";
-import { IResponse } from "./auth.js";
+import { IResponse } from "./authControllers.js";
 import Post from "../models/post.js";
 import Project from "../models/marketplace.js";
 import { IPost } from "../types/post.js";

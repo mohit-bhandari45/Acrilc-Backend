@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getKeywordsHandler } from "../../controllers/utils.js";
+import { getKeywordsHandler } from "../../controllers/utilsControllers.js";
 
 const router = Router();
 

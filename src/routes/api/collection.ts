@@ -1,5 +1,12 @@
 import { Router } from "express";
-import { addCollectionHandler, deleteCollectionHandler, getCollectionHandler, getCollectionPostsHandler, removeCollectionPostHandler, updateCollectionHandler } from "../../controllers/collection.js";
+import {
+    addCollectionHandler,
+    deleteCollectionHandler,
+    getCollectionHandler,
+    getCollectionPostsHandler,
+    removeCollectionPostHandler,
+    updateCollectionHandler,
+} from "../../controllers/collectionControllers.js";
 
 const router = Router();
 

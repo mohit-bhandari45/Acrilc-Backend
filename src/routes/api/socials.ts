@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { followUnfollowHandler, getAllFollowersHandler, getAllFollowingHandler } from "../../controllers/social.js";
+import { followUnfollowHandler, getAllFollowersHandler, getAllFollowingHandler } from "../../controllers/socialControllers.js";
 import socialInteractRoute from "./socialInteract.js";
 
 const router = Router();
