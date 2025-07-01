@@ -33,19 +33,24 @@ async function authCheckMiddleware(req: Request, res: Response, next: NextFuncti
             });
         }
 
-        let cachedUser = await CacheService.getCachedUser<IUser>(decoded.id);
-
-        if (!cachedUser) {
-            cachedUser = await UserService.getUserById(decoded.id);
-
-            if (!cachedUser) {
-                return res.status(401).json({ message: "User not found. Token may be stale or invalid." });
-            }
-
-            await CacheService.setCachedUser(decoded.id, cachedUser);
+        const user = await UserService.getUserById(decoded.id);
+        if (!user) {
+            return res.status(401).json({ message: "User not found. Token may be stale or invalid." });
         }
 
-        req.user = cachedUser as IUser;
+        // let cachedUser = await CacheService.getCachedUser<IUser>(decoded.id);
+
+        // if (!cachedUser) {
+        //     cachedUser = await UserService.getUserById(decoded.id);
+
+        //     if (!cachedUser) {
+        //         return res.status(401).json({ message: "User not found. Token may be stale or invalid." });
+        //     }
+
+        //     await CacheService.setCachedUser(decoded.id, cachedUser);
+        // }
+
+        req.user = user as IUser;
         return next();
     } catch (error) {
         console.error("Token decoding error:", error);

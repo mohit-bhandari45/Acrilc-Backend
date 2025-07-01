@@ -36,6 +36,7 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
 
         const token: string = encode(user);
         response.msg = "User Created Successfully";
+        response.data = user;
         response.token = token;
 
         const isProduction = process.env.NODE_ENV === "production";
