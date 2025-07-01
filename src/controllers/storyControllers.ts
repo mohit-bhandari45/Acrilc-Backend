@@ -1,16 +1,8 @@
 import { Request, Response } from "express";
-import { setErrorDetails } from "../utils/helper.js";
-import { IResponse } from "./auth.js";
-import Post from "../models/post.js";
-import { IStoryBoard } from "../types/storyboard.js";
-import { MulterError } from "multer";
-import upload from "../lib/multer.js";
-import UploadService from "../services/service.js";
-import { Express } from "express";
-import fs from "fs";
-import FormData from "form-data";
-import { IMedia } from "../types/post.js";
 import Story from "../models/storyboard.js";
+import { IStoryBoard } from "../types/storyboard.js";
+import { setErrorDetails } from "../utils/helper.js";
+import { IResponse } from "./authControllers.js";
 
 function mediaType(type: string): string {
     if (type.startsWith("image")) {

@@ -6,6 +6,7 @@ import { setErrorDetails } from "../utils/helper.js";
 import { encode } from "../utils/jwt.js";
 import { firebaseAdmin } from "../services/firebase-admin.js";
 import { setCookie } from "../utils/setCookie.js";
+import emailQueue from "../queues/emailQueue.js";
 
 async function signUpHandler(req: Request, res: Response): Promise<any> {
     const { fullName, email, password } = req.body;
@@ -31,8 +32,11 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
             password: password,
         });
 
-        // email service
-        await EmailService.sendWelcomeEmail(user);
+        // email service using bullmq
+        emailQueue.add("send-email", {
+            type: email,
+            user: user,
+        });
 
         const token: string = encode(user);
         response.msg = "User Created Successfully";

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { Model, Schema, model } from "mongoose";
-import { IResponse } from "../controllers/auth.js";
+import { IResponse } from "../controllers/authControllers.js";
 import { IUser } from "../types/user.js";
 import { encode } from "../utils/jwt.js";
 import { PREFERENCE_ENUM, SERVICES_ENUM } from "../utils/enums.js";

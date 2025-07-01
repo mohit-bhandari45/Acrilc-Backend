@@ -11,7 +11,8 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
-        "seed": "yarn build && node dist/seed.js"
+        "seed": "yarn build && node dist/seed.js",
+        "start:worker": "node --loader ts-node/esm src/workers/emailWorker.ts"
     },
     "lint-staged": {
         "**/*.ts": [
@@ -43,13 +44,15 @@
         "husky": "^8.0.3",
         "lint-staged": "^15.5.1",
         "prettier": "^3.5.2",
-        "typescript": "^5.8.2"
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
     },
     "dependencies": {
         "@types/nodemailer": "^6.4.17",
         "@types/uuid": "^10.0.0",
         "axios": "^1.8.3",
         "bcrypt": "^5.1.1",
+        "bullmq": "^5.56.0",
         "compromise": "^14.14.4",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
@@ -58,6 +61,7 @@
         "express": "^5.1.0",
         "firebase-admin": "^13.4.0",
         "form-data": "^4.0.2",
+        "ioredis": "^5.6.1",
         "jsonwebtoken": "^9.0.2",
         "mongoose": "^8.12.0",
         "morgan": "^1.10.0",

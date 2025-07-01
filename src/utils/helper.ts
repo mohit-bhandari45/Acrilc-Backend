@@ -1,4 +1,4 @@
-import { IResponse } from "../controllers/auth.js";
+import { IResponse } from "../controllers/authControllers.js";
 
 function setErrorDetails(msg: string, err: string): IResponse {
     let response: IResponse = {

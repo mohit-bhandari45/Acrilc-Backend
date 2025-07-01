@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createMarketplaceProjectHandler, getAllMarketPlaceApiHandler, getSingleMarketProjectHandler } from "../../controllers/marketplace.js";
+import { createMarketplaceProjectHandler, getAllMarketPlaceApiHandler, getSingleMarketProjectHandler } from "../../controllers/marketplaceControllers.js";
 
 const router = Router();
 

@@ -1,11 +1,14 @@
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import { Request, Response } from "express";
 import { Schema } from "mongoose";
 import Post from "../models/post.js";
 import User, { IUser } from "../models/user.js";
 import { IResponse } from "../types/response.js";
 // import { createTransporter } from "../utils/email.js";
+import { EmailService } from "../services/email.service.js";
 import { setErrorDetails } from "../utils/helper.js";
+import emailQueue from "../queues/emailQueue.js";
 
 /* Getting Profiles */
 
@@ -429,15 +432,98 @@ async function changePasswordHandler(req: Request, res: Response): Promise<any> 
     }
 }
 
+/* Password Settings Handlers */
+
+/***
+ * @desc Forgot Password
+ * @route Get public/password/forgot
+ */
+async function forgotPasswordHandler(req: Request, res: Response): Promise<void> {
+    const { email } = req.body;
+
+    try {
+        const response: IResponse = {
+            msg: "",
+        };
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            response.msg = "User not found";
+            res.status(404).json(response);
+            return;
+        }
+
+        const resetToken = crypto.randomBytes(32).toString("hex");
+        const hash = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+        user.resetPasswordToken = hash;
+        user.resetPasswordExpiry = new Date(Date.now() + 15 * 60 * 1000); //15 minutes
+        await user.save();
+
+        // email service
+        await EmailService.sendResetPasswordEmail(user, resetToken);
+        emailQueue.add("reset-password", {
+            type: "reset",
+            user: user,
+            resetToken: resetToken,
+        });
+
+        response.msg = "Password reset link sent";
+        res.json(response);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/***
+ * @desc Reset Password
+ * @route Get public/reset-password/:token
+ */
+async function resetPasswordHandler(req: Request, res: Response): Promise<void> {
+    const token = req.params.token;
+    const { newPassword } = req.body;
+
+    const response: IResponse = { msg: "" };
+
+    try {
+        const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+        const user = await User.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpiry: { $gt: new Date() },
+        });
+
+        if (!user) {
+            response.msg = "Invalid or expired token";
+            res.status(400).json(response);
+            return;
+        }
+
+        user.password = newPassword;
+        user.resetPasswordToken = null;
+        user.resetPasswordExpiry = null;
+
+        await user.save();
+
+        response.msg = "Password reset successful";
+        res.json(response);
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
+}
+
 export {
     addBannerPicHandler,
     addProfilePicHandler,
     changeEmailHandler,
     changePasswordHandler,
     deleteProfilePicHandler,
+    forgotPasswordHandler,
     getOwnProfileHandler,
     getPersonalDetailsHandler,
     getUserProfileHandler,
+    resetPasswordHandler,
     setPreferencesHandler,
     setUsernameHandler,
     updatePersonalDetailsHandler,

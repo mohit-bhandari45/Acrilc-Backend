@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Project from "../models/marketplace.js";
-import { IResponse } from "./auth.js";
+import { IResponse } from "./authControllers.js";
 import { setErrorDetails } from "../utils/helper.js";
 
 async function createMarketplaceProjectHandler(req: Request, res: Response): Promise<void> {

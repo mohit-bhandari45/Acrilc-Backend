@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IResponse } from "./auth.js";
+import { IResponse } from "./authControllers.js";
 import nlp from "compromise";
 import { setErrorDetails } from "../utils/helper.js";
 

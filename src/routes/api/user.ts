@@ -11,7 +11,7 @@ import {
     setPreferencesHandler,
     setUsernameHandler,
     updatePersonalDetailsHandler,
-} from "../../controllers/user.js";
+} from "../../controllers/userControllers.js";
 
 const router = Router();
 

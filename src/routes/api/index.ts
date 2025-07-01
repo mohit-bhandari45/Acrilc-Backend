@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authCheckMiddleware } from "../../middlewares/auth.js";
-import { verifyEmailHandler } from "../../controllers/user.js";
+import { verifyEmailHandler } from "../../controllers/userControllers.js";
 
 import postsRoutes from "./post.js";
 import userRoutes from "./user.js";
