@@ -21,7 +21,10 @@ async function getFeaturedArtistsHandler(req: Request, res: Response): Promise<v
 
 async function getFeaturedArtsHandler(req: Request, res: Response): Promise<any> {
     try {
-        const arts = await Post.find({});
+        const arts = await Post.find({}).populate({
+            path: "author",
+            select: "_id fullName profilePicture",
+        });
 
         const groupedData: Record<string, IPost[]> = {};
         arts.forEach((art: IPost) => {

@@ -33,10 +33,14 @@ async function checkURLHandler(req: Request, res: Response): Promise<any> {
 }
 
 async function getPortfolioHandler(req: Request, res: Response): Promise<any> {
-    const { url } = req.query;
+    const { identifier } = req.params;
 
     try {
-        const user = await User.findOne({ portfolioURL: url });
+        let user = await User.findOne({ username: identifier });
+
+        if (!user) {
+            user = await User.findOne({ portfolioURL: identifier });
+        }
 
         if (!user) {
             return res.status(400).json({ msg: "No user found!" });
