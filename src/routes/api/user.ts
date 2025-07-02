@@ -8,6 +8,7 @@ import {
     getOwnProfileHandler,
     getPersonalDetailsHandler,
     getUserProfileHandler,
+    setPasswordHandler,
     setPreferencesHandler,
     setUsernameHandler,
     updatePersonalDetailsHandler,
@@ -32,6 +33,7 @@ router.delete("/profile-pic", deleteProfilePicHandler);
 
 /* Account and Settings */
 router.post("/change-email", changeEmailHandler);
+router.post("/set-password", setPasswordHandler);
 router.post("/change-password", changePasswordHandler);
 
 export default router;

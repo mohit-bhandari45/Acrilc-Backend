@@ -407,6 +407,44 @@ async function verifyEmailHandler(req: Request, res: Response): Promise<any> {
     }
 }
 
+/* Password Settings Handlers */
+
+/***
+ * @desc Setting Password
+ * @route Get api/user/set-passsword
+ */
+async function setPasswordHandler(req: Request, res: Response): Promise<void> {
+    const { password } = req.body;
+    const userId = req.user?.id;
+
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
+
+        const user = await User.findById(userId);
+        if (!user) {
+            response.msg = "User not found";
+            res.status(404).json(response);
+            return;
+        }
+
+        user.password = password;
+        await user.save();
+
+        response.msg = "Password Saved Successfully";
+        res.status(200).json(response);
+        return;
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+    }
+}
+
+/***
+ * @desc Setting Password
+ * @route Get api/user/change-password
+ */
 async function changePasswordHandler(req: Request, res: Response): Promise<any> {
     const userId = req.user?.id as unknown as Schema.Types.ObjectId;
     const { currentPassword, newPassword } = req.body;
@@ -441,11 +479,9 @@ async function changePasswordHandler(req: Request, res: Response): Promise<any> 
     }
 }
 
-/* Password Settings Handlers */
-
 /***
  * @desc Forgot Password
- * @route Get public/password/forgot
+ * @route Get public/user/password/forgot
  */
 async function forgotPasswordHandler(req: Request, res: Response): Promise<void> {
     const { email } = req.body;
@@ -537,4 +573,5 @@ export {
     setUsernameHandler,
     updatePersonalDetailsHandler,
     verifyEmailHandler,
+    setPasswordHandler,
 };
