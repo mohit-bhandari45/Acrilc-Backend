@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import mongoose, { Schema } from "mongoose";
-import Post from "../models/post.js";
-import User, { IUser } from "../models/user.js";
+import { Schema } from "mongoose";
+import User from "../models/user.js";
 import { IResponse } from "../types/response.js";
 import { setErrorDetails } from "../utils/helper.js";
 
@@ -11,29 +10,59 @@ import { setErrorDetails } from "../utils/helper.js";
  */
 async function followUnfollowHandler(req: Request, res: Response): Promise<any> {
     const { userId } = req.params;
-    const loggedUser = req.user?.id;
+    const loggedUserId = req.user?.id;
+
+    if (!loggedUserId) {
+        return res.status(401).json({ msg: "Unauthorized" });
+    }
+
+    if (loggedUserId === userId) {
+        return res.status(400).json({ msg: "Cannot follow yourself" });
+    }
 
     try {
-        let response: IResponse = {
-            msg: "",
-        };
+        const [targetUser, loggedUser] = await Promise.all([
+            User.findById(userId),
+            User.findById(loggedUserId),
+        ]);
 
-        const user = await User.findById(userId);
-        if (!user) {
-            response.msg = "No User";
-            return res.status(404).json(response);
+        if (!targetUser || !loggedUser) {
+            return res.status(404).json({ msg: "User not found" });
         }
 
-        user.followers = user.followers ?? [];
-        const isFollowed = user.followers.some((id) => id.toString() === loggedUser);
+        targetUser.followers = targetUser.followers ?? [];
+        loggedUser.following = loggedUser.following ?? [];
 
-        user.followers = isFollowed ? user.followers.filter((id) => id.toString() !== loggedUser) : [...user.followers, loggedUser as unknown as Schema.Types.ObjectId];
+        const alreadyFollowing = targetUser.followers.some(id =>
+            id.toString() === loggedUser._id.toString()
+        );
 
-        await user.save();
-        response.msg = isFollowed ? "User Unfollowed" : "User Followed";
-        return res.status(200).json(response);
-    } catch (error) {
-        return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+        if (alreadyFollowing) {
+            targetUser.followers = targetUser.followers.filter(
+                (id) => id.toString() !== loggedUser._id.toString()
+            );
+            loggedUser.following = loggedUser.following.filter(
+                (id) => id.toString() !== targetUser._id.toString()
+            );
+        } else {
+            if (!targetUser.followers.some(id => id.toString() === loggedUser._id.toString())) {
+                targetUser.followers.push(loggedUser._id as unknown as Schema.Types.ObjectId);
+            }
+            if (!loggedUser.following.some(id => id.toString() === targetUser._id.toString())) {
+                loggedUser.following.push(targetUser._id as unknown as Schema.Types.ObjectId);
+            }
+        }
+
+        await Promise.all([targetUser.save(), loggedUser.save()]);
+
+        return res.status(200).json({
+            msg: alreadyFollowing ? "User Unfollowed" : "User Followed",
+        });
+    } catch (err) {
+        console.error(err);
+        return res
+            .status(500)
+            .json({ msg: "Internal Server Error", error: (err as Error).message });
     }
 }
 

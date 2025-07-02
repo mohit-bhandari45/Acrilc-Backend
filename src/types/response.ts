@@ -12,6 +12,7 @@ interface IAll extends IUser {
 }
 
 type ResponseData =
+    | any
     | string
     | IPost
     | IPost[]

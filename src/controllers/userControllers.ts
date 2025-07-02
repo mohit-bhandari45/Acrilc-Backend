@@ -58,6 +58,7 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
  */
 async function getUserProfileHandler(req: Request, res: Response): Promise<any> {
     const { username } = req.params;
+    const loggedUser = req.user?.id;
 
     try {
         let response: IResponse = {
@@ -66,10 +67,17 @@ async function getUserProfileHandler(req: Request, res: Response): Promise<any> 
         const user = await User.findOne({
             username: username,
         });
+        if (!user) {
+            response.msg = "No User";
+            return res.status(404).json(response);
+        }
 
         const posts = await Post.find({
-            author: user!._id,
+            author: user._id,
         });
+
+        user.followers = user.followers ?? [];
+        const isFollowed = user.followers.some((id) => id.toString() === loggedUser.toString());
 
         response.msg = "User Found";
         response.data = {
@@ -82,6 +90,7 @@ async function getUserProfileHandler(req: Request, res: Response): Promise<any> 
             bio: user?.bio,
             story: user?.story,
             preferences: user?.preferences,
+            isFollowed,
             // services: user?.services,
             totalFollowers: user?.followers.length,
             totalFollowing: user?.following.length,
