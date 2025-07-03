@@ -3,6 +3,7 @@ import { Schema } from "mongoose";
 import User from "../models/user.js";
 import { IResponse } from "../types/response.js";
 import { setErrorDetails } from "../utils/helper.js";
+import Post from "../models/post.js";
 
 /***
  * @desc Follow/Unfollow a user
@@ -21,10 +22,7 @@ async function followUnfollowHandler(req: Request, res: Response): Promise<any> 
     }
 
     try {
-        const [targetUser, loggedUser] = await Promise.all([
-            User.findById(userId),
-            User.findById(loggedUserId),
-        ]);
+        const [targetUser, loggedUser] = await Promise.all([User.findById(userId), User.findById(loggedUserId)]);
 
         if (!targetUser || !loggedUser) {
             return res.status(404).json({ msg: "User not found" });
@@ -33,22 +31,16 @@ async function followUnfollowHandler(req: Request, res: Response): Promise<any> 
         targetUser.followers = targetUser.followers ?? [];
         loggedUser.following = loggedUser.following ?? [];
 
-        const alreadyFollowing = targetUser.followers.some(id =>
-            id.toString() === loggedUser._id.toString()
-        );
+        const alreadyFollowing = targetUser.followers.some((id) => id.toString() === loggedUser._id.toString());
 
         if (alreadyFollowing) {
-            targetUser.followers = targetUser.followers.filter(
-                (id) => id.toString() !== loggedUser._id.toString()
-            );
-            loggedUser.following = loggedUser.following.filter(
-                (id) => id.toString() !== targetUser._id.toString()
-            );
+            targetUser.followers = targetUser.followers.filter((id) => id.toString() !== loggedUser._id.toString());
+            loggedUser.following = loggedUser.following.filter((id) => id.toString() !== targetUser._id.toString());
         } else {
-            if (!targetUser.followers.some(id => id.toString() === loggedUser._id.toString())) {
+            if (!targetUser.followers.some((id) => id.toString() === loggedUser._id.toString())) {
                 targetUser.followers.push(loggedUser._id as unknown as Schema.Types.ObjectId);
             }
-            if (!loggedUser.following.some(id => id.toString() === targetUser._id.toString())) {
+            if (!loggedUser.following.some((id) => id.toString() === targetUser._id.toString())) {
                 loggedUser.following.push(targetUser._id as unknown as Schema.Types.ObjectId);
             }
         }
@@ -60,9 +52,7 @@ async function followUnfollowHandler(req: Request, res: Response): Promise<any> 
         });
     } catch (err) {
         console.error(err);
-        return res
-            .status(500)
-            .json({ msg: "Internal Server Error", error: (err as Error).message });
+        return res.status(500).json({ msg: "Internal Server Error", error: (err as Error).message });
     }
 }
 
@@ -124,9 +114,9 @@ async function getAllFollowingHandler(req: Request, res: Response): Promise<any>
     }
 }
 
-// /* Post and Storyboard Interaction Handlers */
+/* Post and Storyboard Interaction Handlers */
 
-// /* Applaud Handlers */
+/* Applaud Handlers */
 
 // /***
 //  * @desc Get all applauds in a section(post/storyboard)
@@ -163,67 +153,53 @@ async function getAllFollowingHandler(req: Request, res: Response): Promise<any>
 //     }
 // }
 
-// /***
-//  * @desc Applaud or unApplaud in a section(post/storyboard)
-//  * @route GET /api/socials/:section/:sectionId/applaud
-//  */
-// async function applaudSectionHandler(req: Request, res: Response): Promise<any> {
-//     const { section, postId } = req.params;
-//     const userId = req.user?.id;
+/***
+ * @desc Applaud or unApplaud in a section(post/storyboard)
+ * @route GET /api/socials/:section/:sectionId/applaud
+ */
+async function applaudSectionHandler(req: Request, res: Response): Promise<void> {
+    const { section, id } = req.params;
+    const userId = req.user?.id;
+    console.log(section, id);
 
-//     try {
-//         let response: IResponse = {
-//             msg: "",
-//         };
+    try {
+        let response: IResponse = {
+            msg: "",
+        };
 
-//         const post = await Post.findById(postId);
+        if (section === "post") {
+            const post = await Post.findById(id);
 
-//         if (!post) {
-//             response.msg = section === "post" ? "Post Not found" : "Storyboard not found";
-//             return res.status(404).json(response);
-//         }
+            if (!post) {
+                response.msg = section === "post" ? "Post Not found" : "Storyboard not found";
+                res.status(404).json(response);
+                return;
+            }
 
-//         let isLiked: boolean;
+            let isLiked: boolean;
 
-//         if (section === "post") {
-//             isLiked = post.applauds.includes(userId);
+            isLiked = post.applauds.includes(userId);
 
-//             if (isLiked) {
-//                 post.applauds = post.applauds.filter((applaud) => {
-//                     return applaud.toString() !== userId.toString();
-//                 });
-//             } else {
-//                 post.applauds.push(userId);
-//             }
+            if (isLiked) {
+                post.applauds = post.applauds.filter((applaud) => {
+                    return applaud.toString() !== userId.toString();
+                });
+            } else {
+                post.applauds.push(userId);
+            }
 
-//             response.msg = isLiked ? "UnApplauded a Post" : "Applauded a Post";
-//             response.data = post.applauds;
-//         } else {
-//             if (!post.storyBoard) {
-//                 response.msg = "No Storyboard Found";
-//                 return res.status(404).json(response);
-//             }
-//             post.storyBoard.applauds = post.storyBoard.applauds ?? [];
-//             isLiked = post.storyBoard.applauds.includes(userId);
+            response.msg = isLiked ? "UnApplauded a Post" : "Applauded a Post";
+            response.data = post.applauds;
 
-//             if (isLiked) {
-//                 post.storyBoard.applauds = post.storyBoard.applauds.filter((applaud) => {
-//                     return applaud.toString() !== userId.toString();
-//                 });
-//             } else {
-//                 post.storyBoard.applauds.push(userId);
-//             }
-
-//             response.msg = isLiked ? "UnApplauded a Story" : "Applauded a Story";
-//             response.data = post.storyBoard.applauds;
-//         }
-
-//         await post.save();
-//         return res.status(200).json(response);
-//     } catch (error) {
-//         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
-//     }
-// }
+            await post.save();
+            res.status(200).json(response);
+            return;
+        }
+    } catch (error) {
+        res.status(500).json(setErrorDetails("Internal Server Error", error as string));
+        return;
+    }
+}
 
 // /* Comment Handler */
 
@@ -797,4 +773,4 @@ async function getAllFollowingHandler(req: Request, res: Response): Promise<any>
 //     updateCommentHandler,
 //     updateReplyHandler,
 // };
-export { followUnfollowHandler, getAllFollowersHandler, getAllFollowingHandler };
+export { followUnfollowHandler, getAllFollowersHandler, getAllFollowingHandler, applaudSectionHandler };

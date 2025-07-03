@@ -1,23 +1,11 @@
 import { Router } from "express";
-// import {
-//     addApplaudPostCommentReplyHandler,
-//     addPostCommentApplaudHandler,
-//     addReplyHandler,
-//     allApplaudsHandler,
-//     allCommentsHandler,
-//     applaudSectionHandler,
-//     commentPostHandler,
-//     deleteCommentHandler,
-//     deleteReplyHandler,
-//     updateCommentHandler,
-//     updateReplyHandler,
-// } from "../../controllers/social.js";
+import { applaudSectionHandler } from "../../controllers/socialControllers.js";
 
 const router = Router({ mergeParams: true });
 
 // /* Likes Routes */
 // router.get("/:sectionId/applauds", allApplaudsHandler);
-// router.get("/:postId/applaud", applaudSectionHandler);
+router.get("/:id/applaud", applaudSectionHandler);
 
 // /* Comment Routes */
 // router.get("/:sectionId/comments", allCommentsHandler); //(done)

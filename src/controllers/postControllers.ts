@@ -120,24 +120,28 @@ async function getSpecificPostHandler(req: Request, res: Response): Promise<any>
 
         const post = await Post.findById(postId).populate([
             {
+                path: "author",
+                select: "_id username fullName profilePicture",
+            },
+            {
                 path: "applauds",
-                select: "_id username profilepic",
+                select: "_id username profilePicture",
             },
             {
                 path: "comments.user",
-                select: "_id username profilepic",
+                select: "_id username profilePicture",
             },
             {
                 path: "comments.applauds",
-                select: "_id username profilepic",
+                select: "_id username profilePicture",
             },
             {
                 path: "comments.replies.user",
-                select: "_id username profilepic",
+                select: "_id username profilePicture",
             },
             {
                 path: "comments.replies.applauds",
-                select: "_id username profilepic",
+                select: "_id username profilePicture",
             },
         ]);
 

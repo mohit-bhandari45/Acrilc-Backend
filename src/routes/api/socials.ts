@@ -9,6 +9,6 @@ router.get("/:userId/followers", getAllFollowersHandler);
 router.get("/:userId/following", getAllFollowingHandler);
 
 // /* Applaud and other stuff */
-// router.use("/:section", socialInteractRoute);
+router.use("/:section", socialInteractRoute);
 
 export default router;
