@@ -7,6 +7,7 @@ import apiRoutes from "./routes/api/index.js";
 import authRoutes from "./routes/auth/auth.js";
 import generalRoutes from "./routes/general/general.js";
 import publicRoutes from "./routes/public/index.js";
+import adminRoutes from "./routes/admin/index.js";
 import socketHandler from "./socket.js";
 import cookieParser from "cookie-parser";
 
@@ -60,6 +61,7 @@ app.use(express.urlencoded({ extended: true, limit: "200mb" }));
 app.use("/auth", authRoutes);
 app.use("/api", apiRoutes);
 app.use("/general", generalRoutes);
+app.use("/admin", adminRoutes);
 app.use("/public", publicRoutes);
 
 /* Health Route */

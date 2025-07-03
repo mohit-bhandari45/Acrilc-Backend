@@ -1,12 +1,11 @@
 import { CookieOptions, Request, Response } from "express";
 import User from "../models/user.js";
-import { EmailService } from "../services/email.service.js";
+import emailQueue from "../queues/emailQueue.js";
+import { firebaseAdmin } from "../services/firebase-admin.js";
 import { IResponse } from "../types/response.js";
 import { setErrorDetails } from "../utils/helper.js";
 import { encode } from "../utils/jwt.js";
-import { firebaseAdmin } from "../services/firebase-admin.js";
 import { setCookie } from "../utils/setCookie.js";
-import emailQueue from "../queues/emailQueue.js";
 
 async function signUpHandler(req: Request, res: Response): Promise<any> {
     const { fullName, email, password } = req.body;
@@ -31,6 +30,10 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
             email: formattedEmail,
             password: password,
         });
+
+        if (email === process.env.ADMIN_EMAIL) {
+            user.role = "admin";
+        }
 
         // email service using bullmq
         emailQueue.add("send-email", {
@@ -173,4 +176,4 @@ async function logoutHandler(req: Request, res: Response): Promise<void> {
     return;
 }
 
-export { IResponse, loginHandler, signUpHandler, googleAuthHandler, logoutHandler };
+export { googleAuthHandler, IResponse, loginHandler, logoutHandler, signUpHandler };

@@ -61,4 +61,14 @@ async function authCheckMiddleware(req: Request, res: Response, next: NextFuncti
     }
 }
 
-export { authCheckMiddleware };
+const authorizeRoles = (...roles: string[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        if (!req.user || !roles.includes(req.user.role!)) {
+            res.status(403).json({ message: `Role: ${req.user?.role} is not allowed to access this resource` });
+            return;
+        }
+        next();
+    };
+};
+
+export { authCheckMiddleware, authorizeRoles };
