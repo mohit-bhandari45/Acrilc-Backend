@@ -114,6 +114,7 @@ async function googleAuthHandler(req: Request, res: Response): Promise<void> {
 
         const { uid, name, email, picture } = decodedToken;
         const user = await User.findOne({ email });
+        console.log(user);
 
         if (user) {
             if (user.googleId === uid) {

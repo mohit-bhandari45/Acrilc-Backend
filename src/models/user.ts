@@ -110,6 +110,11 @@ userSchema.static("matchPasswordAndGenerateToken", async function (email, passwo
         return false;
     }
 
+    if (!user.password) {
+        response.msg = "Invalid Password";
+        return false;
+    }
+
     const isMatch: boolean = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {

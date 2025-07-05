@@ -33,8 +33,10 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
             _id: user?._id,
             username: user?.username,
             fullName: user?.fullName,
+            email: user?.email,
             profilePicture: user?.profilePicture,
             portfolioURL: user?.portfolioURL,
+            password: user?.password,
             bannerPicture: user?.bannerPicture,
             bio: user?.bio,
             story: user?.story,
@@ -201,7 +203,7 @@ async function updatePersonalDetailsHandler(req: Request, res: Response): Promis
             msg: "",
         };
 
-        await User.findByIdAndUpdate(
+        const user = await User.findByIdAndUpdate(
             userId,
             {
                 $set: {
@@ -218,6 +220,7 @@ async function updatePersonalDetailsHandler(req: Request, res: Response): Promis
         );
 
         response.msg = "User Updated";
+        response.data = user;
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(setErrorDetails("Internal Server Error", error as string));
@@ -342,32 +345,22 @@ async function changeEmailHandler(req: Request, res: Response): Promise<any> {
         };
         const token = await bcrypt.genSalt(10);
 
-        await User.findByIdAndUpdate(
+        const updatedUser = await User.findByIdAndUpdate(
             userId,
             {
                 $set: {
-                    newEmail: newEmail,
+                    newEmail,
                     newEmailToken: token,
                 },
             },
             { new: true }
         );
 
-        // const transporter = createTransporter();
+        if (!updatedUser) {
+            return res.status(404).json({ msg: "User not found" });
+        }
 
-        // const mailOptions = {
-        //     to: newEmail,
-        //     subject: "Verify Your New Email",
-        //     html: `<p>Click the link below to verify your new email:</p>
-        //         <a href="http://localhost:8000/api/verify-email?token=${token}">Verify Email</a>`,
-        // };
-
-        // await transporter.sendMail({
-        //     from: process.env.EMAIL_FROM,
-        //     ...mailOptions,
-        // });
-
-        console.log("Verification Email Sent");
+        await EmailService.sendEmailVerification(updatedUser, token);
 
         response.msg = "Verification email sent. Please check your inbox.";
         return res.status(200).json(response);
@@ -469,7 +462,7 @@ async function changePasswordHandler(req: Request, res: Response): Promise<any> 
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
-        user.save();
+        await user.save();
 
         response.msg = "Password Changed Successfully";
         return res.status(200).json(response);

@@ -112,4 +112,31 @@ export class EmailService {
             html: emailContent,
         });
     }
+
+    static async sendEmailVerification(user: IUser, token: string): Promise<void> {
+        const verificationUrl = `${process.env.BASE_URL}/verify-email?token=${token}`;
+        console.log(verificationUrl);
+
+        const emailContent = `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2>Hi ${user.fullName},</h2>
+            <p>You recently requested to update your email on <strong>Acrilc</strong>.</p>
+            <p>To confirm and verify your new email address, please click the button below:</p>
+            <a href="${verificationUrl}" style="display:inline-block; background-color: #FF6200; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a>
+            <p>If you didn’t make this request, you can ignore this email and your email address will remain unchanged.</p>
+            <br>
+            <p>This link will expire in 30 minutes for security purposes.</p>
+            <p>Need help? Contact us at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
+
+            <hr>
+            <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
+        </div>
+    `;
+
+        await this.sendEmail({
+            to: user.newEmail!, // Make sure `newEmail` exists on IUser
+            subject: "✅ Verify Your New Acrilc Email",
+            html: emailContent,
+        });
+    }
 }

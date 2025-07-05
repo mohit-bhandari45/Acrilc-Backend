@@ -15,8 +15,6 @@ import marketplaceRoutes from "./marketplace.js";
 
 const router = Router();
 
-router.get("/verify-email", verifyEmailHandler);
-
 router.use(authCheckMiddleware);
 router.use("/user", userRoutes);
 router.use("/collections", collectionRoutes);
