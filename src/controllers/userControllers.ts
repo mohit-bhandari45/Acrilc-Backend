@@ -39,6 +39,7 @@ async function getOwnProfileHandler(req: Request, res: Response): Promise<any> {
             password: user?.password,
             bannerPicture: user?.bannerPicture,
             bio: user?.bio,
+            role: user?.role,
             story: user?.story,
             preferences: user?.preferences,
             services: user?.services,
