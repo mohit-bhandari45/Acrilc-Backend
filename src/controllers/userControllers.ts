@@ -499,7 +499,6 @@ async function forgotPasswordHandler(req: Request, res: Response): Promise<void>
         await user.save();
 
         // email service
-        await EmailService.sendResetPasswordEmail(user, resetToken);
         emailQueue.add("reset-password", {
             type: "reset",
             user: user,

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import CacheService from "../services/cache.js";
 import UserService, { IUser } from "../services/userService.js";
 import { decode } from "../utils/jwt.js";
 
@@ -51,6 +50,7 @@ async function authCheckMiddleware(req: Request, res: Response, next: NextFuncti
         // }
 
         req.user = user as IUser;
+        console.log(user);
         return next();
     } catch (error) {
         console.error("Token decoding error:", error);

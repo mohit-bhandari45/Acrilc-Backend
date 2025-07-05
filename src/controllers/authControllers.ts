@@ -33,6 +33,7 @@ async function signUpHandler(req: Request, res: Response): Promise<any> {
 
         if (email === process.env.ADMIN_EMAIL) {
             user.role = "admin";
+            await user.save();
         }
 
         // email service using bullmq
