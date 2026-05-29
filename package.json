@@ -7,17 +7,17 @@
     "scripts": {
         "build": "tsc",
         "start": "node dist/index.js",
-        "dev": "tsc-watch --onSuccess \"yarn start\"",
+        "dev": "tsc-watch --onSuccess \"npm run start\"",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
-        "seed": "yarn build && node dist/seed.js",
+        "seed": "npm run build && node dist/seed.js",
         "start:worker": "node --loader ts-node/esm src/workers/emailWorker.ts"
     },
     "lint-staged": {
         "**/*.ts": [
-            "yarn lint:fix",
-            "yarn format"
+            "npx eslint --fix",
+            "npx prettier --write"
         ]
     },
     "devDependencies": {

@@ -68,7 +68,7 @@ async function updateUserHandler(req: Request, res: Response): Promise<void> {
 
     try {
         await User.findByIdAndUpdate(
-            userId,
+            id,
             {
                 $set: {
                     username: username && username,
