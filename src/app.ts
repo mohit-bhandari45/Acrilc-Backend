@@ -22,10 +22,12 @@ connectDB();
 const app: Express = express();
 const server = http.createServer(app);
 
+const allowedOrigins = ["https://acrilc.com", "https://www.acrilc.com", "https://acrilc-web.vercel.app", "http://localhost:3000"];
+
 /* Socket IO */
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: allowedOrigins,
         methods: ["GET", "POST"],
         credentials: true,
     },
@@ -41,8 +43,6 @@ io.on("connection", socketHandler(io));
 /* Middlewares */
 const corsOptions: CorsOptions = {
     origin: (origin, callback) => {
-        const allowedOrigins = ["https://acrilc.com", "https://www.acrilc.com", "http://localhost:3000"];
-
         if (!origin || allowedOrigins.includes(origin as string)) {
             callback(null, origin);
         } else {
