@@ -167,6 +167,7 @@ async function googleAuthHandler(req: Request, res: Response): Promise<void> {
 }
 
 async function logoutHandler(req: Request, res: Response): Promise<void> {
+    console.log("Logout Happening");
     res.cookie("token", null, {
         expires: new Date(Date.now()),
         httpOnly: true,

@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import cors, { CorsOptions } from "cors";
 import express, { Express, Request, Response } from "express";
 import http from "http";
@@ -11,13 +14,9 @@ import adminRoutes from "./routes/admin/index.js";
 import socketHandler from "./socket.js";
 import cookieParser from "cookie-parser";
 
-import dotenv from "dotenv";
 import morgan from "morgan";
 import { connectDB } from "./db.js";
 import { socketAuthMiddleware } from "./middlewares/socket.js";
-import { redisConnect } from "./redis.js";
-redisConnect();
-dotenv.config();
 connectDB();
 
 const app: Express = express();

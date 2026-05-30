@@ -2,8 +2,6 @@ import { Worker } from "bullmq";
 import { connection } from "../lib/redis.js";
 import { EmailService } from "../services/email.service.js";
 import { IUser } from "../types/user.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 interface EmailJob {
     type: "email" | "reset";
