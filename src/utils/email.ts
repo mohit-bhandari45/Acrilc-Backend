@@ -17,6 +17,10 @@ export const createTransporter = (): Transporter => {
     });
 };
 
+const getBaseUrl = (): string => {
+    return process.env.NODE_ENV === "production" ? process.env.FRONTEND_URL || "https://acrilc-web.vercel.app" : process.env.FRONTEND_URL_LOCAL || "http://localhost:3000";
+};
+
 const sendWelcomeEmail = async (user: IUser): Promise<void> => {
     const transporter = createTransporter();
 
@@ -36,26 +40,26 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
             </ul>
 
         <p><strong>Ready to dive in? Let’s get started!</strong></p>
-            <a href="${process.env.BASE_URL}/auth/username" style="background-color: #FF6200; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Complete Your Profile Now</a>
+            <a href="${getBaseUrl()}/auth/username" style="background-color: #FF6200; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Complete Your Profile Now</a>
 
             <p>Explore our platform, upload your first piece of art, and connect with the Acrilc community. We can’t wait to see what you create!</p>
 
             <h4>Stay Updated:</h4>
             <p>Keep an eye on your inbox for updates on art challenges, events, and exclusive opportunities.</p>
             <h4>Need Help?</h4>
-            <p>Check out our <a href="${process.env.BASE_URL}/help">Help Center</a> or reach out to our support team at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
+            <p>Check out our <a href="${getBaseUrl()}/help">Help Center</a> or reach out to our support team at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
 
             <p>We’re so excited to see your creativity come to life on Acrilc. Let’s build something amazing together!</p>
             <p><strong>Happy Creating,</strong><br>The Acrilc Team</p>
             <p>
-                <a href="${process.env.BASE_URL}">Website</a> | 
+                <a href="${getBaseUrl()}">Website</a> | 
                 <a href="https://www.instagram.com/theacrilc?igsh=NjRndzAydDdqcnF0">Instagram</a> | 
                 <a href="https://www.linkedin.com/company/acrilc/">Linkedin</a> | 
                 <a href="https://pin.it/2LBlIjfr6">Pinterest</a>
             </p>
 
             <hr>
-            <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
+            <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${getBaseUrl()}/unsubscribe">Unsubscribe</a></p>
         </div>
     `;
 
@@ -81,7 +85,7 @@ const sendWelcomeEmail = async (user: IUser): Promise<void> => {
 const sendPasswordResetEmail = async (user: IUser, resetToken: string): Promise<void> => {
     const transporter = createTransporter();
 
-    const resetUrl = `${process.env.BASE_URL}/reset-password/${resetToken}`;
+    const resetUrl = `${getBaseUrl()}/reset-password/${resetToken}`;
 
     const emailContent = `
         <div style="font-family: Arial, sans-serif; color: #333;">
@@ -95,7 +99,7 @@ const sendPasswordResetEmail = async (user: IUser, resetToken: string): Promise<
             <p>Need help? Contact us at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
 
             <hr>
-            <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
+            <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${getBaseUrl()}/unsubscribe">Unsubscribe</a></p>
         </div>
     `;
 

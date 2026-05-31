@@ -6,6 +6,9 @@ import express, { Express, Request, Response } from "express";
 import http from "http";
 import os from "os";
 import { Server } from "socket.io";
+import session from "express-session";
+import passport from "passport";
+import "./services/passport.js";
 import apiRoutes from "./routes/api/index.js";
 import authRoutes from "./routes/auth/auth.js";
 import generalRoutes from "./routes/general/general.js";
@@ -22,7 +25,16 @@ connectDB();
 const app: Express = express();
 const server = http.createServer(app);
 
-const allowedOrigins = ["https://acrilc.com", "https://www.acrilc.com", "https://acrilc-web.vercel.app", "http://localhost:3000"];
+const frontendUrl = process.env.FRONTEND_URL || "https://acrilc-web.vercel.app";
+const localFrontendUrl = process.env.FRONTEND_URL_LOCAL || "http://localhost:3000";
+const allowedOrigins = Array.from(
+    new Set(
+        [process.env.CORS_ORIGINS, frontendUrl, localFrontendUrl]
+            .flatMap((value) => (value ? value.split(",") : []))
+            .map((value) => value.trim())
+            .filter(Boolean)
+    )
+);
 
 /* Socket IO */
 const io = new Server(server, {
@@ -36,6 +48,16 @@ const io = new Server(server, {
 // request logger
 app.use(morgan("dev"));
 app.use(cookieParser());
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET || process.env.JWT_SECRET || "acrilc-secret",
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: process.env.NODE_ENV === "production", maxAge: 5 * 60 * 1000 },
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 io.use(socketAuthMiddleware); //socket middleware
 io.on("connection", socketHandler(io));

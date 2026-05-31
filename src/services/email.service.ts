@@ -10,6 +10,10 @@ interface EmailOptions {
 export class EmailService {
     private static fromEmail: string = "Acrilc Team connectacrilc@gmail.com";
 
+    private static getBaseUrl(): string {
+        return process.env.NODE_ENV === "production" ? process.env.FRONTEND_URL || "https://acrilc-web.vercel.app" : process.env.FRONTEND_URL_LOCAL || "http://localhost:3000";
+    }
+
     private static createTransporter(): Transporter {
         return nodemailer.createTransport({
             service: "gmail",
@@ -53,26 +57,26 @@ export class EmailService {
                 </ul>
 
             <p><strong>Ready to dive in? Let’s get started!</strong></p>
-                <a href="${process.env.BASE_URL}/auth/username" style="background-color: #FF6200; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Complete Your Profile Now</a>
+                <a href="${this.getBaseUrl()}/auth/username" style="background-color: #FF6200; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Complete Your Profile Now</a>
 
                 <p>Explore our platform, upload your first piece of art, and connect with the Acrilc community. We can’t wait to see what you create!</p>
 
                 <h4>Stay Updated:</h4>
                 <p>Keep an eye on your inbox for updates on art challenges, events, and exclusive opportunities.</p>
                 <h4>Need Help?</h4>
-                <p>Check out our <a href="${process.env.BASE_URL}/help">Help Center</a> or reach out to our support team at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
+                <p>Check out our <a href="${this.getBaseUrl()}/help">Help Center</a> or reach out to our support team at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
 
                 <p>We’re so excited to see your creativity come to life on Acrilc. Let’s build something amazing together!</p>
                 <p><strong>Happy Creating,</strong><br>The Acrilc Team</p>
                 <p>
-                    <a href="${process.env.BASE_URL}">Website</a> | 
+                    <a href="${this.getBaseUrl()}">Website</a> | 
                     <a href="https://www.instagram.com/theacrilc?igsh=NjRndzAydDdqcnF0">Instagram</a> | 
                     <a href="https://www.linkedin.com/company/acrilc/">Linkedin</a> | 
                     <a href="https://pin.it/2LBlIjfr6">Pinterest</a>
                 </p>
 
                 <hr>
-                <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
+                <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${this.getBaseUrl()}/unsubscribe">Unsubscribe</a></p>
             </div>
         `;
 
@@ -84,7 +88,7 @@ export class EmailService {
     }
 
     static async sendResetPasswordEmail(user: IUser, resetToken: string): Promise<void> {
-        const resetUrl = `${process.env.BASE_URL}/auth/reset/${resetToken}`;
+        const resetUrl = `${this.getBaseUrl()}/auth/reset/${resetToken}`;
         console.log("EMAIL_USER:", process.env.EMAIL_USER);
         console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
         console.log("Reset:", resetUrl);
@@ -102,7 +106,7 @@ export class EmailService {
                 <p>Need help? Contact us at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
 
                 <hr>
-                <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
+                <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${this.getBaseUrl()}/unsubscribe">Unsubscribe</a></p>
             </div>
         `;
 
@@ -114,7 +118,7 @@ export class EmailService {
     }
 
     static async sendEmailVerification(user: IUser, token: string): Promise<void> {
-        const verificationUrl = `${process.env.BASE_URL}/verify-email?token=${token}`;
+        const verificationUrl = `${this.getBaseUrl()}/verify-email?token=${token}`;
         console.log(verificationUrl);
 
         const emailContent = `
@@ -129,7 +133,7 @@ export class EmailService {
             <p>Need help? Contact us at <a href="mailto:support@Acrilc.com">support@Acrilc.com</a>.</p>
 
             <hr>
-            <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${process.env.BASE_URL}/unsubscribe">Unsubscribe</a></p>
+            <p style="font-size: 12px; color: #777;">© 2025 Acrilc. All rights reserved.<br><a href="${this.getBaseUrl()}/unsubscribe">Unsubscribe</a></p>
         </div>
     `;
 
